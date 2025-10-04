@@ -210,7 +210,7 @@ export default function Home() {
               />
             </div>
             
-            <div className="group relative w-48 h-48 hover:scale-110 transition-all duration-500">
+            <div className="group relative w-52 h-52 hover:scale-110 transition-all duration-500">
               {/* Circular background exactly behind image */}
               <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500 hover:border-orange-400 transition-all duration-500 shadow-2xl hover:shadow-orange-500/30"></div>
               {/* Circular glow effect */}
@@ -218,7 +218,7 @@ export default function Home() {
               <img 
                 src="/acsm-certified.png" 
                 alt="ACSM Certified" 
-                className="w-full h-full object-contain hover:scale-105 transition-transform duration-300 relative z-10 rounded-full"
+                className="w-full h-full object-contain hover:scale-105 transition-transform duration-300 relative z-10 rounded-full p-2"
               />
             </div>
             
