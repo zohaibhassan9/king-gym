@@ -149,9 +149,9 @@ export default function Home() {
               </div>
               <div className="text-center group">
                 <div className="text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 mb-4 group-hover:scale-110 transition-transform duration-300">
-                  24/7
+                  100%
                 </div>
-                <div className="text-gray-300 text-lg md:text-xl font-semibold">Gym Access</div>
+                <div className="text-gray-300 text-lg md:text-xl font-semibold">Satisfaction Rate</div>
               </div>
             </div>
           </div>
