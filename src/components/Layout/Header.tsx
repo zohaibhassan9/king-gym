@@ -37,11 +37,11 @@ const Header = () => {
           <div className="flex-shrink-0">
             <Link href="/" className="flex items-center group">
               <div className="relative">
-                <img 
-                  src="/logo-navbar.png" 
-                  alt="King Gym Logo" 
-                  className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
-                />
+                    <img 
+                      src="/logo-navbar.png" 
+                      alt="King Gym Logo" 
+                      className="h-24 w-auto transition-transform duration-300 group-hover:scale-105"
+                    />
                 <div className="absolute -inset-1 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-lg blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
             </Link>
@@ -106,11 +106,11 @@ const Header = () => {
               {/* Header with Close Button */}
               <div className="flex items-center justify-between p-4 border-b border-gray-200">
                 <div className="flex items-center space-x-3">
-                  <img 
-                    src="/logo-navbar.png" 
-                    alt="King Gym Logo" 
-                    className="h-10 w-auto"
-                  />
+                      <img 
+                        src="/logo-navbar.png" 
+                        alt="King Gym Logo" 
+                        className="h-20 w-auto"
+                      />
                   <span className="text-gray-900 text-lg font-semibold">King Gym</span>
                 </div>
                 <button

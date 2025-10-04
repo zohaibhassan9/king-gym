@@ -45,31 +45,31 @@ export default function Home() {
 
   const packages = [
     {
-      name: 'Cardio Package',
-      price: '$29',
+      name: 'Men Normal',
+      price: 'Rs 3,500',
       period: '/month',
-      features: ['Cardio Equipment Access', 'Group Classes', 'Locker Room Access'],
+      features: ['Full Gym Access', 'Weight Training Equipment', 'Cardio Equipment', 'Locker Room Access', 'Shower Facilities'],
       popular: false
     },
     {
-      name: 'Weight Training Package',
-      price: '$39',
+      name: 'Men Cardio',
+      price: 'Rs 2,500',
       period: '/month',
-      features: ['Weight Training Equipment', 'Free Weights', 'Locker Room Access'],
+      features: ['Cardio Equipment Only', 'Treadmills & Bikes', 'Group Classes', 'Locker Room Access', 'Shower Facilities'],
+      popular: false
+    },
+    {
+      name: 'Couple (Separate Floor)',
+      price: 'Rs 6,000',
+      period: '/month',
+      features: ['Dedicated Couple Floor', 'Private Workout Space', 'Full Equipment Access', 'Personal Lockers', 'Premium Facilities'],
       popular: true
     },
     {
-      name: 'With Trainer Package',
-      price: '$79',
+      name: 'Ladies (Separate Floor)',
+      price: 'Rs 4,000',
       period: '/month',
-      features: ['Personal Trainer Sessions', 'Custom Workout Plans', 'Nutrition Guidance'],
-      popular: false
-    },
-    {
-      name: 'With Coach Package',
-      price: '$99',
-      period: '/month',
-      features: ['Professional Coach', 'Competition Training', 'Advanced Techniques'],
+      features: ['Ladies Only Floor', 'Full Gym Access', 'Female Trainers Available', 'Private Changing Rooms', 'Security & Privacy'],
       popular: false
     }
   ];

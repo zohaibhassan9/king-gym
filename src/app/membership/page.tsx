@@ -5,68 +5,72 @@ import { CheckIcon, StarIcon } from '@heroicons/react/24/outline';
 export default function Membership() {
   const packages = [
     {
-      id: 'cardio',
-      name: 'Cardio Package',
-      price: 29,
+      id: 'men-normal',
+      name: 'Men Normal',
+      price: 3500,
       period: 'month',
-      description: 'Perfect for cardio enthusiasts and beginners',
+      description: 'Complete gym access for men with all facilities',
       features: [
-        'Access to all cardio equipment',
-        'Group fitness classes',
+        'Full gym equipment access',
+        'Weight training equipment',
+        'Cardio equipment access',
         'Locker room access',
-        'Basic nutrition guidance',
-        'Monthly progress check-ins'
+        'Shower facilities',
+        '24/7 gym access',
+        'Monthly progress tracking'
       ],
       popular: false
     },
     {
-      id: 'weight',
-      name: 'Weight Training Package',
-      price: 39,
+      id: 'men-cardio',
+      name: 'Men Cardio',
+      price: 2500,
       period: 'month',
-      description: 'Comprehensive weight training program',
+      description: 'Cardio-focused package for cardiovascular fitness',
       features: [
-        'Full gym equipment access',
-        'Free weights and machines',
+        'Cardio equipment only',
+        'Treadmills & stationary bikes',
+        'Group fitness classes',
         'Locker room access',
-        'Workout plan creation',
-        'Monthly body composition analysis',
-        'Supplement recommendations'
+        'Shower facilities',
+        'Basic nutrition guidance',
+        'Monthly cardio assessments'
+      ],
+      popular: false
+    },
+    {
+      id: 'couple',
+      name: 'Couple (Separate Floor)',
+      price: 6000,
+      period: 'month',
+      description: 'Premium package for couples with dedicated floor',
+      features: [
+        'Dedicated couple floor',
+        'Private workout space',
+        'Full equipment access',
+        'Personal lockers',
+        'Premium facilities',
+        'Couple training sessions',
+        'Private changing rooms',
+        'Priority booking system'
       ],
       popular: true
     },
     {
-      id: 'trainer',
-      name: 'With Trainer Package',
-      price: 79,
+      id: 'ladies',
+      name: 'Ladies (Separate Floor)',
+      price: 4000,
       period: 'month',
-      description: 'Personal training with certified professionals',
+      description: 'Exclusive ladies-only floor with full privacy',
       features: [
-        '4 personal training sessions/month',
-        'Custom workout plans',
-        'Nutrition consultation',
-        'Progress tracking',
-        '24/7 gym access',
-        'Priority equipment booking',
-        'Monthly goal setting sessions'
-      ],
-      popular: false
-    },
-    {
-      id: 'coach',
-      name: 'With Coach Package',
-      price: 99,
-      period: 'month',
-      description: 'Elite coaching for serious athletes',
-      features: [
-        'Unlimited personal training',
-        'Competition preparation',
-        'Advanced nutrition planning',
-        'Performance analytics',
-        '24/7 gym access',
-        'Equipment priority access',
-        'Weekly coaching sessions',
-        'Competition entry support'
+        'Ladies only floor',
+        'Full gym equipment access',
+        'Female trainers available',
+        'Private changing rooms',
+        'Security & privacy',
+        'Women-only group classes',
+        'Locker room access',
+        'Shower facilities'
       ],
       popular: false
     }
