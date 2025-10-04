@@ -101,18 +101,7 @@ export default function Membership() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gray-50">
-        {/* Hero Section */}
-        <section className="bg-gradient-to-r from-orange-600 to-orange-700 text-white py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">
-              Choose Your Perfect Package
-            </h1>
-            <p className="text-xl md:text-2xl text-orange-100 max-w-3xl mx-auto">
-              Flexible membership options designed to help you achieve your fitness goals
-            </p>
-          </div>
-        </section>
+      <div className="min-h-screen bg-black">
 
         {/* Packages Section */}
         <section className="py-24 bg-black relative overflow-hidden">
