@@ -159,7 +159,7 @@ export default function Home() {
       </section>
 
       {/* Professional Logos Section */}
-      <section className="py-16 bg-black relative overflow-hidden">
+      <section className="py-24 pb-32 bg-black relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <div className="inline-flex items-center px-4 py-2 rounded-full bg-orange-600/10 border border-orange-500/20 text-orange-300 text-sm font-medium mb-6">
@@ -179,7 +179,7 @@ export default function Home() {
             {/* Fitness Certification Logos */}
             <div className="group relative w-48 h-48 hover:scale-110 transition-all duration-500">
               {/* Circular background exactly behind image */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500/20 hover:border-orange-500/40 transition-all duration-500 shadow-2xl hover:shadow-orange-500/20"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500 hover:border-orange-400 transition-all duration-500 shadow-2xl hover:shadow-orange-500/30"></div>
               {/* Circular glow effect */}
               <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <img 
@@ -191,7 +191,7 @@ export default function Home() {
             
             <div className="group relative w-48 h-48 hover:scale-110 transition-all duration-500">
               {/* Circular background exactly behind image */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500/20 hover:border-orange-500/40 transition-all duration-500 shadow-2xl hover:shadow-orange-500/20"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500 hover:border-orange-400 transition-all duration-500 shadow-2xl hover:shadow-orange-500/30"></div>
               {/* Circular glow effect */}
               <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <img 
@@ -203,7 +203,7 @@ export default function Home() {
             
             <div className="group relative w-48 h-48 hover:scale-110 transition-all duration-500">
               {/* Circular background exactly behind image */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500/20 hover:border-orange-500/40 transition-all duration-500 shadow-2xl hover:shadow-orange-500/20"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500 hover:border-orange-400 transition-all duration-500 shadow-2xl hover:shadow-orange-500/30"></div>
               {/* Circular glow effect */}
               <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <img 
@@ -215,7 +215,7 @@ export default function Home() {
             
             <div className="group relative w-48 h-48 hover:scale-110 transition-all duration-500">
               {/* Circular background exactly behind image */}
-              <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500/20 hover:border-orange-500/40 transition-all duration-500 shadow-2xl hover:shadow-orange-500/20"></div>
+              <div className="absolute inset-0 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500 hover:border-orange-400 transition-all duration-500 shadow-2xl hover:shadow-orange-500/30"></div>
               {/* Circular glow effect */}
               <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <img 
@@ -414,23 +414,7 @@ export default function Home() {
               <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">→</span>
             </Link>
           </div>
-          
-          {/* Trust Indicators */}
-          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            <div className="text-center">
-              <div className="text-2xl md:text-3xl font-bold text-white mb-2">5000+</div>
-              <div className="text-orange-200 text-sm font-medium">Happy Members</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl md:text-3xl font-bold text-white mb-2">10+</div>
-              <div className="text-orange-200 text-sm font-medium">Years Experience</div>
-            </div>
-            <div className="text-center">
-              <div className="text-2xl md:text-3xl font-bold text-white mb-2">100%</div>
-              <div className="text-orange-200 text-sm font-medium">Satisfaction Rate</div>
-            </div>
-          </div>
-        </div>
+    </div>
       </section>
     </Layout>
   );
