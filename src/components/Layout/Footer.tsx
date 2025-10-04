@@ -19,20 +19,10 @@ const Footer = () => {
               Your premier destination for fitness and wellness. We provide world-class facilities 
               and expert trainers to help you achieve your fitness goals.
             </p>
-            {/* Contact Info - Three Columns on Large Screens */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-              <div className="flex items-center text-gray-300">
-                <MapPinIcon className="h-5 w-5 mr-2 flex-shrink-0" />
-                <span>199 A Commercial, Central Park Housing Scheme, Society, 54600</span>
-              </div>
-              <div className="flex items-center text-gray-300">
-                <PhoneIcon className="h-5 w-5 mr-2 flex-shrink-0" />
-                <span>0320 4881042</span>
-              </div>
-              <div className="flex items-center text-gray-300">
-                <EnvelopeIcon className="h-5 w-5 mr-2 flex-shrink-0" />
-                <span>info@kinggym.com</span>
-              </div>
+            {/* Address - Only in company info section */}
+            <div className="flex items-center text-gray-300">
+              <MapPinIcon className="h-5 w-5 mr-2" />
+              <span>199 A Commercial, Central Park Housing Scheme, Society, 54600</span>
             </div>
           </div>
 
@@ -91,6 +81,22 @@ const Footer = () => {
                     </Link>
                   </li>
                 </ul>
+              </div>
+            </div>
+            
+            {/* Contact Info - Three Columns on Large Screens */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-8 pt-6 border-t border-gray-700">
+              <div className="flex items-center text-gray-300">
+                <MapPinIcon className="h-5 w-5 mr-2 flex-shrink-0" />
+                <span>199 A Commercial, Central Park Housing Scheme, Society, 54600</span>
+              </div>
+              <div className="flex items-center text-gray-300">
+                <PhoneIcon className="h-5 w-5 mr-2 flex-shrink-0" />
+                <span>0320 4881042</span>
+              </div>
+              <div className="flex items-center text-gray-300">
+                <EnvelopeIcon className="h-5 w-5 mr-2 flex-shrink-0" />
+                <span>info@kinggym.com</span>
               </div>
             </div>
           </div>
