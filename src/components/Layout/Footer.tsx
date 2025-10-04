@@ -84,7 +84,7 @@ const Footer = () => {
               </div>
             </div>
             
-            {/* Contact Info - Two Columns on Large Screens */}
+            {/* Contact Info - Stacked on Mobile, Two Columns on Large Screens */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
               <div className="flex items-center text-gray-300">
                 <PhoneIcon className="h-5 w-5 mr-2 flex-shrink-0" />
