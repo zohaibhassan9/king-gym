@@ -30,76 +30,63 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-gradient-to-r from-black via-gray-900 to-black backdrop-blur-lg shadow-2xl sticky top-0 z-50 border-b border-orange-500/20">
+    <header className="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-200/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-20 relative">
-          {/* Animated background gradient */}
-          <div className="absolute inset-0 bg-gradient-to-r from-orange-500/5 via-transparent to-orange-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-1000"></div>
+        <div className="flex justify-between items-center h-16 relative">
           {/* Logo */}
-          <div className="flex-shrink-0 z-10">
+          <div className="flex-shrink-0">
             <Link href="/" className="flex items-center group">
-              <div className="relative p-2 rounded-xl">
+              <div className="relative">
                 <img 
                   src="/logo-navbar.png" 
                   alt="King Gym Logo" 
-                  className="h-20 w-auto transition-all duration-500 group-hover:scale-110 group-hover:rotate-2"
+                  className="h-12 w-auto transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-500/30 to-orange-600/30 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                <div className="absolute inset-0 border border-orange-500/20 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute -inset-1 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-lg blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-2 z-10">
+          <nav className="hidden md:flex space-x-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="relative text-white/90 hover:text-white px-5 py-3 text-sm font-semibold transition-all duration-500 rounded-xl hover:bg-gradient-to-r hover:from-orange-500/20 hover:to-orange-600/20 group overflow-hidden"
+                className="relative text-gray-700 hover:text-orange-600 px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg hover:bg-orange-50 group"
               >
-                <span className="relative z-10 flex items-center space-x-2">
-                  <span>{item.name}</span>
-                  <div className="w-0 h-0.5 bg-orange-400 group-hover:w-4 transition-all duration-300"></div>
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-orange-500/10 to-orange-600/10 rounded-xl opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-                <div className="absolute bottom-0 left-0 w-0 h-1 bg-gradient-to-r from-orange-400 to-orange-500 group-hover:w-full transition-all duration-500 rounded-full"></div>
-                <div className="absolute top-0 left-0 w-full h-0 bg-gradient-to-r from-orange-500/30 to-orange-600/30 group-hover:h-full transition-all duration-500 rounded-xl"></div>
+                <span className="relative z-10">{item.name}</span>
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-300 rounded-full"></div>
               </Link>
             ))}
           </nav>
 
           {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4 z-10">
+          <div className="hidden md:flex items-center space-x-3">
             <Link
               href="/login"
-              className="text-white/90 hover:text-white px-5 py-3 text-sm font-semibold transition-all duration-500 rounded-xl hover:bg-gradient-to-r hover:from-white/10 hover:to-white/5 border border-transparent hover:border-white/20"
+              className="text-gray-700 hover:text-orange-600 px-4 py-2 text-sm font-medium transition-colors duration-300 rounded-lg hover:bg-orange-50"
             >
               Login
             </Link>
             <Link
               href="/register"
-              className="relative bg-gradient-to-r from-orange-600 via-orange-700 to-orange-800 hover:from-orange-500 hover:via-orange-600 hover:to-orange-700 text-white font-bold py-3 px-8 rounded-xl transition-all duration-500 shadow-2xl hover:shadow-orange-500/40 hover:scale-105 group overflow-hidden border border-orange-500/30"
+              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105"
             >
-              <span className="relative z-10 flex items-center space-x-2">
-                <span>Join Now</span>
-                <div className="w-0 h-0.5 bg-white group-hover:w-6 transition-all duration-300"></div>
-              </span>
-              <div className="absolute inset-0 bg-gradient-to-r from-orange-400 to-orange-500 opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
-              <div className="absolute top-0 left-0 w-full h-0 bg-gradient-to-r from-white/20 to-white/10 group-hover:h-full transition-all duration-500 rounded-xl"></div>
+              Join Now
             </Link>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden z-10">
+          <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white/90 hover:text-white p-3 rounded-xl hover:bg-gradient-to-r hover:from-orange-500/20 hover:to-orange-600/20 transition-all duration-500 border border-transparent hover:border-orange-500/30"
+              className="text-gray-700 hover:text-orange-600 p-2 rounded-lg hover:bg-orange-50 transition-colors duration-300"
             >
               {isMenuOpen ? (
-                <XMarkIcon className="h-7 w-7" />
+                <XMarkIcon className="h-6 w-6" />
               ) : (
-                <Bars3Icon className="h-7 w-7" />
+                <Bars3Icon className="h-6 w-6" />
               )}
             </button>
           </div>
@@ -110,25 +97,25 @@ const Header = () => {
           <div className="md:hidden fixed inset-0 z-50">
             {/* Backdrop */}
             <div 
-              className="absolute inset-0 bg-black/90 backdrop-blur-sm"
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
               onClick={() => setIsMenuOpen(false)}
             ></div>
             
             {/* Mobile Menu Panel */}
-            <div className="relative z-10 h-full bg-black flex flex-col">
+            <div className="relative z-10 h-full bg-white flex flex-col">
               {/* Header with Close Button */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-800">
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
                 <div className="flex items-center space-x-3">
                   <img 
                     src="/logo-navbar.png" 
                     alt="King Gym Logo" 
-                    className="h-12 w-auto"
+                    className="h-10 w-auto"
                   />
-                  <span className="text-white text-lg font-bold">King Gym</span>
+                  <span className="text-gray-900 text-lg font-semibold">King Gym</span>
                 </div>
                 <button
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-white/70 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors"
+                  className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-colors"
                 >
                   <XMarkIcon className="h-6 w-6" />
                 </button>
@@ -139,12 +126,12 @@ const Header = () => {
                 <div className="p-6">
                   {/* Navigation Links in Two Columns */}
                   {navigation && navigation.length > 0 ? (
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-3">
                       {navigation.map((item) => (
                         <Link
                           key={item.name}
                           href={item.href}
-                          className="block px-4 py-4 text-white text-lg font-semibold hover:bg-orange-600/20 rounded-xl transition-colors border border-transparent hover:border-orange-500/30 text-center"
+                          className="block px-4 py-3 text-gray-700 text-base font-medium hover:bg-orange-50 hover:text-orange-600 rounded-lg transition-colors text-center"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           {item.name}
@@ -152,25 +139,25 @@ const Header = () => {
                       ))}
                     </div>
                   ) : (
-                    <div className="text-white text-center py-8">
+                    <div className="text-gray-500 text-center py-8">
                       <p>Navigation items not found</p>
                     </div>
                   )}
                 </div>
                 
                 {/* Auth Buttons */}
-                <div className="p-6 border-t border-gray-800">
-                  <div className="grid grid-cols-2 gap-4">
+                <div className="p-6 border-t border-gray-200">
+                  <div className="grid grid-cols-2 gap-3">
                     <Link
                       href="/login"
-                      className="block text-center px-4 py-4 text-white text-lg font-semibold hover:bg-white/10 rounded-xl transition-colors border border-gray-700 hover:border-white/30"
+                      className="block text-center px-4 py-3 text-gray-700 text-base font-medium hover:bg-gray-50 rounded-lg transition-colors border border-gray-200 hover:border-gray-300"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Login
                     </Link>
                     <Link
                       href="/register"
-                      className="block text-center px-4 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-colors text-lg font-bold shadow-lg hover:shadow-orange-500/25"
+                      className="block text-center px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors text-base font-semibold shadow-sm hover:shadow-md"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Join Now
