@@ -169,16 +169,15 @@ export default function Home() {
           {/* Logos Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center justify-items-center">
             {/* Fitness Certification Logos */}
-            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mx-auto mb-2">
-                  <span className="text-white font-bold text-lg">ACE</span>
-                </div>
-                <span className="text-xs text-gray-400 font-medium">ACE Certified</span>
-              </div>
+            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105 p-3">
+              <img 
+                src="/ace-certified.jpg" 
+                alt="ACE Certified" 
+                className="w-full h-full object-contain filter brightness-110 hover:brightness-125 transition-all duration-300"
+              />
             </div>
             
-            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105">
+            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105 p-3">
               <div className="text-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mx-auto mb-2">
                   <span className="text-white font-bold text-lg">NASM</span>
@@ -187,34 +186,31 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mx-auto mb-2">
-                  <span className="text-white font-bold text-lg">ISSA</span>
-                </div>
-                <span className="text-xs text-gray-400 font-medium">ISSA Certified</span>
-              </div>
+            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105 p-3">
+              <img 
+                src="/issa-certified.webp" 
+                alt="ISSA Certified" 
+                className="w-full h-full object-contain filter brightness-110 hover:brightness-125 transition-all duration-300"
+              />
             </div>
             
-            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-2">
-                  <span className="text-white font-bold text-lg">ACSM</span>
-                </div>
-                <span className="text-xs text-gray-400 font-medium">ACSM Certified</span>
-              </div>
+            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105 p-3">
+              <img 
+                src="/acsm-certified.png" 
+                alt="ACSM Certified" 
+                className="w-full h-full object-contain filter brightness-110 hover:brightness-125 transition-all duration-300"
+              />
             </div>
             
-            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105">
-              <div className="text-center">
-                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center mx-auto mb-2">
-                  <span className="text-white font-bold text-lg">NSCA</span>
-                </div>
-                <span className="text-xs text-gray-400 font-medium">NSCA Certified</span>
-              </div>
+            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105 p-3">
+              <img 
+                src="/nsca-certified.jpg" 
+                alt="NSCA Certified" 
+                className="w-full h-full object-contain filter brightness-110 hover:brightness-125 transition-all duration-300"
+              />
             </div>
             
-            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105">
+            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105 p-3">
               <div className="text-center">
                 <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mx-auto mb-2">
                   <span className="text-white font-bold text-lg">CPT</span>
