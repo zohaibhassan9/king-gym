@@ -54,6 +54,11 @@ const Footer = () => {
                     </Link>
                   </li>
                 </ul>
+                {/* Phone Number below Quick Links */}
+                <div className="flex items-center text-gray-300 mt-6">
+                  <PhoneIcon className="h-5 w-5 mr-2 flex-shrink-0" />
+                  <span>0320 4881042</span>
+                </div>
               </div>
 
               {/* Support */}
@@ -81,18 +86,11 @@ const Footer = () => {
                     </Link>
                   </li>
                 </ul>
-              </div>
-            </div>
-            
-            {/* Contact Info - Stacked on Mobile, Two Columns on Large Screens */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8">
-              <div className="flex items-center text-gray-300">
-                <PhoneIcon className="h-5 w-5 mr-2 flex-shrink-0" />
-                <span>0320 4881042</span>
-              </div>
-              <div className="flex items-center text-gray-300">
-                <EnvelopeIcon className="h-5 w-5 mr-2 flex-shrink-0" />
-                <span>info@kinggym.com</span>
+                {/* Email below Support */}
+                <div className="flex items-center text-gray-300 mt-6">
+                  <EnvelopeIcon className="h-5 w-5 mr-2 flex-shrink-0" />
+                  <span>info@kinggym.com</span>
+                </div>
               </div>
             </div>
           </div>
