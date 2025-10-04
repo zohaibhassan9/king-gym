@@ -93,48 +93,52 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-md">
+          <div className="md:hidden fixed inset-0 z-50 bg-gradient-to-b from-black via-gray-900 to-black backdrop-blur-lg">
             {/* Close Button */}
-            <div className="flex justify-end p-4">
+            <div className="flex justify-end p-6">
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="text-white/90 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-all duration-300"
+                className="text-white/90 hover:text-white p-3 rounded-xl hover:bg-gradient-to-r hover:from-orange-500/20 hover:to-orange-600/20 transition-all duration-300 border border-transparent hover:border-orange-500/30"
               >
                 <XMarkIcon className="h-8 w-8" />
               </button>
             </div>
             
-            <div className="px-4 pb-6 space-y-2 h-full overflow-y-auto">
+            <div className="px-6 pb-8 space-y-4 h-full overflow-y-auto">
               {/* Logo in Mobile Menu */}
-              <div className="flex justify-center mb-8">
-                <img 
-                  src="/logo-navbar.png" 
-                  alt="King Gym Logo" 
-                  className="h-24 w-auto"
-                />
+              <div className="flex justify-center mb-12">
+                <div className="relative p-4 rounded-2xl">
+                  <img 
+                    src="/logo-navbar.png" 
+                    alt="King Gym Logo" 
+                    className="h-28 w-auto"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-2xl blur-lg"></div>
+                </div>
               </div>
               
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-white/90 hover:text-white block px-4 py-4 text-lg font-medium rounded-lg hover:bg-white/10 transition-all duration-300 text-center"
+                  className="text-white/90 hover:text-white block px-6 py-5 text-xl font-semibold rounded-2xl hover:bg-gradient-to-r hover:from-orange-500/20 hover:to-orange-600/20 transition-all duration-500 text-center border border-transparent hover:border-orange-500/30"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              <div className="pt-8 space-y-4 border-t border-gray-800">
+              
+              <div className="pt-12 space-y-6 border-t border-gray-700">
                 <Link
                   href="/login"
-                  className="text-white/90 hover:text-white block px-4 py-4 text-lg font-medium rounded-lg hover:bg-white/10 transition-all duration-300 text-center"
+                  className="text-white/90 hover:text-white block px-6 py-5 text-xl font-semibold rounded-2xl hover:bg-gradient-to-r hover:from-white/10 hover:to-white/5 transition-all duration-500 text-center border border-transparent hover:border-white/20"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-medium py-4 px-6 rounded-lg transition-all duration-300 block text-center shadow-lg hover:shadow-orange-500/25 text-lg"
+                  className="bg-gradient-to-r from-orange-600 via-orange-700 to-orange-800 hover:from-orange-500 hover:via-orange-600 hover:to-orange-700 text-white font-bold py-5 px-8 rounded-2xl transition-all duration-500 block text-center shadow-2xl hover:shadow-orange-500/40 text-xl border border-orange-500/30"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Join Now
