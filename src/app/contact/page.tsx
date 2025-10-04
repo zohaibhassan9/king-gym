@@ -227,7 +227,7 @@ export default function Contact() {
                   <textarea
                     id="message"
                     name="message"
-                    rows={6}
+                    rows={12}
                     value={formData.message}
                     onChange={handleInputChange}
                     className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
