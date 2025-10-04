@@ -283,12 +283,6 @@ export default function Contact() {
               {/* Map Section */}
               <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Find Us</h3>
-                <div className="mb-4">
-                  <p className="text-gray-700 font-medium mb-1">King Gym Location</p>
-                  <p className="text-sm text-gray-600 mb-1">199 A Commercial</p>
-                  <p className="text-sm text-gray-600 mb-1">Central Park Housing Scheme</p>
-                  <p className="text-sm text-gray-600 mb-3">Society, 54600</p>
-                </div>
                 <div className="rounded-lg overflow-hidden">
                   <div className="mapouter" style={{position: 'relative', textAlign: 'right', width: '100%', height: '450px'}}>
                     <div className="gmap_canvas" style={{overflow: 'hidden', background: 'none!important', width: '100%', height: '450px'}}>
