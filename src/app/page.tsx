@@ -218,32 +218,6 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Additional Professional Badges */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-600/20 to-orange-700/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <TrophyIcon className="h-8 w-8 text-orange-400" />
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Award Winning</h3>
-              <p className="text-gray-400 text-sm">Best Gym in Lahore 2023</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-600/20 to-orange-700/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <ShieldCheckIcon className="h-8 w-8 text-orange-400" />
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Safety Certified</h3>
-              <p className="text-gray-400 text-sm">Health & Safety Standards</p>
-            </div>
-            
-            <div className="text-center">
-              <div className="w-16 h-16 bg-gradient-to-br from-orange-600/20 to-orange-700/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
-                <UserGroupIcon className="h-8 w-8 text-orange-400" />
-              </div>
-              <h3 className="text-lg font-bold text-white mb-2">Community Trusted</h3>
-              <p className="text-gray-400 text-sm">5000+ Happy Members</p>
-            </div>
-          </div>
         </div>
       </section>
 
