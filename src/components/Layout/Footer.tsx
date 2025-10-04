@@ -35,58 +35,63 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Quick Links */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/membership" className="text-gray-300 hover:text-orange-400 transition-colors">
-                  Membership Plans
-                </Link>
-              </li>
-              <li>
-                <Link href="/classes" className="text-gray-300 hover:text-orange-400 transition-colors">
-                  Classes
-                </Link>
-              </li>
-              <li>
-                <Link href="/trainers" className="text-gray-300 hover:text-orange-400 transition-colors">
-                  Trainers
-                </Link>
-              </li>
-              <li>
-                <Link href="/facilities" className="text-gray-300 hover:text-orange-400 transition-colors">
-                  Facilities
-                </Link>
-              </li>
-            </ul>
-          </div>
+          {/* Quick Links and Support - Two Columns on Mobile */}
+          <div className="md:col-span-2">
+            <div className="grid grid-cols-2 gap-8">
+              {/* Quick Links */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="/membership" className="text-gray-300 hover:text-orange-400 transition-colors">
+                      Membership Plans
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/classes" className="text-gray-300 hover:text-orange-400 transition-colors">
+                      Classes
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/trainers" className="text-gray-300 hover:text-orange-400 transition-colors">
+                      Trainers
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/facilities" className="text-gray-300 hover:text-orange-400 transition-colors">
+                      Facilities
+                    </Link>
+                  </li>
+                </ul>
+              </div>
 
-          {/* Support */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Support</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/help" className="text-gray-300 hover:text-orange-400 transition-colors">
-                  Help Center
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-gray-300 hover:text-orange-400 transition-colors">
-                  Contact Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy" className="text-gray-300 hover:text-orange-400 transition-colors">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/terms" className="text-gray-300 hover:text-orange-400 transition-colors">
-                  Terms of Service
-                </Link>
-              </li>
-            </ul>
+              {/* Support */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Support</h3>
+                <ul className="space-y-2">
+                  <li>
+                    <Link href="/help" className="text-gray-300 hover:text-orange-400 transition-colors">
+                      Help Center
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/contact" className="text-gray-300 hover:text-orange-400 transition-colors">
+                      Contact Us
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/privacy" className="text-gray-300 hover:text-orange-400 transition-colors">
+                      Privacy Policy
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/terms" className="text-gray-300 hover:text-orange-400 transition-colors">
+                      Terms of Service
+                    </Link>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
 
