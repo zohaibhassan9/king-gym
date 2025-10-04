@@ -59,14 +59,14 @@ export default function Home() {
       popular: false
     },
     {
-      name: 'Couple (Separate Floor)',
+      name: 'Couple',
       price: 'Rs 6,000',
       period: '/month',
       features: ['Dedicated Couple Floor', 'Private Workout Space', 'Full Equipment Access', 'Personal Lockers', 'Premium Facilities'],
       popular: true
     },
     {
-      name: 'Ladies (Separate Floor)',
+      name: 'Ladies',
       price: 'Rs 4,000',
       period: '/month',
       features: ['Ladies Only Floor', 'Full Gym Access', 'Female Trainers Available', 'Private Changing Rooms', 'Security & Privacy'],
@@ -77,111 +77,322 @@ export default function Home() {
   return (
     <Layout>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-black via-gray-900 to-orange-900 text-white">
-        <div className="absolute inset-0 bg-black opacity-50"></div>
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32">
+      <section className="relative min-h-screen flex items-center bg-gradient-to-br from-black via-gray-900 to-orange-900 text-white overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-black opacity-60"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-600/10 to-transparent"></div>
+        
+        {/* Animated Background Elements */}
+        <div className="absolute top-20 left-10 w-32 h-32 bg-orange-500/20 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-48 h-48 bg-orange-600/10 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-orange-400/15 rounded-full blur-lg animate-pulse delay-500"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 lg:py-32 w-full">
           <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
-              Transform Your Body,
-              <span className="text-orange-400"> Transform Your Life</span>
+            {/* Badge */}
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-orange-600/20 border border-orange-500/30 text-orange-300 text-sm font-medium mb-8 animate-fade-in">
+              <span className="w-2 h-2 bg-orange-400 rounded-full mr-2 animate-pulse"></span>
+              #1 Fitness Destination in Lahore
+            </div>
+            
+            <h1 className="text-5xl md:text-7xl font-black mb-6 leading-tight">
+              <span className="block">Transform</span>
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">
+                Your Body
+              </span>
+              <span className="block text-4xl md:text-5xl font-bold text-gray-300 mt-2">
+                Transform Your Life
+              </span>
             </h1>
-            <p className="text-xl md:text-2xl mb-8 text-gray-300 max-w-3xl mx-auto">
-              Join King Gym and become part of a community dedicated to achieving 
-              their fitness goals with world-class facilities and expert guidance.
+            
+            <p className="text-xl md:text-2xl mb-12 text-gray-300 max-w-4xl mx-auto leading-relaxed">
+              Join <span className="text-orange-400 font-semibold">King Gym</span> and become part of a community dedicated to achieving 
+              their fitness goals with world-class facilities, expert trainers, and cutting-edge equipment.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/register" className="btn-primary text-lg px-8 py-4">
-                Start Your Journey
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+              <Link 
+                href="/register" 
+                className="group relative bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-bold text-lg px-10 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/25"
+              >
+                <span className="relative z-10">Start Your Journey</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
               </Link>
-              <Link href="/membership" className="btn-outline text-lg px-8 py-4 text-white border-white hover:bg-white hover:text-gray-900">
+              <Link 
+                href="/membership" 
+                className="group border-2 border-white/30 hover:border-orange-400 text-white hover:text-orange-400 font-semibold text-lg px-10 py-4 rounded-xl transition-all duration-300 hover:bg-white/5 backdrop-blur-sm"
+              >
                 View Packages
+                <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">→</span>
               </Link>
+            </div>
+            
+            {/* Stats */}
+            <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-2">5000+</div>
+                <div className="text-gray-400 text-sm">Active Members</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-2">10+</div>
+                <div className="text-gray-400 text-sm">Years Experience</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-2">50+</div>
+                <div className="text-gray-400 text-sm">Expert Trainers</div>
+              </div>
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-2">24/7</div>
+                <div className="text-gray-400 text-sm">Gym Access</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Professional Logos Section */}
+      <section className="py-16 bg-black relative overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-orange-600/10 border border-orange-500/20 text-orange-300 text-sm font-medium mb-6">
+              <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+              Trusted & Certified
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              Professional <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">Certifications</span>
+            </h2>
+            <p className="text-gray-300 max-w-2xl mx-auto">
+              Recognized by leading fitness organizations and certified professionals
+            </p>
+          </div>
+          
+          {/* Logos Grid */}
+          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-8 items-center justify-items-center">
+            {/* Fitness Certification Logos */}
+            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mx-auto mb-2">
+                  <span className="text-white font-bold text-lg">ACE</span>
+                </div>
+                <span className="text-xs text-gray-400 font-medium">ACE Certified</span>
+              </div>
+            </div>
+            
+            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center mx-auto mb-2">
+                  <span className="text-white font-bold text-lg">NASM</span>
+                </div>
+                <span className="text-xs text-gray-400 font-medium">NASM Certified</span>
+              </div>
+            </div>
+            
+            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center mx-auto mb-2">
+                  <span className="text-white font-bold text-lg">ISSA</span>
+                </div>
+                <span className="text-xs text-gray-400 font-medium">ISSA Certified</span>
+              </div>
+            </div>
+            
+            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center mx-auto mb-2">
+                  <span className="text-white font-bold text-lg">ACSM</span>
+                </div>
+                <span className="text-xs text-gray-400 font-medium">ACSM Certified</span>
+              </div>
+            </div>
+            
+            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-lg flex items-center justify-center mx-auto mb-2">
+                  <span className="text-white font-bold text-lg">NSCA</span>
+                </div>
+                <span className="text-xs text-gray-400 font-medium">NSCA Certified</span>
+              </div>
+            </div>
+            
+            <div className="group flex items-center justify-center w-32 h-20 bg-gray-800/50 rounded-xl border border-gray-700/50 hover:border-orange-500/30 transition-all duration-300 hover:scale-105">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-gradient-to-br from-yellow-500 to-orange-500 rounded-lg flex items-center justify-center mx-auto mb-2">
+                  <span className="text-white font-bold text-lg">CPT</span>
+                </div>
+                <span className="text-xs text-gray-400 font-medium">Certified PT</span>
+              </div>
+            </div>
+          </div>
+          
+          {/* Additional Professional Badges */}
+          <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-600/20 to-orange-700/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <TrophyIcon className="h-8 w-8 text-orange-400" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Award Winning</h3>
+              <p className="text-gray-400 text-sm">Best Gym in Lahore 2023</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-600/20 to-orange-700/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <ShieldCheckIcon className="h-8 w-8 text-orange-400" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Safety Certified</h3>
+              <p className="text-gray-400 text-sm">Health & Safety Standards</p>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-16 h-16 bg-gradient-to-br from-orange-600/20 to-orange-700/20 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                <UserGroupIcon className="h-8 w-8 text-orange-400" />
+              </div>
+              <h3 className="text-lg font-bold text-white mb-2">Community Trusted</h3>
+              <p className="text-gray-400 text-sm">5000+ Happy Members</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-gray-900">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Why Choose King Gym?
+      <section className="py-24 bg-gray-900 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black opacity-50"></div>
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-orange-600/10 border border-orange-500/20 text-orange-300 text-sm font-medium mb-6">
+              <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+              Why Choose Us
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
+              World-Class <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">Fitness Experience</span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              We provide everything you need to achieve your fitness goals in a supportive environment.
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              We provide everything you need to achieve your fitness goals in a supportive, 
+              professional environment with cutting-edge equipment and expert guidance.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300">
-                <div className="w-12 h-12 bg-orange-600/20 rounded-lg flex items-center justify-center mb-6">
-                  <feature.icon className="h-6 w-6 text-orange-400" />
+              <div 
+                key={index} 
+                className="group relative bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50 hover:border-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 hover:-translate-y-2"
+              >
+                {/* Gradient Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-600/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                
+                {/* Icon Container */}
+                <div className="relative mb-6">
+                  <div className="w-16 h-16 bg-gradient-to-br from-orange-600/20 to-orange-700/20 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
+                    <feature.icon className="h-8 w-8 text-orange-400 group-hover:text-orange-300 transition-colors duration-300" />
+                  </div>
+                  {/* Decorative Line */}
+                  <div className="w-12 h-1 bg-gradient-to-r from-orange-500 to-transparent rounded-full"></div>
                 </div>
-                <h3 className="text-xl font-semibold text-white mb-4">
+                
+                <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-orange-300 transition-colors duration-300">
                   {feature.title}
                 </h3>
-                <p className="text-gray-300">
+                <p className="text-gray-300 leading-relaxed group-hover:text-gray-200 transition-colors duration-300">
                   {feature.description}
                 </p>
+                
+                {/* Hover Effect Arrow */}
+                <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-x-2 group-hover:translate-x-0">
+                  <div className="w-8 h-8 bg-orange-600/20 rounded-full flex items-center justify-center">
+                    <span className="text-orange-400 text-sm">→</span>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Packages Section */}
-      <section className="py-20 bg-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-              Choose Your Package
+      {/* Membership Preview Section */}
+      <section className="py-24 bg-black relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900/20 to-black"></div>
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <div className="inline-flex items-center px-4 py-2 rounded-full bg-orange-600/10 border border-orange-500/20 text-orange-300 text-sm font-medium mb-6">
+              <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+              Membership Plans
+            </div>
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-6">
+              Choose Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">Fitness Journey</span>
             </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Flexible membership options designed to fit your lifestyle and fitness goals.
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed mb-12">
+              Flexible membership options designed to fit your lifestyle and fitness goals. 
+              All plans include access to our world-class facilities and expert guidance.
             </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {packages.map((pkg, index) => (
-              <div key={index} className={`relative bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 ${pkg.popular ? 'ring-2 ring-orange-500' : ''}`}>
-                {pkg.popular && (
-                  <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
-                    <span className="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
-                      Most Popular
-                    </span>
+            
+            {/* Quick Preview Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              {packages.map((pkg, index) => (
+                <div 
+                  key={index} 
+                  className={`group relative bg-gray-800/30 backdrop-blur-sm rounded-xl border transition-all duration-300 hover:-translate-y-1 ${
+                    pkg.popular 
+                      ? 'border-orange-500/50 hover:border-orange-400 hover:shadow-lg hover:shadow-orange-500/20' 
+                      : 'border-gray-700/50 hover:border-orange-500/30'
+                  }`}
+                >
+                  {pkg.popular && (
+                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-1 rounded-full text-xs font-bold">
+                        Most Popular
+                      </div>
+                    </div>
+                  )}
+                  
+                  <div className="p-6 pt-8">
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-orange-300 transition-colors duration-300">
+                      {pkg.name}
+                    </h3>
+                    <div className="mb-4">
+                      <span className="text-3xl font-black text-orange-400">{pkg.price}</span>
+                      <span className="text-gray-400 ml-1">{pkg.period}</span>
+                    </div>
+                    <div className="text-gray-300 text-sm mb-4">
+                      {pkg.features.slice(0, 2).map((feature, featureIndex) => (
+                        <div key={featureIndex} className="flex items-center mb-1">
+                          <svg className="h-3 w-3 text-orange-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                          <span className="text-xs">{feature}</span>
+                        </div>
+                      ))}
+                      <div className="text-orange-400 text-xs font-medium mt-2">
+                        +{pkg.features.length - 2} more features
+                      </div>
+                    </div>
                   </div>
-                )}
-                <div className="p-8 pt-12">
-                  <h3 className="text-2xl font-bold text-white mb-2">{pkg.name}</h3>
-                  <div className="mb-6">
-                    <span className="text-4xl font-bold text-orange-600">{pkg.price}</span>
-                    <span className="text-gray-400">{pkg.period}</span>
-                  </div>
-                  <ul className="space-y-3 mb-8">
-                    {pkg.features.map((feature, featureIndex) => (
-                      <li key={featureIndex} className="flex items-center text-gray-300">
-                        <svg className="h-5 w-5 text-orange-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                        </svg>
-                        <span className="text-sm">{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link 
-                    href="/register" 
-                    className={`w-full text-center py-3 px-4 rounded-lg font-medium transition-colors duration-200 ${
-                      pkg.popular 
-                        ? 'bg-orange-600 hover:bg-orange-700 text-white' 
-                        : 'bg-gray-700 hover:bg-gray-600 text-white'
-                    }`}
-                  >
-                    Choose Plan
-                  </Link>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+            
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+              <Link 
+                href="/membership" 
+                className="group relative bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-bold text-lg px-10 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/25"
+              >
+                <span className="relative z-10">View All Plans</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
+              </Link>
+              <Link 
+                href="/register" 
+                className="group border-2 border-orange-500/50 hover:border-orange-400 text-orange-400 hover:text-orange-300 font-semibold text-lg px-10 py-4 rounded-xl transition-all duration-300 hover:bg-orange-500/10 backdrop-blur-sm"
+              >
+                Join Now
+                <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">→</span>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
@@ -203,7 +414,7 @@ export default function Home() {
               Contact Us
             </Link>
           </div>
-        </div>
+    </div>
       </section>
     </Layout>
   );
