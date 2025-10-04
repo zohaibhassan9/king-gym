@@ -368,23 +368,69 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 bg-gradient-to-r from-orange-600 to-orange-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Start Your Fitness Journey?
+      <section className="relative py-32 bg-gradient-to-br from-orange-600 via-orange-700 to-orange-800 text-white overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-black/10"></div>
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"></div>
+        
+        {/* Animated Background Elements */}
+        <div className="absolute top-10 left-10 w-32 h-32 bg-white/10 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute bottom-10 right-10 w-48 h-48 bg-white/5 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-white/8 rounded-full blur-lg animate-pulse delay-500"></div>
+        
+        <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          {/* Badge */}
+          <div className="inline-flex items-center px-6 py-3 rounded-full bg-white/10 border border-white/20 text-white text-sm font-medium mb-8 backdrop-blur-sm">
+            <span className="w-2 h-2 bg-white rounded-full mr-3 animate-pulse"></span>
+            Join the Fitness Revolution
+          </div>
+          
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-black mb-8 leading-tight">
+            Ready to Start Your
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-white to-orange-100">
+              Fitness Journey?
+            </span>
           </h2>
-          <p className="text-xl mb-8 text-orange-100 max-w-2xl mx-auto">
-            Join thousands of members who have already transformed their lives with King Gym.
+          
+          <p className="text-xl md:text-2xl mb-12 text-orange-100 max-w-4xl mx-auto leading-relaxed">
+            Join <span className="text-white font-semibold">thousands of members</span> who have already 
+            transformed their lives with King Gym. Your transformation starts today.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/register" className="bg-white text-orange-600 hover:bg-gray-100 font-medium py-3 px-8 rounded-lg transition-colors duration-200">
-              Get Started Today
+          
+          <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
+            <Link 
+              href="/register" 
+              className="group relative bg-white text-orange-600 hover:bg-orange-50 font-bold text-lg px-10 py-4 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-white/25"
+            >
+              <span className="relative z-10">Get Started Today</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-50 to-white rounded-xl blur opacity-0 group-hover:opacity-75 transition-opacity duration-300"></div>
             </Link>
-            <Link href="/contact" className="border-2 border-white text-white hover:bg-white hover:text-orange-600 font-medium py-3 px-8 rounded-lg transition-all duration-200">
+            
+            <Link 
+              href="/contact" 
+              className="group border-2 border-white/80 hover:border-white text-white hover:text-orange-600 font-bold text-lg px-10 py-4 rounded-xl transition-all duration-300 hover:bg-white/10 backdrop-blur-sm hover:scale-105"
+            >
               Contact Us
+              <span className="ml-2 group-hover:translate-x-1 transition-transform duration-300">→</span>
             </Link>
           </div>
-    </div>
+          
+          {/* Trust Indicators */}
+          <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-white mb-2">5000+</div>
+              <div className="text-orange-200 text-sm font-medium">Happy Members</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-white mb-2">10+</div>
+              <div className="text-orange-200 text-sm font-medium">Years Experience</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-white mb-2">100%</div>
+              <div className="text-orange-200 text-sm font-medium">Satisfaction Rate</div>
+            </div>
+          </div>
+        </div>
       </section>
     </Layout>
   );
