@@ -85,12 +85,12 @@ export default function Contact() {
     {
       icon: MapPinIcon,
       title: 'Address',
-      details: ['123 Fitness Street', 'Gym City, GC 12345']
+      details: ['199 A Commercial', 'Central Park Housing Scheme', 'Society, 54600']
     },
     {
       icon: PhoneIcon,
       title: 'Phone',
-      details: ['+1 (555) 123-4567', '+1 (555) 123-4568']
+      details: ['0320 4881042']
     },
     {
       icon: EnvelopeIcon,
@@ -100,7 +100,10 @@ export default function Contact() {
     {
       icon: ClockIcon,
       title: 'Hours',
-      details: ['Mon-Fri: 5:00 AM - 11:00 PM', 'Sat-Sun: 6:00 AM - 10:00 PM']
+      details: [
+        'Monday - Friday: 6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM',
+        'Saturday - Sunday: 6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM'
+      ]
     }
   ];
 
@@ -278,12 +281,47 @@ export default function Contact() {
                 ))}
               </div>
 
+              {/* Operating Hours Detail */}
+              <div className="bg-white rounded-lg shadow p-6">
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Detailed Operating Hours</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="font-medium text-gray-700">Monday</span>
+                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="font-medium text-gray-700">Tuesday</span>
+                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="font-medium text-gray-700">Wednesday</span>
+                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="font-medium text-gray-700">Thursday</span>
+                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="font-medium text-gray-700">Friday</span>
+                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <span className="font-medium text-gray-700">Saturday</span>
+                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2">
+                    <span className="font-medium text-gray-700">Sunday</span>
+                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
+                  </div>
+                </div>
+              </div>
+
               {/* Map Placeholder */}
               <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center">
                 <div className="text-center">
                   <MapPinIcon className="h-12 w-12 text-gray-400 mx-auto mb-2" />
                   <p className="text-gray-500">Interactive Map</p>
-                  <p className="text-sm text-gray-400">123 Fitness Street, Gym City</p>
+                  <p className="text-sm text-gray-400">199 A Commercial, Central Park Housing Scheme</p>
                 </div>
               </div>
             </div>

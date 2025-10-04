@@ -21,11 +21,11 @@ const Footer = () => {
             <div className="space-y-2">
               <div className="flex items-center text-gray-300">
                 <MapPinIcon className="h-5 w-5 mr-2" />
-                <span>123 Fitness Street, Gym City, GC 12345</span>
+                <span>199 A Commercial, Central Park Housing Scheme, Society, 54600</span>
               </div>
               <div className="flex items-center text-gray-300">
                 <PhoneIcon className="h-5 w-5 mr-2" />
-                <span>+1 (555) 123-4567</span>
+                <span>0320 4881042</span>
               </div>
               <div className="flex items-center text-gray-300">
                 <EnvelopeIcon className="h-5 w-5 mr-2" />

@@ -219,8 +219,9 @@ export default function About() {
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Address</h3>
                 <p className="text-gray-600">
-                  123 Fitness Street<br />
-                  Gym City, GC 12345
+                  199 A Commercial<br />
+                  Central Park Housing Scheme<br />
+                  Society, 54600
                 </p>
               </div>
 
@@ -229,7 +230,7 @@ export default function About() {
                   <PhoneIcon className="h-8 w-8 text-orange-600" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">Phone</h3>
-                <p className="text-gray-600">+1 (555) 123-4567</p>
+                <p className="text-gray-600">0320 4881042</p>
               </div>
 
               <div className="text-center">
