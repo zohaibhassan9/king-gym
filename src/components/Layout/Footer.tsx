@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { MapPinIcon, PhoneIcon, EnvelopeIcon } from '@heroicons/react/24/outline';
+import { InstagramIcon, FacebookIcon } from '@heroicons/react/24/solid';
 
 const Footer = () => {
   return (
@@ -96,14 +97,23 @@ const Footer = () => {
               © 2024 King Gym. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
-              <Link href="#" className="text-gray-400 hover:text-orange-400 transition-colors">
-                Facebook
+              <Link 
+                href="https://www.facebook.com/KingFitnessForever/" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-orange-400 transition-colors flex items-center space-x-2"
+              >
+                <FacebookIcon className="h-5 w-5" />
+                <span>Facebook</span>
               </Link>
-              <Link href="#" className="text-gray-400 hover:text-orange-400 transition-colors">
-                Instagram
-              </Link>
-              <Link href="#" className="text-gray-400 hover:text-orange-400 transition-colors">
-                Twitter
+              <Link 
+                href="https://www.instagram.com/king_fitness_club/?hl=en" 
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-400 hover:text-orange-400 transition-colors flex items-center space-x-2"
+              >
+                <InstagramIcon className="h-5 w-5" />
+                <span>Instagram</span>
               </Link>
             </div>
           </div>
