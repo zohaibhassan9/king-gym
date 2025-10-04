@@ -307,7 +307,7 @@ export default function Contact() {
                 </div>
                 <div className="mt-4 text-center">
                   <a
-                    href="https://share.google/A6tyJ9j57ZGCQz2uz"
+                    href="https://maps.app.goo.gl/YfU4b2tQbobaoCn79"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors duration-200"
