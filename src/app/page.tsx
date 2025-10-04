@@ -171,7 +171,7 @@ export default function Home() {
             {/* Fitness Certification Logos */}
             <div className="group flex items-center justify-center w-40 h-24 bg-white/90 rounded-xl border border-gray-200/50 hover:border-orange-500/50 transition-all duration-300 hover:scale-105 p-4 shadow-lg hover:shadow-xl">
               <img 
-                src="/ace-certified.jpg" 
+                src="/ace-certified.png" 
                 alt="ACE Certified" 
                 className="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
               />
@@ -195,7 +195,7 @@ export default function Home() {
             
             <div className="group flex items-center justify-center w-40 h-24 bg-white/90 rounded-xl border border-gray-200/50 hover:border-orange-500/50 transition-all duration-300 hover:scale-105 p-4 shadow-lg hover:shadow-xl">
               <img 
-                src="/nsca-certified.jpg" 
+                src="/nsca-certified.png" 
                 alt="NSCA Certified" 
                 className="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
               />
