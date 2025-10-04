@@ -251,16 +251,7 @@ export default function Contact() {
 
             {/* Contact Information */}
             <div className="space-y-6">
-              <div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6">
-                  Get in Touch
-                </h2>
-                <p className="text-lg text-gray-600 mb-8">
-                  We'd love to hear from you. Send us a message and we'll respond as soon as possible.
-                </p>
-              </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {contactInfo.map((info, index) => (
                 <div key={index} className="flex items-start">
                   <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
