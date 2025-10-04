@@ -19,17 +19,18 @@ const Footer = () => {
               Your premier destination for fitness and wellness. We provide world-class facilities 
               and expert trainers to help you achieve your fitness goals.
             </p>
-            <div className="space-y-2">
+            {/* Contact Info - Three Columns on Large Screens */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
               <div className="flex items-center text-gray-300">
-                <MapPinIcon className="h-5 w-5 mr-2" />
+                <MapPinIcon className="h-5 w-5 mr-2 flex-shrink-0" />
                 <span>199 A Commercial, Central Park Housing Scheme, Society, 54600</span>
               </div>
               <div className="flex items-center text-gray-300">
-                <PhoneIcon className="h-5 w-5 mr-2" />
+                <PhoneIcon className="h-5 w-5 mr-2 flex-shrink-0" />
                 <span>0320 4881042</span>
               </div>
               <div className="flex items-center text-gray-300">
-                <EnvelopeIcon className="h-5 w-5 mr-2" />
+                <EnvelopeIcon className="h-5 w-5 mr-2 flex-shrink-0" />
                 <span>info@kinggym.com</span>
               </div>
             </div>
