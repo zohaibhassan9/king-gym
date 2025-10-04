@@ -101,8 +101,7 @@ export default function Contact() {
       icon: ClockIcon,
       title: 'Hours',
       details: [
-        'Monday - Friday: 6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM',
-        'Saturday - Sunday: 6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM'
+        'Daily: 6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM'
       ]
     }
   ];
@@ -281,47 +280,20 @@ export default function Contact() {
                 ))}
               </div>
 
-              {/* Operating Hours Detail */}
+              {/* Map Section */}
               <div className="bg-white rounded-lg shadow p-6">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Detailed Operating Hours</h3>
-                <div className="space-y-2">
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="font-medium text-gray-700">Monday</span>
-                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
+                <h3 className="text-lg font-semibold text-gray-900 mb-4">Find Us</h3>
+                <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center">
+                  <div className="text-center">
+                    <MapPinIcon className="h-12 w-12 text-orange-600 mx-auto mb-3" />
+                    <p className="text-gray-700 font-medium mb-2">King Gym Location</p>
+                    <p className="text-sm text-gray-600 mb-1">199 A Commercial</p>
+                    <p className="text-sm text-gray-600 mb-1">Central Park Housing Scheme</p>
+                    <p className="text-sm text-gray-600 mb-3">Society, 54600</p>
+                    <div className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-xs font-medium inline-block">
+                      Click to open in Google Maps
+                    </div>
                   </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="font-medium text-gray-700">Tuesday</span>
-                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="font-medium text-gray-700">Wednesday</span>
-                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="font-medium text-gray-700">Thursday</span>
-                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="font-medium text-gray-700">Friday</span>
-                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                    <span className="font-medium text-gray-700">Saturday</span>
-                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
-                  </div>
-                  <div className="flex justify-between items-center py-2">
-                    <span className="font-medium text-gray-700">Sunday</span>
-                    <span className="text-gray-600">6:00 AM - 9:30 AM, 4:30 PM - 10:00 PM</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Map Placeholder */}
-              <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center">
-                <div className="text-center">
-                  <MapPinIcon className="h-12 w-12 text-gray-400 mx-auto mb-2" />
-                  <p className="text-gray-500">Interactive Map</p>
-                  <p className="text-sm text-gray-400">199 A Commercial, Central Park Housing Scheme</p>
                 </div>
               </div>
             </div>
