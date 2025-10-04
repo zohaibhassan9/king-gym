@@ -128,22 +128,30 @@ export default function Home() {
             </div>
             
             {/* Stats */}
-            <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-2">5000+</div>
-                <div className="text-gray-400 text-sm">Active Members</div>
+            <div className="mt-20 grid grid-cols-2 md:grid-cols-4 gap-12 max-w-6xl mx-auto">
+              <div className="text-center group">
+                <div className="text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 mb-4 group-hover:scale-110 transition-transform duration-300">
+                  5000+
+                </div>
+                <div className="text-gray-300 text-lg md:text-xl font-semibold">Active Members</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-2">10+</div>
-                <div className="text-gray-400 text-sm">Years Experience</div>
+              <div className="text-center group">
+                <div className="text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 mb-4 group-hover:scale-110 transition-transform duration-300">
+                  10+
+                </div>
+                <div className="text-gray-300 text-lg md:text-xl font-semibold">Years Experience</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-2">50+</div>
-                <div className="text-gray-400 text-sm">Expert Trainers</div>
+              <div className="text-center group">
+                <div className="text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 mb-4 group-hover:scale-110 transition-transform duration-300">
+                  50+
+                </div>
+                <div className="text-gray-300 text-lg md:text-xl font-semibold">Expert Trainers</div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-orange-400 mb-2">24/7</div>
-                <div className="text-gray-400 text-sm">Gym Access</div>
+              <div className="text-center group">
+                <div className="text-5xl md:text-6xl lg:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600 mb-4 group-hover:scale-110 transition-transform duration-300">
+                  24/7
+                </div>
+                <div className="text-gray-300 text-lg md:text-xl font-semibold">Gym Access</div>
               </div>
             </div>
           </div>
