@@ -1,11 +1,25 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { Bars3Icon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (isMenuOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+    
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [isMenuOpen]);
 
   const navigation = [
     { name: 'Home', href: '/' },
@@ -93,9 +107,9 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 bg-gradient-to-b from-black via-gray-900 to-black backdrop-blur-lg">
+          <div className="md:hidden fixed top-0 left-0 right-0 bottom-0 w-full h-full z-[9999] bg-black">
             {/* Close Button */}
-            <div className="flex justify-end p-6">
+            <div className="flex justify-end p-4 pt-16">
               <button
                 onClick={() => setIsMenuOpen(false)}
                 className="text-white/90 hover:text-white p-3 rounded-xl hover:bg-gradient-to-r hover:from-orange-500/20 hover:to-orange-600/20 transition-all duration-300 border border-transparent hover:border-orange-500/30"
@@ -104,16 +118,15 @@ const Header = () => {
               </button>
             </div>
             
-            <div className="px-6 pb-8 space-y-4 h-full overflow-y-auto">
+            <div className="px-6 pb-8 space-y-6 h-full overflow-y-auto">
               {/* Logo in Mobile Menu */}
-              <div className="flex justify-center mb-12">
-                <div className="relative p-4 rounded-2xl">
+              <div className="flex justify-center mb-16 pt-8">
+                <div className="relative">
                   <img 
                     src="/logo-navbar.png" 
                     alt="King Gym Logo" 
-                    className="h-28 w-auto"
+                    className="h-32 w-auto"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-2xl blur-lg"></div>
                 </div>
               </div>
               
