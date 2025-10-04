@@ -263,7 +263,7 @@ export default function Home() {
             {features.map((feature, index) => (
               <div 
                 key={index} 
-                className="group relative bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50 hover:border-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 hover:-translate-y-2"
+                className="group relative bg-gray-800/50 backdrop-blur-sm p-8 rounded-2xl border border-gray-700/50 hover:border-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full"
               >
                 {/* Gradient Overlay */}
                 <div className="absolute inset-0 bg-gradient-to-br from-orange-600/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -280,9 +280,16 @@ export default function Home() {
                 <h3 className="text-2xl font-bold text-white mb-4 group-hover:text-orange-300 transition-colors duration-300">
                   {feature.title}
                 </h3>
-                <p className="text-gray-300 leading-relaxed group-hover:text-gray-200 transition-colors duration-300">
+                <p className="text-gray-300 leading-relaxed group-hover:text-gray-200 transition-colors duration-300 mb-8 flex-grow">
                   {feature.description}
                 </p>
+                
+                {/* Get Started Button */}
+                <div className="mt-auto">
+                  <button className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25">
+                    Get Started
+                  </button>
+                </div>
               </div>
             ))}
           </div>
