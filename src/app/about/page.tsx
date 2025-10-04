@@ -94,9 +94,11 @@ export default function About() {
                   whatever they may be.
                 </p>
                 <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 bg-gradient-to-r from-orange-600 to-orange-500 rounded-lg flex items-center justify-center">
-                    <span className="text-white font-bold text-xl">KG</span>
-                  </div>
+                  <img 
+                    src="/logo-navbar.png" 
+                    alt="King Gym Logo" 
+                    className="h-16 w-auto"
+                  />
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900">King Gym</h3>
                     <p className="text-gray-600">Since 2014</p>

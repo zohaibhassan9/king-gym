@@ -9,10 +9,11 @@ const Footer = () => {
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center mb-4">
-              <div className="w-10 h-10 bg-gradient-to-r from-orange-600 to-orange-500 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-xl">KG</span>
-              </div>
-              <span className="ml-3 text-2xl font-bold">King Gym</span>
+              <img 
+                src="/logo-navbar.png" 
+                alt="King Gym Logo" 
+                className="h-12 w-auto"
+              />
             </div>
             <p className="text-gray-300 mb-6 max-w-md">
               Your premier destination for fitness and wellness. We provide world-class facilities 

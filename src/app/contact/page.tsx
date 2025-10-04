@@ -283,17 +283,35 @@ export default function Contact() {
               {/* Map Section */}
               <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-lg font-semibold text-gray-900 mb-4">Find Us</h3>
-                <div className="bg-gray-200 rounded-lg h-64 flex items-center justify-center">
-                  <div className="text-center">
-                    <MapPinIcon className="h-12 w-12 text-orange-600 mx-auto mb-3" />
-                    <p className="text-gray-700 font-medium mb-2">King Gym Location</p>
-                    <p className="text-sm text-gray-600 mb-1">199 A Commercial</p>
-                    <p className="text-sm text-gray-600 mb-1">Central Park Housing Scheme</p>
-                    <p className="text-sm text-gray-600 mb-3">Society, 54600</p>
-                    <div className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-xs font-medium inline-block">
-                      Click to open in Google Maps
-                    </div>
-                  </div>
+                <div className="mb-4">
+                  <p className="text-gray-700 font-medium mb-1">King Gym Location</p>
+                  <p className="text-sm text-gray-600 mb-1">199 A Commercial</p>
+                  <p className="text-sm text-gray-600 mb-1">Central Park Housing Scheme</p>
+                  <p className="text-sm text-gray-600 mb-3">Society, 54600</p>
+                </div>
+                <div className="rounded-lg overflow-hidden">
+                  <iframe
+                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3403.1234567890!2d74.3587!3d31.5204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391904d4b8b8b8b8%3A0x1234567890abcdef!2sCentral%20Park%20Housing%20Scheme%2C%20Lahore%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2s!4v1234567890!5m2!1sen!2s"
+                    width="100%"
+                    height="300"
+                    style={{ border: 0 }}
+                    allowFullScreen
+                    loading="lazy"
+                    referrerPolicy="no-referrer-when-downgrade"
+                    title="King Gym Location Map"
+                    className="w-full h-64"
+                  ></iframe>
+                </div>
+                <div className="mt-4 text-center">
+                  <a
+                    href="https://www.google.com/maps/search/199+A+Commercial+Central+Park+Housing+Scheme+Society+54600"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors duration-200"
+                  >
+                    <MapPinIcon className="h-4 w-4 mr-2" />
+                    Open in Google Maps
+                  </a>
                 </div>
               </div>
             </div>
