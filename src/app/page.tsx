@@ -134,7 +134,7 @@ export default function Home() {
       {/* Packages Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
+          <div className="text-center mb-20">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
               Choose Your Package
             </h2>
@@ -147,13 +147,13 @@ export default function Home() {
             {packages.map((pkg, index) => (
               <div key={index} className={`relative bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 ${pkg.popular ? 'ring-2 ring-orange-500' : ''}`}>
                 {pkg.popular && (
-                  <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <span className="bg-orange-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                  <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 z-10">
+                    <span className="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-medium shadow-lg">
                       Most Popular
                     </span>
                   </div>
                 )}
-                <div className="p-8">
+                <div className="p-8 pt-12">
                   <h3 className="text-2xl font-bold text-gray-900 mb-2">{pkg.name}</h3>
                   <div className="mb-6">
                     <span className="text-4xl font-bold text-orange-600">{pkg.price}</span>
@@ -162,10 +162,10 @@ export default function Home() {
                   <ul className="space-y-3 mb-8">
                     {pkg.features.map((feature, featureIndex) => (
                       <li key={featureIndex} className="flex items-center text-gray-600">
-                        <svg className="h-5 w-5 text-orange-500 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                        <svg className="h-5 w-5 text-orange-500 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
-                        {feature}
+                        <span className="text-sm">{feature}</span>
                       </li>
                     ))}
                   </ul>
@@ -187,7 +187,7 @@ export default function Home() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-20 bg-gradient-to-r from-orange-600 to-orange-700 text-white">
+      <section className="py-24 bg-gradient-to-r from-orange-600 to-orange-700 text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">
             Ready to Start Your Fitness Journey?
