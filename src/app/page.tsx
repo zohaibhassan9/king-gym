@@ -167,37 +167,45 @@ export default function Home() {
           </div>
           
           {/* Logos Grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 items-center justify-items-center">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-12 items-center justify-items-center">
             {/* Fitness Certification Logos */}
-            <div className="group flex items-center justify-center w-40 h-24 bg-white/90 rounded-xl border border-gray-200/50 hover:border-orange-500/50 transition-all duration-300 hover:scale-105 p-4 shadow-lg hover:shadow-xl">
+            <div className="group flex items-center justify-center w-48 h-48 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500/20 hover:border-orange-500/40 transition-all duration-500 hover:scale-110 p-8 shadow-2xl hover:shadow-orange-500/20 relative overflow-hidden">
+              {/* Circular glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <img 
                 src="/ace-certified.png" 
                 alt="ACE Certified" 
-                className="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                className="w-full h-full object-contain hover:scale-105 transition-transform duration-300 relative z-10"
               />
             </div>
             
-            <div className="group flex items-center justify-center w-40 h-24 bg-white/90 rounded-xl border border-gray-200/50 hover:border-orange-500/50 transition-all duration-300 hover:scale-105 p-4 shadow-lg hover:shadow-xl">
+            <div className="group flex items-center justify-center w-48 h-48 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500/20 hover:border-orange-500/40 transition-all duration-500 hover:scale-110 p-8 shadow-2xl hover:shadow-orange-500/20 relative overflow-hidden">
+              {/* Circular glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <img 
                 src="/issa-certified.webp" 
                 alt="ISSA Certified" 
-                className="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                className="w-full h-full object-contain hover:scale-105 transition-transform duration-300 relative z-10"
               />
             </div>
             
-            <div className="group flex items-center justify-center w-40 h-24 bg-white/90 rounded-xl border border-gray-200/50 hover:border-orange-500/50 transition-all duration-300 hover:scale-105 p-4 shadow-lg hover:shadow-xl">
+            <div className="group flex items-center justify-center w-48 h-48 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500/20 hover:border-orange-500/40 transition-all duration-500 hover:scale-110 p-8 shadow-2xl hover:shadow-orange-500/20 relative overflow-hidden">
+              {/* Circular glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <img 
                 src="/acsm-certified.png" 
                 alt="ACSM Certified" 
-                className="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                className="w-full h-full object-contain hover:scale-105 transition-transform duration-300 relative z-10"
               />
             </div>
             
-            <div className="group flex items-center justify-center w-40 h-24 bg-white/90 rounded-xl border border-gray-200/50 hover:border-orange-500/50 transition-all duration-300 hover:scale-105 p-4 shadow-lg hover:shadow-xl">
+            <div className="group flex items-center justify-center w-48 h-48 bg-gradient-to-br from-white to-gray-50 rounded-full border-4 border-orange-500/20 hover:border-orange-500/40 transition-all duration-500 hover:scale-110 p-8 shadow-2xl hover:shadow-orange-500/20 relative overflow-hidden">
+              {/* Circular glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
               <img 
                 src="/nsca-certified.png" 
                 alt="NSCA Certified" 
-                className="w-full h-full object-contain hover:scale-110 transition-transform duration-300"
+                className="w-full h-full object-contain hover:scale-105 transition-transform duration-300 relative z-10"
               />
             </div>
           </div>
