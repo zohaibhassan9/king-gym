@@ -148,9 +148,9 @@ export default function Membership() {
                   {/* Popular Badge */}
                   {pkg.popular && (
                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center">
-                        <StarIcon className="h-4 w-4 mr-2" />
-                        Most Popular
+                      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center whitespace-nowrap">
+                        <StarIcon className="h-4 w-4 mr-2 flex-shrink-0" />
+                        <span>Most Popular</span>
                       </div>
                     </div>
                   )}
