@@ -43,21 +43,21 @@ export default function Home() {
     }
   ];
 
-  const packages = [
-    {
-      name: 'Men Normal',
-      price: 'Rs 3,500',
-      period: '/month',
-      features: ['Full Gym Access', 'Weight Training Equipment', 'Cardio Equipment', 'Locker Room Access', 'Shower Facilities'],
-      popular: false
-    },
-    {
-      name: 'Men Cardio',
-      price: 'Rs 2,500',
-      period: '/month',
-      features: ['Cardio Equipment Only', 'Treadmills & Bikes', 'Group Classes', 'Locker Room Access', 'Shower Facilities'],
-      popular: false
-    },
+      const packages = [
+        {
+          name: 'Men Normal',
+          price: 'Rs 3,000',
+          period: '/month',
+          features: ['Full Gym Access', 'Weight Training Equipment', 'Cardio Equipment', 'Locker Room Access', 'Shower Facilities'],
+          popular: false
+        },
+        {
+          name: 'Men Cardio',
+          price: 'Rs 4,000',
+          period: '/month',
+          features: ['Cardio Equipment Only', 'Treadmills & Bikes', 'Group Classes', 'Locker Room Access', 'Shower Facilities'],
+          popular: false
+        },
     {
       name: 'Couple',
       price: 'Rs 6,000',

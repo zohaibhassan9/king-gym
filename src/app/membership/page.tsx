@@ -4,40 +4,40 @@ import { CheckIcon, StarIcon } from '@heroicons/react/24/outline';
 
 export default function Membership() {
   const packages = [
-    {
-      id: 'men-normal',
-      name: 'Men Normal',
-      price: 3500,
-      period: 'month',
-      description: 'Complete gym access for men with all facilities',
-      features: [
-        'Full gym equipment access',
-        'Weight training equipment',
-        'Cardio equipment access',
-        'Locker room access',
-        'Shower facilities',
-        '24/7 gym access',
-        'Monthly progress tracking'
-      ],
-      popular: false
-    },
-    {
-      id: 'men-cardio',
-      name: 'Men Cardio',
-      price: 2500,
-      period: 'month',
-      description: 'Cardio-focused package for cardiovascular fitness',
-      features: [
-        'Cardio equipment only',
-        'Treadmills & stationary bikes',
-        'Group fitness classes',
-        'Locker room access',
-        'Shower facilities',
-        'Basic nutrition guidance',
-        'Monthly cardio assessments'
-      ],
-      popular: false
-    },
+        {
+          id: 'men-normal',
+          name: 'Men Normal',
+          price: 3000,
+          period: 'month',
+          description: 'Complete gym access for men with all facilities',
+          features: [
+            'Full gym equipment access',
+            'Weight training equipment',
+            'Cardio equipment access',
+            'Locker room access',
+            'Shower facilities',
+            '24/7 gym access',
+            'Monthly progress tracking'
+          ],
+          popular: false
+        },
+        {
+          id: 'men-cardio',
+          name: 'Men Cardio',
+          price: 4000,
+          period: 'month',
+          description: 'Cardio-focused package for cardiovascular fitness',
+          features: [
+            'Cardio equipment only',
+            'Treadmills & stationary bikes',
+            'Group fitness classes',
+            'Locker room access',
+            'Shower facilities',
+            'Basic nutrition guidance',
+            'Monthly cardio assessments'
+          ],
+          popular: false
+        },
     {
       id: 'couple',
       name: 'Couple',
