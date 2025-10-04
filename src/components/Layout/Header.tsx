@@ -136,32 +136,38 @@ const Header = () => {
               
               {/* Navigation Content */}
               <div className="flex-1 overflow-y-auto">
-                <div className="p-4 space-y-2">
+                <div className="p-6 space-y-4">
                   {/* Navigation Links */}
-                  {navigation.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className="block px-4 py-3 text-white/90 hover:text-white hover:bg-orange-600/20 rounded-lg transition-colors text-lg font-medium"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      {item.name}
-                    </Link>
-                  ))}
+                  {navigation && navigation.length > 0 ? (
+                    navigation.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className="block px-6 py-4 text-white text-xl font-semibold hover:bg-orange-600/20 rounded-xl transition-colors border border-transparent hover:border-orange-500/30"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))
+                  ) : (
+                    <div className="text-white text-center py-8">
+                      <p>Navigation items not found</p>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Auth Buttons */}
-                <div className="p-4 border-t border-gray-800 space-y-3">
+                <div className="p-6 border-t border-gray-800 space-y-4">
                   <Link
                     href="/login"
-                    className="block w-full text-center px-4 py-3 text-white/90 hover:text-white hover:bg-white/10 rounded-lg transition-colors text-lg font-medium"
+                    className="block w-full text-center px-6 py-4 text-white text-xl font-semibold hover:bg-white/10 rounded-xl transition-colors border border-gray-700 hover:border-white/30"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Login
                   </Link>
                   <Link
                     href="/register"
-                    className="block w-full text-center px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors text-lg font-bold"
+                    className="block w-full text-center px-6 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-colors text-xl font-bold shadow-lg hover:shadow-orange-500/25"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Join Now
