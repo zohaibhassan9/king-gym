@@ -105,8 +105,12 @@ export default function About() {
                   </div>
                 </div>
               </div>
-              <div className="bg-gray-200 rounded-lg h-96 flex items-center justify-center">
-                <span className="text-gray-500">CEO Photo Placeholder</span>
+              <div className="rounded-lg overflow-hidden h-96">
+                <img 
+                  src="/ceo.jpeg" 
+                  alt="King Gym CEO" 
+                  className="w-full h-full object-cover"
+                />
               </div>
             </div>
           </div>
