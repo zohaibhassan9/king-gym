@@ -121,16 +121,16 @@ export default function Contact() {
           </div>
         </section>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Contact Form */}
-            <div className="bg-white rounded-lg shadow-lg p-8">
+            <div className="bg-white rounded-lg shadow-lg p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">
                 Send us a Message
               </h2>
               
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
                       Full Name *
@@ -172,7 +172,7 @@ export default function Contact() {
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
                       Phone Number *
@@ -242,7 +242,7 @@ export default function Contact() {
 
                 <button
                   type="submit"
-                  className="w-full btn-primary text-lg py-4"
+                  className="w-full btn-primary text-lg py-3"
                 >
                   Send Message
                 </button>
@@ -250,7 +250,7 @@ export default function Contact() {
             </div>
 
             {/* Contact Information */}
-            <div className="space-y-8">
+            <div className="space-y-6">
               <div>
                 <h2 className="text-2xl font-bold text-gray-900 mb-6">
                   Get in Touch

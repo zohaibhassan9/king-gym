@@ -12,7 +12,7 @@ const Footer = () => {
               <img 
                 src="/logo-navbar.png" 
                 alt="King Gym Logo" 
-                className="h-16 w-auto"
+                className="h-20 w-auto"
               />
             </div>
             <p className="text-gray-300 mb-6 max-w-md">
