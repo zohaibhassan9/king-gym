@@ -26,7 +26,7 @@ const Header = () => {
                 <img 
                   src="/logo-navbar.png" 
                   alt="King Gym Logo" 
-                  className="h-16 w-auto transition-transform duration-300 group-hover:scale-105"
+                  className="h-20 w-auto transition-transform duration-300 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-orange-500/20 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </div>
@@ -82,29 +82,48 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-4 pt-4 pb-6 space-y-2 bg-black/95 backdrop-blur-md border-t border-gray-800">
+          <div className="md:hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-md">
+            {/* Close Button */}
+            <div className="flex justify-end p-4">
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="text-white/90 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-all duration-300"
+              >
+                <XMarkIcon className="h-8 w-8" />
+              </button>
+            </div>
+            
+            <div className="px-4 pb-6 space-y-2 h-full overflow-y-auto">
+              {/* Logo in Mobile Menu */}
+              <div className="flex justify-center mb-8">
+                <img 
+                  src="/logo-navbar.png" 
+                  alt="King Gym Logo" 
+                  className="h-24 w-auto"
+                />
+              </div>
+              
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-white/90 hover:text-white block px-4 py-3 text-base font-medium rounded-lg hover:bg-white/10 transition-all duration-300"
+                  className="text-white/90 hover:text-white block px-4 py-4 text-lg font-medium rounded-lg hover:bg-white/10 transition-all duration-300 text-center"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              <div className="pt-4 space-y-3 border-t border-gray-800">
+              <div className="pt-8 space-y-4 border-t border-gray-800">
                 <Link
                   href="/login"
-                  className="text-white/90 hover:text-white block px-4 py-3 text-base font-medium rounded-lg hover:bg-white/10 transition-all duration-300"
+                  className="text-white/90 hover:text-white block px-4 py-4 text-lg font-medium rounded-lg hover:bg-white/10 transition-all duration-300 text-center"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 block text-center shadow-lg hover:shadow-orange-500/25"
+                  className="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-medium py-4 px-6 rounded-lg transition-all duration-300 block text-center shadow-lg hover:shadow-orange-500/25 text-lg"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Join Now
