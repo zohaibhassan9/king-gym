@@ -260,25 +260,25 @@ export default function Contact() {
                 </p>
               </div>
 
-              <div className="space-y-6">
-                {contactInfo.map((info, index) => (
-                  <div key={index} className="flex items-start">
-                    <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-                      <info.icon className="h-6 w-6 text-orange-600" />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                        {info.title}
-                      </h3>
-                      {info.details.map((detail, detailIndex) => (
-                        <p key={detailIndex} className="text-gray-600">
-                          {detail}
-                        </p>
-                      ))}
-                    </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {contactInfo.map((info, index) => (
+                <div key={index} className="flex items-start">
+                  <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
+                    <info.icon className="h-6 w-6 text-orange-600" />
                   </div>
-                ))}
-              </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                      {info.title}
+                    </h3>
+                    {info.details.map((detail, detailIndex) => (
+                      <p key={detailIndex} className="text-gray-600">
+                        {detail}
+                      </p>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
 
               {/* Map Section */}
               <div className="bg-white rounded-lg shadow p-6">
