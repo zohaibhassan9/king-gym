@@ -136,19 +136,21 @@ const Header = () => {
               
               {/* Navigation Content */}
               <div className="flex-1 overflow-y-auto">
-                <div className="p-6 space-y-4">
-                  {/* Navigation Links */}
+                <div className="p-6">
+                  {/* Navigation Links in Two Columns */}
                   {navigation && navigation.length > 0 ? (
-                    navigation.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className="block px-6 py-4 text-white text-xl font-semibold hover:bg-orange-600/20 rounded-xl transition-colors border border-transparent hover:border-orange-500/30"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
-                    ))
+                    <div className="grid grid-cols-2 gap-4">
+                      {navigation.map((item) => (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className="block px-4 py-4 text-white text-lg font-semibold hover:bg-orange-600/20 rounded-xl transition-colors border border-transparent hover:border-orange-500/30 text-center"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
+                      ))}
+                    </div>
                   ) : (
                     <div className="text-white text-center py-8">
                       <p>Navigation items not found</p>
@@ -157,21 +159,23 @@ const Header = () => {
                 </div>
                 
                 {/* Auth Buttons */}
-                <div className="p-6 border-t border-gray-800 space-y-4">
-                  <Link
-                    href="/login"
-                    className="block w-full text-center px-6 py-4 text-white text-xl font-semibold hover:bg-white/10 rounded-xl transition-colors border border-gray-700 hover:border-white/30"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="block w-full text-center px-6 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-colors text-xl font-bold shadow-lg hover:shadow-orange-500/25"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Join Now
-                  </Link>
+                <div className="p-6 border-t border-gray-800">
+                  <div className="grid grid-cols-2 gap-4">
+                    <Link
+                      href="/login"
+                      className="block text-center px-4 py-4 text-white text-lg font-semibold hover:bg-white/10 rounded-xl transition-colors border border-gray-700 hover:border-white/30"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="block text-center px-4 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-colors text-lg font-bold shadow-lg hover:shadow-orange-500/25"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Join Now
+                    </Link>
+                  </div>
                 </div>
               </div>
             </div>
