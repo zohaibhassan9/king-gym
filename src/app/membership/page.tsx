@@ -36,7 +36,7 @@ export default function Membership() {
             'Basic nutrition guidance',
             'Monthly cardio assessments'
           ],
-          popular: false
+          popular: true
         },
     {
       id: 'couple',
@@ -54,7 +54,7 @@ export default function Membership() {
         'Private changing rooms',
         'Priority booking system'
       ],
-      popular: true
+      popular: false
     },
     {
       id: 'ladies',

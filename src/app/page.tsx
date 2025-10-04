@@ -56,15 +56,15 @@ export default function Home() {
           price: 'Rs 4,000',
           period: '/month',
           features: ['Cardio Equipment Only', 'Treadmills & Bikes', 'Group Classes', 'Locker Room Access', 'Shower Facilities'],
+          popular: true
+        },
+        {
+          name: 'Couple',
+          price: 'Rs 6,000',
+          period: '/month',
+          features: ['Dedicated Couple Floor', 'Private Workout Space', 'Full Equipment Access', 'Personal Lockers', 'Premium Facilities'],
           popular: false
         },
-    {
-      name: 'Couple',
-      price: 'Rs 6,000',
-      period: '/month',
-      features: ['Dedicated Couple Floor', 'Private Workout Space', 'Full Equipment Access', 'Personal Lockers', 'Premium Facilities'],
-      popular: true
-    },
     {
       name: 'Ladies',
       price: 'Rs 4,000',
