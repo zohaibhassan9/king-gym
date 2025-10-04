@@ -61,33 +61,63 @@ const Header = () => {
             </Link>
           </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-1">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                    className="relative text-gray-300 hover:text-orange-400 px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg hover:bg-gray-800 group"
-              >
-                <span className="relative z-10">{item.name}</span>
-                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-300 rounded-full"></div>
-              </Link>
-            ))}
-          </nav>
+              {/* Desktop Navigation */}
+              <nav className="hidden md:flex space-x-2">
+                {navigation.map((item) => (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className="relative text-gray-300 hover:text-white px-6 py-3 text-sm font-medium transition-all duration-500 rounded-lg group overflow-hidden"
+                  >
+                    {/* Background hover effect */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-orange-600/10 to-orange-500/10 rounded-lg transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+                    
+                    {/* Text with subtle glow */}
+                    <span className="relative z-10 group-hover:drop-shadow-sm transition-all duration-300">
+                      {item.name}
+                    </span>
+                    
+                    {/* Bottom border animation */}
+                    <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-400 group-hover:w-3/4 transition-all duration-500 rounded-full"></div>
+                    
+                    {/* Subtle top highlight */}
+                    <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-0 h-px bg-gradient-to-r from-transparent via-orange-400 to-transparent group-hover:w-1/2 transition-all duration-700 delay-100"></div>
+                  </Link>
+                ))}
+              </nav>
 
           {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-3">
+          <div className="hidden md:flex items-center space-x-4">
             <Link
               href="/login"
-                  className="text-gray-300 hover:text-orange-400 px-4 py-2 text-sm font-medium transition-colors duration-300 rounded-lg hover:bg-gray-800"
+              className="relative text-gray-300 hover:text-white px-6 py-3 text-sm font-medium transition-all duration-500 rounded-lg group overflow-hidden"
             >
-              Login
+              {/* Background hover effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-gray-700/20 to-gray-600/20 rounded-lg transform scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"></div>
+              
+              {/* Text with subtle glow */}
+              <span className="relative z-10 group-hover:drop-shadow-sm transition-all duration-300">
+                Login
+              </span>
+              
+              {/* Bottom border animation */}
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-0 h-0.5 bg-gradient-to-r from-gray-400 to-gray-300 group-hover:w-3/4 transition-all duration-500 rounded-full"></div>
             </Link>
+            
             <Link
               href="/register"
-              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-300 shadow-sm hover:shadow-md hover:scale-105"
+              className="relative bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-semibold py-3 px-8 rounded-lg transition-all duration-500 shadow-lg hover:shadow-xl group overflow-hidden"
             >
-              Join Now
+              {/* Glow effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              
+              {/* Text */}
+              <span className="relative z-10 group-hover:scale-105 transition-transform duration-300">
+                Join Now
+              </span>
+              
+              {/* Shine effect */}
+              <div className="absolute inset-0 -top-1 -left-1 w-0 h-full bg-gradient-to-r from-transparent via-white/20 to-transparent group-hover:w-full transition-all duration-700 transform -skew-x-12"></div>
             </Link>
           </div>
 
@@ -95,13 +125,19 @@ const Header = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-                  className="text-gray-300 hover:text-orange-400 p-2 rounded-lg hover:bg-gray-800 transition-colors duration-300"
+              className="relative text-gray-300 hover:text-orange-400 p-3 rounded-lg group transition-all duration-300"
             >
-              {isMenuOpen ? (
-                <XMarkIcon className="h-6 w-6" />
-              ) : (
-                <Bars3Icon className="h-6 w-6" />
-              )}
+              {/* Background hover effect */}
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-600/10 to-orange-500/10 rounded-lg transform scale-0 group-hover:scale-100 transition-transform duration-300"></div>
+              
+              {/* Icon with subtle rotation */}
+              <div className="relative z-10 group-hover:rotate-90 transition-transform duration-300">
+                {isMenuOpen ? (
+                  <XMarkIcon className="h-6 w-6" />
+                ) : (
+                  <Bars3Icon className="h-6 w-6" />
+                )}
+              </div>
             </button>
           </div>
         </div>
