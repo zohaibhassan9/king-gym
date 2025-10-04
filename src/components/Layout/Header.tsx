@@ -6,6 +6,7 @@ import { Bars3Icon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Lock body scroll when mobile menu is open
   useEffect(() => {
@@ -21,6 +22,17 @@ const Header = () => {
     };
   }, [isMenuOpen]);
 
+  // Handle scroll detection
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
   const navigation = [
     { name: 'Home', href: '/' },
     { name: 'Membership', href: '/membership' },
@@ -30,7 +42,9 @@ const Header = () => {
   ];
 
   return (
-        <header className="bg-gray-900/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-700/50">
+        <header className={`bg-gray-900/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b transition-all duration-300 ${
+          isScrolled ? 'border-orange-500' : 'border-gray-700/50'
+        }`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 relative">
           {/* Logo */}
