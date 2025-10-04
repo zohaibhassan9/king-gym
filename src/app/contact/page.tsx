@@ -85,7 +85,7 @@ export default function Contact() {
     {
       icon: MapPinIcon,
       title: 'Address',
-      details: ['199 A Commercial', 'Central Park Housing Scheme', 'Society, 54600']
+      details: ['199 A Commercial, Central Park Housing Scheme, Society, 54600']
     },
     {
       icon: PhoneIcon,
@@ -307,7 +307,7 @@ export default function Contact() {
                 </div>
                 <div className="mt-4 text-center">
                   <a
-                    href="https://www.google.com/maps/search/199+A+Commercial+Central+Park+Housing+Scheme+Society+54600"
+                    href="https://share.google/A6tyJ9j57ZGCQz2uz"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors duration-200"
