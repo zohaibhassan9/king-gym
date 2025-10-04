@@ -16,46 +16,52 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-black shadow-lg sticky top-0 z-50">
+    <header className="bg-black/95 backdrop-blur-md shadow-xl sticky top-0 z-50 border-b border-gray-800">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex-shrink-0">
-            <Link href="/" className="flex items-center">
-              <img 
-                src="/logo-navbar.png" 
-                alt="King Gym Logo" 
-                className="h-20 w-auto"
-              />
+            <Link href="/" className="flex items-center group">
+              <div className="relative">
+                <img 
+                  src="/logo-navbar.png" 
+                  alt="King Gym Logo" 
+                  className="h-16 w-auto transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-orange-500/20 rounded-lg blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              </div>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8">
+          <nav className="hidden md:flex space-x-1">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 href={item.href}
-                className="text-white hover:text-orange-400 px-3 py-2 text-sm font-medium transition-colors duration-200"
+                className="relative text-white/90 hover:text-white px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg hover:bg-white/10 group"
               >
-                {item.name}
+                <span className="relative z-10">{item.name}</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-orange-500 to-orange-600 group-hover:w-full transition-all duration-300"></div>
               </Link>
             ))}
           </nav>
 
           {/* Desktop Auth Buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             <Link
               href="/login"
-              className="text-white hover:text-orange-400 px-3 py-2 text-sm font-medium transition-colors duration-200"
+              className="text-white/90 hover:text-white px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg hover:bg-white/10"
             >
               Login
             </Link>
             <Link
               href="/register"
-              className="bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+              className="relative bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-medium py-2.5 px-6 rounded-lg transition-all duration-300 shadow-lg hover:shadow-orange-500/25 hover:scale-105 group overflow-hidden"
             >
-              Join Now
+              <span className="relative z-10">Join Now</span>
+              <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </Link>
           </div>
 
@@ -63,7 +69,7 @@ const Header = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white hover:text-orange-400 p-2"
+              className="text-white/90 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-all duration-300"
             >
               {isMenuOpen ? (
                 <XMarkIcon className="h-6 w-6" />
@@ -77,28 +83,28 @@ const Header = () => {
         {/* Mobile Navigation */}
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-black border-t border-gray-800">
+            <div className="px-4 pt-4 pb-6 space-y-2 bg-black/95 backdrop-blur-md border-t border-gray-800">
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-white hover:text-orange-400 block px-3 py-2 text-base font-medium"
+                  className="text-white/90 hover:text-white block px-4 py-3 text-base font-medium rounded-lg hover:bg-white/10 transition-all duration-300"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.name}
                 </Link>
               ))}
-              <div className="pt-4 space-y-2">
+              <div className="pt-4 space-y-3 border-t border-gray-800">
                 <Link
                   href="/login"
-                  className="text-white hover:text-orange-400 block px-3 py-2 text-base font-medium"
+                  className="text-white/90 hover:text-white block px-4 py-3 text-base font-medium rounded-lg hover:bg-white/10 transition-all duration-300"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200 block text-center mx-3"
+                  className="bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 block text-center shadow-lg hover:shadow-orange-500/25"
                   onClick={() => setIsMenuOpen(false)}
                 >
                   Join Now
