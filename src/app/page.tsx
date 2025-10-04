@@ -316,50 +316,57 @@ export default function Home() {
               All plans include access to our world-class facilities and expert guidance.
             </p>
             
-            {/* Quick Preview Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-              {packages.map((pkg, index) => (
-                <div 
-                  key={index} 
-                  className={`group relative bg-gray-800/30 backdrop-blur-sm rounded-xl border transition-all duration-300 hover:-translate-y-1 ${
-                    pkg.popular 
-                      ? 'border-orange-500/50 hover:border-orange-400 hover:shadow-lg hover:shadow-orange-500/20' 
-                      : 'border-gray-700/50 hover:border-orange-500/30'
-                  }`}
-                >
-                  {pkg.popular && (
-                    <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
-                      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-1 rounded-full text-xs font-bold">
-                        Most Popular
-                      </div>
-                    </div>
-                  )}
-                  
-                  <div className="p-6 pt-8">
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-orange-300 transition-colors duration-300">
-                      {pkg.name}
-                    </h3>
-                    <div className="mb-4">
-                      <span className="text-3xl font-black text-orange-400">{pkg.price}</span>
-                      <span className="text-gray-400 ml-1">{pkg.period}</span>
-                    </div>
-                    <div className="text-gray-300 text-sm mb-4">
-                      {pkg.features.slice(0, 2).map((feature, featureIndex) => (
-                        <div key={featureIndex} className="flex items-center mb-1">
-                          <svg className="h-3 w-3 text-orange-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                          <span className="text-xs">{feature}</span>
+                {/* Quick Preview Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                  {packages.map((pkg, index) => (
+                    <div 
+                      key={index} 
+                      className={`group relative bg-gray-800/30 backdrop-blur-sm rounded-xl border transition-all duration-300 hover:-translate-y-1 flex flex-col h-full ${
+                        pkg.popular 
+                          ? 'border-orange-500/50 hover:border-orange-400 hover:shadow-lg hover:shadow-orange-500/20' 
+                          : 'border-gray-700/50 hover:border-orange-500/30'
+                      }`}
+                    >
+                      {pkg.popular && (
+                        <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 z-10">
+                          <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-1 rounded-full text-xs font-bold">
+                            Most Popular
+                          </div>
                         </div>
-                      ))}
-                      <div className="text-orange-400 text-xs font-medium mt-2">
-                        +{pkg.features.length - 2} more features
+                      )}
+                      
+                      <div className="p-6 pt-8 flex flex-col h-full">
+                        <h3 className="text-xl font-bold text-white mb-3 group-hover:text-orange-300 transition-colors duration-300">
+                          {pkg.name}
+                        </h3>
+                        <div className="mb-4">
+                          <span className="text-3xl font-black text-orange-400">{pkg.price}</span>
+                          <span className="text-gray-400 ml-1">{pkg.period}</span>
+                        </div>
+                        <div className="text-gray-300 text-sm mb-4 flex-grow">
+                          {pkg.features.slice(0, 2).map((feature, featureIndex) => (
+                            <div key={featureIndex} className="flex items-center mb-1">
+                              <svg className="h-3 w-3 text-orange-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                                <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                              </svg>
+                              <span className="text-xs">{feature}</span>
+                            </div>
+                          ))}
+                          <div className="text-orange-400 text-xs font-medium mt-2">
+                            +{pkg.features.length - 2} more features
+                          </div>
+                        </div>
+                        
+                        {/* Get Started Button */}
+                        <div className="mt-auto">
+                          <button className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25 text-sm">
+                            Get Started
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
             
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

@@ -124,85 +124,87 @@ export default function Membership() {
               </p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {packages.map((pkg, index) => (
-                <div 
-                  key={pkg.id} 
-                  className={`group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl border transition-all duration-500 hover:-translate-y-2 ${
-                    pkg.popular 
-                      ? 'border-orange-500/50 hover:border-orange-400 hover:shadow-2xl hover:shadow-orange-500/20 scale-105' 
-                      : 'border-gray-700/50 hover:border-orange-500/30 hover:shadow-xl hover:shadow-orange-500/10'
-                  }`}
-                >
-                  {/* Popular Badge */}
-                  {pkg.popular && (
-                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
-                      <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center whitespace-nowrap">
-                        <StarIcon className="h-4 w-4 mr-2 flex-shrink-0" />
-                        <span>Most Popular</span>
-                      </div>
-                    </div>
-                  )}
-                  
-                  {/* Gradient Overlay */}
-                  <div className={`absolute inset-0 rounded-2xl transition-opacity duration-500 ${
-                    pkg.popular 
-                      ? 'bg-gradient-to-br from-orange-600/10 to-transparent opacity-100' 
-                      : 'bg-gradient-to-br from-orange-600/5 to-transparent opacity-0 group-hover:opacity-100'
-                  }`}></div>
-                  
-                  <div className="relative p-8 pt-12">
-                    {/* Package Name */}
-                    <div className="mb-6">
-                      <h3 className="text-2xl font-black text-white mb-2 group-hover:text-orange-300 transition-colors duration-300">
-                        {pkg.name}
-                      </h3>
-                      <p className="text-gray-400 text-sm mb-4">{pkg.description}</p>
-                      {pkg.popular && (
-                        <div className="w-12 h-1 bg-gradient-to-r from-orange-500 to-transparent rounded-full"></div>
-                      )}
-                    </div>
-                    
-                    {/* Price */}
-                    <div className="mb-8">
-                      <div className="flex items-baseline">
-                        <span className="text-5xl font-black text-orange-400">Rs {pkg.price}</span>
-                        <span className="text-gray-400 ml-2 text-lg">/{pkg.period}</span>
-                      </div>
-                    </div>
-                    
-                    {/* Features */}
-                    <ul className="space-y-4 mb-8">
-                      {pkg.features.map((feature, featureIndex) => (
-                        <li key={featureIndex} className="flex items-start">
-                          <div className="w-6 h-6 bg-orange-500/20 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
-                            <CheckIcon className="h-4 w-4 text-orange-400" />
-                          </div>
-                          <span className="text-gray-300 text-sm leading-relaxed">{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    
-                    {/* CTA Button */}
-                    <Link 
-                      href="/register" 
-                      className={`group/btn relative w-full text-center py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 ${
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {packages.map((pkg, index) => (
+                    <div 
+                      key={pkg.id} 
+                      className={`group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl border transition-all duration-500 hover:-translate-y-2 flex flex-col h-full ${
                         pkg.popular 
-                          ? 'bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white shadow-lg hover:shadow-xl hover:shadow-orange-500/25' 
-                          : 'bg-gray-700/50 hover:bg-orange-600 text-white border border-gray-600 hover:border-orange-500'
+                          ? 'border-orange-500/50 hover:border-orange-400 hover:shadow-2xl hover:shadow-orange-500/20 scale-105' 
+                          : 'border-gray-700/50 hover:border-orange-500/30 hover:shadow-xl hover:shadow-orange-500/10'
                       }`}
                     >
-                      <span className="relative z-10">
-                        {pkg.popular ? 'Get Started' : 'Choose Plan'}
-                      </span>
+                      {/* Popular Badge */}
                       {pkg.popular && (
-                        <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl blur opacity-0 group-hover/btn:opacity-75 transition-opacity duration-300"></div>
+                        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 z-10">
+                          <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-6 py-2 rounded-full text-sm font-bold shadow-lg flex items-center whitespace-nowrap">
+                            <StarIcon className="h-4 w-4 mr-2 flex-shrink-0" />
+                            <span>Most Popular</span>
+                          </div>
+                        </div>
                       )}
-                    </Link>
-                  </div>
+                      
+                      {/* Gradient Overlay */}
+                      <div className={`absolute inset-0 rounded-2xl transition-opacity duration-500 ${
+                        pkg.popular 
+                          ? 'bg-gradient-to-br from-orange-600/10 to-transparent opacity-100' 
+                          : 'bg-gradient-to-br from-orange-600/5 to-transparent opacity-0 group-hover:opacity-100'
+                      }`}></div>
+                      
+                      <div className="relative p-8 pt-12 flex flex-col h-full">
+                        {/* Package Name */}
+                        <div className="mb-6">
+                          <h3 className="text-2xl font-black text-white mb-2 group-hover:text-orange-300 transition-colors duration-300">
+                            {pkg.name}
+                          </h3>
+                          <p className="text-gray-400 text-sm mb-4">{pkg.description}</p>
+                          {pkg.popular && (
+                            <div className="w-12 h-1 bg-gradient-to-r from-orange-500 to-transparent rounded-full"></div>
+                          )}
+                        </div>
+                        
+                        {/* Price */}
+                        <div className="mb-8">
+                          <div className="flex items-baseline">
+                            <span className="text-5xl font-black text-orange-400">Rs {pkg.price}</span>
+                            <span className="text-gray-400 ml-2 text-lg">/{pkg.period}</span>
+                          </div>
+                        </div>
+                        
+                        {/* Features */}
+                        <ul className="space-y-4 mb-8 flex-grow">
+                          {pkg.features.map((feature, featureIndex) => (
+                            <li key={featureIndex} className="flex items-start">
+                              <div className="w-6 h-6 bg-orange-500/20 rounded-full flex items-center justify-center mr-3 mt-0.5 flex-shrink-0">
+                                <CheckIcon className="h-4 w-4 text-orange-400" />
+                              </div>
+                              <span className="text-gray-300 text-sm leading-relaxed">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+                        
+                        {/* CTA Button - Always at bottom */}
+                        <div className="mt-auto">
+                          <Link 
+                            href="/register" 
+                            className={`group/btn relative w-full text-center py-4 px-6 rounded-xl font-bold text-lg transition-all duration-300 transform hover:scale-105 ${
+                              pkg.popular 
+                                ? 'bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white shadow-lg hover:shadow-xl hover:shadow-orange-500/25' 
+                                : 'bg-gray-700/50 hover:bg-orange-600 text-white border border-gray-600 hover:border-orange-500'
+                            }`}
+                          >
+                            <span className="relative z-10">
+                              {pkg.popular ? 'Get Started' : 'Choose Plan'}
+                            </span>
+                            {pkg.popular && (
+                              <div className="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl blur opacity-0 group-hover/btn:opacity-75 transition-opacity duration-300"></div>
+                            )}
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
           </div>
         </section>
 
