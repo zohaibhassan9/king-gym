@@ -76,28 +76,34 @@ export default function Membership() {
     }
   ];
 
-  const additionalServices = [
-    {
-      name: 'Nutrition Consultation',
-      price: '$50/session',
-      description: 'One-on-one nutrition planning with certified dietitians'
-    },
-    {
-      name: 'Massage Therapy',
-      price: '$80/session',
-      description: 'Professional massage therapy for recovery and relaxation'
-    },
-    {
-      name: 'Supplement Store',
-      price: 'Various',
-      description: 'High-quality supplements and protein powders at member prices'
-    },
-    {
-      name: 'Personal Training',
-      price: '$30/session',
-      description: 'Additional personal training sessions beyond your package'
-    }
-  ];
+      const additionalServices = [
+        {
+          name: 'Nutrition Consultation',
+          price: 'Rs 2,500/session',
+          description: 'One-on-one nutrition planning with certified dietitians',
+          hasButton: false
+        },
+        {
+          name: 'Massage Therapy',
+          price: 'Rs 4,000/session',
+          description: 'Professional massage therapy for recovery and relaxation',
+          hasButton: false
+        },
+        {
+          name: 'Supplement Store',
+          price: 'Member Prices',
+          description: 'High-quality supplements and protein powders at member prices',
+          hasButton: true,
+          buttonText: 'View Shop',
+          buttonLink: '/shop'
+        },
+        {
+          name: 'Personal Training',
+          price: 'Rs 1,500/session',
+          description: 'Additional personal training sessions beyond your package',
+          hasButton: false
+        }
+      ];
 
   return (
     <Layout>
@@ -427,8 +433,20 @@ export default function Membership() {
                   
                   <div className="relative">
                     <h3 className="text-xl font-semibold text-white mb-2 group-hover:text-orange-300 transition-colors duration-300">{service.name}</h3>
-                    <p className="text-2xl font-bold text-orange-400 mb-4">{service.price}</p>
-                    <p className="text-gray-300 group-hover:text-gray-200 transition-colors duration-300">{service.description}</p>
+                    <div className="mb-4">
+                      <p className="text-2xl font-bold text-orange-400">{service.price}</p>
+                    </div>
+                    <p className="text-gray-300 group-hover:text-gray-200 transition-colors duration-300 mb-4">{service.description}</p>
+                    
+                    {/* View Shop Button for Supplement Store */}
+                    {service.hasButton && (
+                      <Link 
+                        href={service.buttonLink}
+                        className="inline-block bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25"
+                      >
+                        {service.buttonText}
+                      </Link>
+                    )}
                   </div>
                 </div>
               ))}
