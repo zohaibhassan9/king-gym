@@ -84,12 +84,8 @@ const Footer = () => {
               </div>
             </div>
             
-            {/* Contact Info - Three Columns on Large Screens */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-8 pt-6 border-t border-gray-700">
-              <div className="flex items-center text-gray-300">
-                <MapPinIcon className="h-5 w-5 mr-2 flex-shrink-0" />
-                <span>199 A Commercial, Central Park Housing Scheme, Society, 54600</span>
-              </div>
+            {/* Contact Info - Two Columns on Large Screens */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mt-8 pt-6 border-t border-gray-700">
               <div className="flex items-center text-gray-300">
                 <PhoneIcon className="h-5 w-5 mr-2 flex-shrink-0" />
                 <span>0320 4881042</span>
