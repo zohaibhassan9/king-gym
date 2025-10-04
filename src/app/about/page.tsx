@@ -109,7 +109,8 @@ export default function About() {
                 <img 
                   src="/ceo.jpeg" 
                   alt="King Gym CEO" 
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover object-center"
+                  style={{ objectPosition: 'center 20%' }}
                 />
               </div>
             </div>
