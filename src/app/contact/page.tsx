@@ -290,17 +290,20 @@ export default function Contact() {
                   <p className="text-sm text-gray-600 mb-3">Society, 54600</p>
                 </div>
                 <div className="rounded-lg overflow-hidden">
-                  <iframe
-                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3403.1234567890!2d74.3587!3d31.5204!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x391904d4b8b8b8b8%3A0x1234567890abcdef!2sCentral%20Park%20Housing%20Scheme%2C%20Lahore%2C%20Punjab%2C%20Pakistan!5e0!3m2!1sen!2s!4v1234567890!5m2!1sen!2s"
-                    width="100%"
-                    height="300"
-                    style={{ border: 0 }}
-                    allowFullScreen
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                    title="King Gym Location Map"
-                    className="w-full h-64"
-                  ></iframe>
+                  <div className="mapouter" style={{position: 'relative', textAlign: 'right', width: '100%', height: '450px'}}>
+                    <div className="gmap_canvas" style={{overflow: 'hidden', background: 'none!important', width: '100%', height: '450px'}}>
+                      <iframe 
+                        width="100%" 
+                        height="450" 
+                        style={{border: 0}} 
+                        allowFullScreen 
+                        loading="lazy" 
+                        referrerPolicy="no-referrer-when-downgrade" 
+                        src="https://www.google.com/maps/embed/v1/search?q=King%20gym%20fitness%20club%20central%20park%20lahore&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"
+                        title="King Gym Location Map"
+                      ></iframe>
+                    </div>
+                  </div>
                 </div>
                 <div className="mt-4 text-center">
                   <a

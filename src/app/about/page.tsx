@@ -97,7 +97,7 @@ export default function About() {
                   <img 
                     src="/logo-navbar.png" 
                     alt="King Gym Logo" 
-                    className="h-16 w-auto"
+                    className="h-20 w-auto"
                   />
                   <div>
                     <h3 className="text-xl font-semibold text-gray-900">King Gym</h3>
