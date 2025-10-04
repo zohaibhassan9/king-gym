@@ -43,7 +43,7 @@ export default function About() {
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-black">
         {/* Hero Section */}
         <section className="bg-gradient-to-r from-orange-600 to-orange-700 text-white py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -57,7 +57,7 @@ export default function About() {
         </section>
 
         {/* Stats Section */}
-        <section className="py-20 bg-white">
+        <section className="py-20 bg-gray-900">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {stats.map((stat, index) => (
@@ -65,7 +65,7 @@ export default function About() {
                   <div className="text-4xl md:text-5xl font-bold text-orange-600 mb-2">
                     {stat.number}
                   </div>
-                  <div className="text-lg text-gray-600">
+                  <div className="text-lg text-gray-300">
                     {stat.label}
                   </div>
                 </div>

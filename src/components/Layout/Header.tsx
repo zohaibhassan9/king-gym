@@ -30,7 +30,7 @@ const Header = () => {
   ];
 
   return (
-    <header className="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-200/50">
+        <header className="bg-gray-900/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-700/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16 relative">
           {/* Logo */}
@@ -53,7 +53,7 @@ const Header = () => {
               <Link
                 key={item.name}
                 href={item.href}
-                className="relative text-gray-700 hover:text-orange-600 px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg hover:bg-orange-50 group"
+                    className="relative text-gray-300 hover:text-orange-400 px-4 py-2 text-sm font-medium transition-all duration-300 rounded-lg hover:bg-gray-800 group"
               >
                 <span className="relative z-10">{item.name}</span>
                 <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-orange-600 group-hover:w-full transition-all duration-300 rounded-full"></div>
@@ -65,7 +65,7 @@ const Header = () => {
           <div className="hidden md:flex items-center space-x-3">
             <Link
               href="/login"
-              className="text-gray-700 hover:text-orange-600 px-4 py-2 text-sm font-medium transition-colors duration-300 rounded-lg hover:bg-orange-50"
+                  className="text-gray-300 hover:text-orange-400 px-4 py-2 text-sm font-medium transition-colors duration-300 rounded-lg hover:bg-gray-800"
             >
               Login
             </Link>
@@ -81,7 +81,7 @@ const Header = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-700 hover:text-orange-600 p-2 rounded-lg hover:bg-orange-50 transition-colors duration-300"
+                  className="text-gray-300 hover:text-orange-400 p-2 rounded-lg hover:bg-gray-800 transition-colors duration-300"
             >
               {isMenuOpen ? (
                 <XMarkIcon className="h-6 w-6" />
@@ -102,20 +102,20 @@ const Header = () => {
             ></div>
             
             {/* Mobile Menu Panel */}
-            <div className="relative z-10 h-full bg-white flex flex-col">
+                <div className="relative z-10 h-full bg-gray-900 flex flex-col">
               {/* Header with Close Button */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <div className="flex items-center justify-between p-4 border-b border-gray-700">
                 <div className="flex items-center space-x-3">
                       <img 
                         src="/logo-navbar.png" 
                         alt="King Gym Logo" 
                         className="h-20 w-auto"
                       />
-                  <span className="text-gray-900 text-lg font-semibold">King Gym</span>
+                  <span className="text-white text-lg font-semibold">King Gym</span>
                 </div>
                 <button
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-gray-500 hover:text-gray-700 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 transition-colors"
                 >
                   <XMarkIcon className="h-6 w-6" />
                 </button>
@@ -131,7 +131,7 @@ const Header = () => {
                         <Link
                           key={item.name}
                           href={item.href}
-                          className="block px-4 py-3 text-gray-700 text-base font-medium hover:bg-orange-50 hover:text-orange-600 rounded-lg transition-colors text-center"
+                              className="block px-4 py-3 text-gray-300 text-base font-medium hover:bg-gray-800 hover:text-orange-400 rounded-lg transition-colors text-center"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           {item.name}
@@ -146,11 +146,11 @@ const Header = () => {
                 </div>
                 
                 {/* Auth Buttons */}
-                <div className="p-6 border-t border-gray-200">
+                    <div className="p-6 border-t border-gray-700">
                   <div className="grid grid-cols-2 gap-3">
                     <Link
                       href="/login"
-                      className="block text-center px-4 py-3 text-gray-700 text-base font-medium hover:bg-gray-50 rounded-lg transition-colors border border-gray-200 hover:border-gray-300"
+                      className="block text-center px-4 py-3 text-gray-300 text-base font-medium hover:bg-gray-800 rounded-lg transition-colors border border-gray-600 hover:border-gray-500"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Login

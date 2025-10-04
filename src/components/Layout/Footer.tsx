@@ -3,7 +3,7 @@ import { MapPinIcon, PhoneIcon, EnvelopeIcon } from '@heroicons/react/24/outline
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white">
+        <footer className="bg-black text-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
@@ -15,12 +15,12 @@ const Footer = () => {
                 className="h-20 w-auto"
               />
             </div>
-            <p className="text-gray-300 mb-6 max-w-md">
+                <p className="text-gray-400 mb-6 max-w-md">
               Your premier destination for fitness and wellness. We provide world-class facilities 
               and expert trainers to help you achieve your fitness goals.
             </p>
             {/* Address - Only in company info section */}
-            <div className="flex items-center text-gray-300">
+            <div className="flex items-center text-gray-400">
               <MapPinIcon className="h-5 w-5 mr-2" />
               <span>199 A Commercial, Central Park Housing Scheme, Society, 54600</span>
             </div>
@@ -34,28 +34,28 @@ const Footer = () => {
                 <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
                 <ul className="space-y-2">
                   <li>
-                    <Link href="/membership" className="text-gray-300 hover:text-orange-400 transition-colors">
+                        <Link href="/membership" className="text-gray-400 hover:text-orange-400 transition-colors">
                       Membership Plans
                     </Link>
                   </li>
                   <li>
-                    <Link href="/classes" className="text-gray-300 hover:text-orange-400 transition-colors">
+                    <Link href="/classes" className="text-gray-400 hover:text-orange-400 transition-colors">
                       Classes
                     </Link>
                   </li>
                   <li>
-                    <Link href="/trainers" className="text-gray-300 hover:text-orange-400 transition-colors">
+                    <Link href="/trainers" className="text-gray-400 hover:text-orange-400 transition-colors">
                       Trainers
                     </Link>
                   </li>
                   <li>
-                    <Link href="/facilities" className="text-gray-300 hover:text-orange-400 transition-colors">
+                    <Link href="/facilities" className="text-gray-400 hover:text-orange-400 transition-colors">
                       Facilities
                     </Link>
                   </li>
                 </ul>
                 {/* Phone Number below Quick Links */}
-                <div className="flex items-center text-gray-300 mt-6">
+                <div className="flex items-center text-gray-400 mt-6">
                   <PhoneIcon className="h-5 w-5 mr-2 flex-shrink-0" />
                   <span>0320 4881042</span>
                 </div>
@@ -66,28 +66,28 @@ const Footer = () => {
                 <h3 className="text-lg font-semibold mb-4">Support</h3>
                 <ul className="space-y-2">
                   <li>
-                    <Link href="/help" className="text-gray-300 hover:text-orange-400 transition-colors">
+                    <Link href="/help" className="text-gray-400 hover:text-orange-400 transition-colors">
                       Help Center
                     </Link>
                   </li>
                   <li>
-                    <Link href="/contact" className="text-gray-300 hover:text-orange-400 transition-colors">
+                    <Link href="/contact" className="text-gray-400 hover:text-orange-400 transition-colors">
                       Contact Us
                     </Link>
                   </li>
                   <li>
-                    <Link href="/privacy" className="text-gray-300 hover:text-orange-400 transition-colors">
+                    <Link href="/privacy" className="text-gray-400 hover:text-orange-400 transition-colors">
                       Privacy Policy
                     </Link>
                   </li>
                   <li>
-                    <Link href="/terms" className="text-gray-300 hover:text-orange-400 transition-colors">
+                    <Link href="/terms" className="text-gray-400 hover:text-orange-400 transition-colors">
                       Terms of Service
                     </Link>
                   </li>
                 </ul>
                 {/* Email below Support */}
-                <div className="flex items-center text-gray-300 mt-6">
+                <div className="flex items-center text-gray-400 mt-6">
                   <EnvelopeIcon className="h-5 w-5 mr-2 flex-shrink-0" />
                   <span>info@kinggym.com</span>
                 </div>
@@ -96,7 +96,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-gray-700 mt-8 pt-8">
+            <div className="border-t border-gray-800 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
               © 2024 King Gym. All rights reserved.
