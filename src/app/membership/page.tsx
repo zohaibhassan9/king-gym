@@ -130,7 +130,7 @@ export default function Membership() {
                       key={pkg.id} 
                       className={`group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl border transition-all duration-500 hover:-translate-y-2 flex flex-col h-full ${
                         pkg.popular 
-                          ? 'border-orange-500/50 hover:border-orange-400 hover:shadow-2xl hover:shadow-orange-500/20 scale-105' 
+                          ? 'border-orange-500/50 hover:border-orange-400 hover:shadow-2xl hover:shadow-orange-500/20' 
                           : 'border-gray-700/50 hover:border-orange-500/30 hover:shadow-xl hover:shadow-orange-500/10'
                       }`}
                     >
