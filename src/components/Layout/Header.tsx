@@ -192,7 +192,7 @@ const Header = () => {
             </div>
             
             {/* Mobile Menu Content */}
-            <div className="relative h-screen min-h-screen flex flex-col bg-black w-full">
+            <div className="relative h-screen min-h-screen flex flex-col bg-black w-full overflow-y-auto">
               {/* Header */}
               <div className="flex items-center justify-center p-6 border-b border-gray-700 bg-black">
                 <img 
@@ -204,13 +204,13 @@ const Header = () => {
               </div>
               
               {/* Navigation Links */}
-              <div className="flex-1 px-6 py-8 bg-black">
+              <div className="flex-1 px-6 py-8 bg-black min-h-0">
                 <div className="space-y-4">
                   {navigation.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`block w-full px-6 py-4 text-lg font-semibold text-center rounded-lg border transition-all duration-300 ${
+                      className={`block w-full px-6 py-4 text-xl font-bold text-center rounded-xl border-2 transition-all duration-300 ${
                         pathname === item.href 
                           ? 'text-orange-400 bg-orange-500/20 border-orange-500' 
                           : 'text-white border-gray-600 hover:bg-gray-800 hover:border-orange-500'
@@ -224,7 +224,7 @@ const Header = () => {
               </div>
               
               {/* Auth Buttons */}
-              <div className="p-6 border-t border-gray-700 bg-black">
+              <div className="p-6 border-t border-gray-700 bg-black flex-shrink-0">
                 {user ? (
                   <div className="space-y-4">
                     <div className="text-center text-gray-300 text-sm mb-4">
@@ -235,23 +235,23 @@ const Header = () => {
                         handleLogout();
                         setIsMenuOpen(false);
                       }}
-                      className="w-full px-6 py-3 text-red-400 text-lg font-semibold hover:bg-red-600/10 rounded-lg transition-colors border border-red-500/30 hover:border-red-500"
+                      className="w-full px-6 py-4 text-red-400 text-xl font-bold hover:bg-red-600/10 rounded-xl transition-colors border-2 border-red-500/30 hover:border-red-500"
                     >
                       Logout
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-3">
+                  <div className="space-y-4">
                     <Link
                       href="/login"
-                      className="block w-full text-center px-6 py-3 text-gray-300 text-lg font-semibold hover:bg-gray-800 rounded-lg transition-colors border border-gray-600 hover:border-gray-500"
+                      className="block w-full text-center px-6 py-4 text-gray-300 text-xl font-bold hover:bg-gray-800 rounded-xl transition-colors border-2 border-gray-600 hover:border-gray-500"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Login
                     </Link>
                     <Link
                       href="/register"
-                      className="block w-full text-center px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors text-lg font-bold"
+                      className="block w-full text-center px-6 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-colors text-xl font-bold shadow-lg hover:shadow-orange-500/25"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Join Now
