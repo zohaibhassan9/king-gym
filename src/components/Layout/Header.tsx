@@ -146,40 +146,44 @@ const Header = () => {
 
         {/* Mobile Navigation Overlay */}
         {isMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 bg-gray-900">
+          <div className="md:hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-md">
             {/* Close Button */}
-            <div className="absolute top-4 right-4 z-10">
+            <div className="absolute top-6 right-6 z-10">
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="text-gray-400 hover:text-white p-3 rounded-lg hover:bg-gray-800 transition-colors"
+                className="text-gray-300 hover:text-white p-3 rounded-xl hover:bg-gray-800/50 transition-all duration-300"
               >
                 <XMarkIcon className="h-8 w-8" />
               </button>
             </div>
             
             {/* Full Screen Navigation */}
-            <div className="h-full flex flex-col justify-center items-center px-8">
+            <div className="h-full flex flex-col justify-center items-center px-6">
               {/* Logo */}
-              <div className="mb-12 text-center">
-                <img 
-                  src="/logo-navbar.png" 
-                  alt="King Gym Logo" 
-                  className="h-24 w-auto mx-auto mb-4"
-                />
-                <h2 className="text-2xl font-bold text-white">King Gym</h2>
+              <div className="mb-16 text-center">
+                <div className="relative mb-6">
+                  <img 
+                    src="/logo-navbar.png" 
+                    alt="King Gym Logo" 
+                    className="h-20 w-auto mx-auto"
+                  />
+                  <div className="absolute -inset-2 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-2xl blur-lg opacity-50"></div>
+                </div>
+                <h2 className="text-3xl font-black text-white mb-2">King Gym</h2>
+                <p className="text-orange-400 text-lg font-medium">#1 Fitness Destination in Lahore</p>
               </div>
               
               {/* Navigation Links */}
-              <div className="w-full max-w-sm space-y-4 mb-12">
+              <div className="w-full max-w-md space-y-6 mb-16">
                 {navigation && navigation.length > 0 ? (
                   navigation.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`block w-full px-8 py-4 text-xl font-semibold transition-all duration-300 text-center rounded-xl border-2 ${
+                      className={`block w-full px-8 py-5 text-2xl font-bold transition-all duration-300 text-center rounded-2xl border-2 transform hover:scale-105 ${
                         pathname === item.href 
-                          ? 'text-orange-400 bg-orange-500/20 border-orange-500 shadow-lg shadow-orange-500/25' 
-                          : 'text-gray-300 hover:text-orange-400 hover:bg-gray-800 border-gray-600 hover:border-orange-500/50'
+                          ? 'text-orange-400 bg-orange-500/20 border-orange-500 shadow-2xl shadow-orange-500/30' 
+                          : 'text-white hover:text-orange-400 hover:bg-gray-800/50 border-gray-600 hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/20'
                       }`}
                       onClick={() => setIsMenuOpen(false)}
                     >
@@ -194,10 +198,10 @@ const Header = () => {
               </div>
               
               {/* Auth Buttons */}
-              <div className="w-full max-w-sm space-y-4">
+              <div className="w-full max-w-md space-y-6">
                 {user ? (
                   <div className="text-center">
-                    <div className="text-gray-300 text-lg mb-6">
+                    <div className="text-gray-300 text-xl mb-8 font-medium">
                       Welcome, {user.role === 'admin' ? 'Admin' : 'Staff'}
                     </div>
                     <button
@@ -205,29 +209,39 @@ const Header = () => {
                         handleLogout();
                         setIsMenuOpen(false);
                       }}
-                      className="w-full px-8 py-4 text-red-300 text-xl font-semibold hover:bg-red-600/10 rounded-xl transition-colors border-2 border-red-500/30 hover:border-red-500/60"
+                      className="w-full px-8 py-5 text-red-300 text-2xl font-bold hover:bg-red-600/10 rounded-2xl transition-all duration-300 border-2 border-red-500/30 hover:border-red-500/60 hover:shadow-xl hover:shadow-red-500/20 transform hover:scale-105"
                     >
                       Logout
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     <Link
                       href="/login"
-                      className="block w-full text-center px-8 py-4 text-gray-300 text-xl font-semibold hover:bg-gray-800 rounded-xl transition-colors border-2 border-gray-600 hover:border-gray-500"
+                      className="block w-full text-center px-8 py-5 text-white text-2xl font-bold hover:bg-gray-800/50 rounded-2xl transition-all duration-300 border-2 border-gray-600 hover:border-gray-500 hover:shadow-xl transform hover:scale-105"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Login
                     </Link>
                     <Link
                       href="/register"
-                      className="block w-full text-center px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-colors text-xl font-bold shadow-lg hover:shadow-xl"
+                      className="block w-full text-center px-8 py-5 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white rounded-2xl transition-all duration-300 text-2xl font-black shadow-2xl hover:shadow-orange-500/30 transform hover:scale-105"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Join Now
                     </Link>
                   </div>
                 )}
+              </div>
+              
+              {/* Footer Text */}
+              <div className="mt-12 text-center">
+                <p className="text-gray-400 text-lg font-medium">
+                  Transform Your Life
+                </p>
+                <p className="text-gray-500 text-sm mt-2">
+                  Start Your Journey Today
+                </p>
               </div>
             </div>
           </div>
