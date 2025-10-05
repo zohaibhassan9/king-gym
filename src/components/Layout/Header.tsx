@@ -146,97 +146,88 @@ const Header = () => {
 
         {/* Mobile Navigation Overlay */}
         {isMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50">
-            {/* Backdrop */}
-            <div 
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-              onClick={() => setIsMenuOpen(false)}
-            ></div>
+          <div className="md:hidden fixed inset-0 z-50 bg-gray-900">
+            {/* Close Button */}
+            <div className="absolute top-4 right-4 z-10">
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="text-gray-400 hover:text-white p-3 rounded-lg hover:bg-gray-800 transition-colors"
+              >
+                <XMarkIcon className="h-8 w-8" />
+              </button>
+            </div>
             
-            {/* Mobile Menu Panel */}
-            <div className="relative z-10 h-full bg-gray-900 flex flex-col w-full">
-              {/* Header with Close Button */}
-              <div className="flex items-center justify-between p-4 border-b border-gray-700">
-                <div className="flex items-center space-x-3">
-                      <img 
-                        src="/logo-navbar.png" 
-                        alt="King Gym Logo" 
-                        className="h-20 w-auto"
-                      />
-                  <span className="text-white text-lg font-semibold">King Gym</span>
-                </div>
-                <button
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-gray-400 hover:text-white p-2 rounded-lg hover:bg-gray-800 transition-colors"
-                >
-                  <XMarkIcon className="h-6 w-6" />
-                </button>
+            {/* Full Screen Navigation */}
+            <div className="h-full flex flex-col justify-center items-center px-8">
+              {/* Logo */}
+              <div className="mb-12 text-center">
+                <img 
+                  src="/logo-navbar.png" 
+                  alt="King Gym Logo" 
+                  className="h-24 w-auto mx-auto mb-4"
+                />
+                <h2 className="text-2xl font-bold text-white">King Gym</h2>
               </div>
               
-              {/* Navigation Content */}
-              <div className="flex-1 overflow-y-auto">
-                <div className="p-6">
-                  {/* Navigation Links in Two Columns */}
-                  <div className="grid grid-cols-2 gap-3">
-                    {navigation && navigation.length > 0 ? (
-                      navigation.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                          className={`block px-6 py-4 text-lg font-medium transition-all duration-300 text-center rounded-lg border ${
-                            pathname === item.href 
-                              ? 'text-orange-400 bg-orange-500/10 border-orange-500/20' 
-                              : 'text-gray-300 hover:text-orange-400 hover:bg-gray-800 border-gray-600'
-                          }`}
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          {item.name}
-                        </Link>
-                      ))
-                    ) : (
-                      <div className="col-span-2 text-center text-gray-500 py-8">
-                        <p>Navigation not available</p>
-                      </div>
-                    )}
+              {/* Navigation Links */}
+              <div className="w-full max-w-sm space-y-4 mb-12">
+                {navigation && navigation.length > 0 ? (
+                  navigation.map((item) => (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={`block w-full px-8 py-4 text-xl font-semibold transition-all duration-300 text-center rounded-xl border-2 ${
+                        pathname === item.href 
+                          ? 'text-orange-400 bg-orange-500/20 border-orange-500 shadow-lg shadow-orange-500/25' 
+                          : 'text-gray-300 hover:text-orange-400 hover:bg-gray-800 border-gray-600 hover:border-orange-500/50'
+                      }`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.name}
+                    </Link>
+                  ))
+                ) : (
+                  <div className="text-center text-gray-500 py-8">
+                    <p>Navigation not available</p>
                   </div>
-                </div>
-                
-                {/* Auth Buttons */}
-                    <div className="p-6 border-t border-gray-700">
-                  {user ? (
-                    <div className="space-y-3">
-                      <div className="text-center text-gray-300 text-sm mb-4">
-                        Welcome, {user.role === 'admin' ? 'Admin' : 'Staff'}
-                      </div>
-                      <button
-                        onClick={() => {
-                          handleLogout();
-                          setIsMenuOpen(false);
-                        }}
-                        className="w-full text-center px-6 py-4 text-red-300 text-lg font-medium hover:bg-red-600/10 rounded-lg transition-colors border border-red-500/20 hover:border-red-500/40"
-                      >
-                        Logout
-                      </button>
+                )}
+              </div>
+              
+              {/* Auth Buttons */}
+              <div className="w-full max-w-sm space-y-4">
+                {user ? (
+                  <div className="text-center">
+                    <div className="text-gray-300 text-lg mb-6">
+                      Welcome, {user.role === 'admin' ? 'Admin' : 'Staff'}
                     </div>
-                  ) : (
-                    <div className="grid grid-cols-2 gap-3">
-                      <Link
-                        href="/login"
-                        className="block text-center px-6 py-4 text-gray-300 text-lg font-medium hover:bg-gray-800 rounded-lg transition-colors border border-gray-600 hover:border-gray-500"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        Login
-                      </Link>
-                      <Link
-                        href="/register"
-                        className="block text-center px-6 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors text-lg font-semibold shadow-sm hover:shadow-md"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        Join Now
-                      </Link>
-                    </div>
-                  )}
-                </div>
+                    <button
+                      onClick={() => {
+                        handleLogout();
+                        setIsMenuOpen(false);
+                      }}
+                      className="w-full px-8 py-4 text-red-300 text-xl font-semibold hover:bg-red-600/10 rounded-xl transition-colors border-2 border-red-500/30 hover:border-red-500/60"
+                    >
+                      Logout
+                    </button>
+                  </div>
+                ) : (
+                  <div className="space-y-4">
+                    <Link
+                      href="/login"
+                      className="block w-full text-center px-8 py-4 text-gray-300 text-xl font-semibold hover:bg-gray-800 rounded-xl transition-colors border-2 border-gray-600 hover:border-gray-500"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Login
+                    </Link>
+                    <Link
+                      href="/register"
+                      className="block w-full text-center px-8 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-colors text-xl font-bold shadow-lg hover:shadow-xl"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Join Now
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </div>
