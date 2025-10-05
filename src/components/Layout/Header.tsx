@@ -146,62 +146,54 @@ const Header = () => {
 
         {/* Mobile Navigation Overlay */}
         {isMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 bg-black/95 backdrop-blur-md">
+          <div className="md:hidden fixed inset-0 z-50 bg-gray-900">
             {/* Close Button */}
-            <div className="absolute top-6 right-6 z-10">
+            <div className="absolute top-4 right-4 z-20">
               <button
                 onClick={() => setIsMenuOpen(false)}
-                className="text-gray-300 hover:text-white p-3 rounded-xl hover:bg-gray-800/50 transition-all duration-300"
+                className="text-white hover:text-orange-400 p-2 rounded-lg hover:bg-gray-800 transition-colors"
               >
-                <XMarkIcon className="h-8 w-8" />
+                <XMarkIcon className="h-6 w-6" />
               </button>
             </div>
             
-            {/* Full Screen Navigation */}
-            <div className="h-full flex flex-col justify-center items-center px-6">
-              {/* Logo */}
-              <div className="mb-16 text-center">
-                <div className="relative mb-6">
-                  <img 
-                    src="/logo-navbar.png" 
-                    alt="King Gym Logo" 
-                    className="h-20 w-auto mx-auto"
-                  />
-                  <div className="absolute -inset-2 bg-gradient-to-r from-orange-500/20 to-orange-600/20 rounded-2xl blur-lg opacity-50"></div>
-                </div>
-                <h2 className="text-3xl font-black text-white mb-2">King Gym</h2>
-                <p className="text-orange-400 text-lg font-medium">#1 Fitness Destination in Lahore</p>
+            {/* Mobile Menu Content */}
+            <div className="h-full flex flex-col">
+              {/* Header */}
+              <div className="flex items-center justify-center p-6 border-b border-gray-700">
+                <img 
+                  src="/logo-navbar.png" 
+                  alt="King Gym Logo" 
+                  className="h-16 w-auto"
+                />
+                <span className="text-white text-xl font-bold ml-3">King Gym</span>
               </div>
               
               {/* Navigation Links */}
-              <div className="w-full max-w-md space-y-6 mb-16">
-                {navigation && navigation.length > 0 ? (
-                  navigation.map((item) => (
+              <div className="flex-1 px-6 py-8">
+                <div className="space-y-4">
+                  {navigation.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`block w-full px-8 py-5 text-2xl font-bold transition-all duration-300 text-center rounded-2xl border-2 transform hover:scale-105 ${
+                      className={`block w-full px-6 py-4 text-lg font-semibold text-center rounded-lg border transition-all duration-300 ${
                         pathname === item.href 
-                          ? 'text-orange-400 bg-orange-500/20 border-orange-500 shadow-2xl shadow-orange-500/30' 
-                          : 'text-white hover:text-orange-400 hover:bg-gray-800/50 border-gray-600 hover:border-orange-500/50 hover:shadow-xl hover:shadow-orange-500/20'
+                          ? 'text-orange-400 bg-orange-500/20 border-orange-500' 
+                          : 'text-white border-gray-600 hover:bg-gray-800 hover:border-orange-500'
                       }`}
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {item.name}
                     </Link>
-                  ))
-                ) : (
-                  <div className="text-center text-gray-500 py-8">
-                    <p>Navigation not available</p>
-                  </div>
-                )}
+                  ))}
+                </div>
               </div>
               
               {/* Auth Buttons */}
-              <div className="w-full max-w-md space-y-6">
+              <div className="p-6 border-t border-gray-700">
                 {user ? (
-                  <div className="text-center">
-                    <div className="text-gray-300 text-xl mb-8 font-medium">
+                  <div className="space-y-4">
+                    <div className="text-center text-gray-300 text-sm mb-4">
                       Welcome, {user.role === 'admin' ? 'Admin' : 'Staff'}
                     </div>
                     <button
@@ -209,39 +201,29 @@ const Header = () => {
                         handleLogout();
                         setIsMenuOpen(false);
                       }}
-                      className="w-full px-8 py-5 text-red-300 text-2xl font-bold hover:bg-red-600/10 rounded-2xl transition-all duration-300 border-2 border-red-500/30 hover:border-red-500/60 hover:shadow-xl hover:shadow-red-500/20 transform hover:scale-105"
+                      className="w-full px-6 py-3 text-red-400 text-lg font-semibold hover:bg-red-600/10 rounded-lg transition-colors border border-red-500/30 hover:border-red-500"
                     >
                       Logout
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-6">
+                  <div className="space-y-3">
                     <Link
                       href="/login"
-                      className="block w-full text-center px-8 py-5 text-white text-2xl font-bold hover:bg-gray-800/50 rounded-2xl transition-all duration-300 border-2 border-gray-600 hover:border-gray-500 hover:shadow-xl transform hover:scale-105"
+                      className="block w-full text-center px-6 py-3 text-gray-300 text-lg font-semibold hover:bg-gray-800 rounded-lg transition-colors border border-gray-600 hover:border-gray-500"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Login
                     </Link>
                     <Link
                       href="/register"
-                      className="block w-full text-center px-8 py-5 bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white rounded-2xl transition-all duration-300 text-2xl font-black shadow-2xl hover:shadow-orange-500/30 transform hover:scale-105"
+                      className="block w-full text-center px-6 py-3 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors text-lg font-bold"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Join Now
                     </Link>
                   </div>
                 )}
-              </div>
-              
-              {/* Footer Text */}
-              <div className="mt-12 text-center">
-                <p className="text-gray-400 text-lg font-medium">
-                  Transform Your Life
-                </p>
-                <p className="text-gray-500 text-sm mt-2">
-                  Start Your Journey Today
-                </p>
               </div>
             </div>
           </div>
