@@ -119,6 +119,19 @@ export default function StaffDashboard() {
 
     // Load data from database
     loadData();
+    
+    // Auto-refresh when page becomes visible (user switches back to tab)
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        loadData();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   const loadData = async () => {
@@ -660,7 +673,7 @@ export default function StaffDashboard() {
 
           {/* Navigation Tabs */}
           <div className="mb-8">
-            <div className="flex flex-wrap gap-2 justify-center">
+            <div className="flex flex-wrap gap-2 justify-center items-center">
               <button
                 onClick={() => setActiveTab('dashboard')}
                 className={`px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
@@ -700,6 +713,17 @@ export default function StaffDashboard() {
                 }`}
               >
                 Payments
+              </button>
+              
+              {/* Refresh Button */}
+              <button
+                onClick={loadData}
+                className="px-4 py-3 rounded-xl font-semibold transition-all duration-300 bg-gray-800 text-gray-300 hover:bg-gray-700 hover:text-white border border-gray-600 hover:border-gray-500"
+                title="Refresh Data"
+              >
+                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
               </button>
             </div>
           </div>

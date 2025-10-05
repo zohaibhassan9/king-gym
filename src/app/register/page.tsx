@@ -168,6 +168,12 @@ export default function Register() {
           expiryDate: '',
           photo: null
         });
+        
+        // Clear photo preview
+        const photoInput = document.getElementById('photo') as HTMLInputElement;
+        if (photoInput) {
+          photoInput.value = '';
+        }
       } catch (error) {
         console.error('Registration error:', error);
         alert('Registration failed. Please try again.');

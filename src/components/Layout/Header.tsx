@@ -177,28 +177,22 @@ const Header = () => {
               <div className="flex-1 overflow-y-auto">
                 <div className="p-6">
                   {/* Navigation Links in Two Columns */}
-                  {navigation && navigation.length > 0 ? (
-                    <div className="grid grid-cols-2 gap-3">
-                      {navigation.map((item) => (
-                        <Link
-                          key={item.name}
-                          href={item.href}
-                              className={`block px-6 py-4 text-lg font-medium transition-all duration-300 text-center ${
-                                pathname === item.href 
-                                  ? 'text-orange-400' 
-                                  : 'text-gray-300 hover:text-orange-400'
-                              }`}
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          {item.name}
-                        </Link>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="text-gray-500 text-center py-8">
-                      <p>Navigation items not found</p>
-                    </div>
-                  )}
+                  <div className="grid grid-cols-2 gap-3">
+                    {navigation.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`block px-6 py-4 text-lg font-medium transition-all duration-300 text-center rounded-lg ${
+                          pathname === item.href 
+                            ? 'text-orange-400 bg-orange-500/10 border border-orange-500/20' 
+                            : 'text-gray-300 hover:text-orange-400 hover:bg-gray-800'
+                        }`}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
                 
                 {/* Auth Buttons */}

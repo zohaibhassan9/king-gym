@@ -151,6 +151,19 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     loadData();
+    
+    // Auto-refresh when page becomes visible (user switches back to tab)
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        loadData();
+      }
+    };
+    
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
 
   const tabs = [
