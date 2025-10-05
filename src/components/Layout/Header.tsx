@@ -146,9 +146,9 @@ const Header = () => {
 
         {/* Mobile Navigation Overlay */}
         {isMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-[9999] bg-gray-900 w-full h-full">
-            {/* Backdrop */}
-            <div className="absolute inset-0 bg-gray-900"></div>
+          <div className="md:hidden fixed inset-0 z-[9999] bg-black w-full h-screen min-h-screen" style={{top: 0, left: 0, right: 0, bottom: 0, width: '100vw', height: '100vh'}}>
+            {/* Solid Background */}
+            <div className="absolute inset-0 bg-black w-full h-full min-h-screen" style={{top: 0, left: 0, right: 0, bottom: 0, width: '100vw', height: '100vh'}}></div>
             
             {/* Close Button */}
             <div className="absolute top-4 right-4 z-20">
@@ -161,9 +161,9 @@ const Header = () => {
             </div>
             
             {/* Mobile Menu Content */}
-            <div className="relative h-full flex flex-col bg-gray-900">
+            <div className="relative h-screen min-h-screen flex flex-col bg-black w-full">
               {/* Header */}
-              <div className="flex items-center justify-center p-6 border-b border-gray-700">
+              <div className="flex items-center justify-center p-6 border-b border-gray-700 bg-black">
                 <img 
                   src="/logo-navbar.png" 
                   alt="King Gym Logo" 
@@ -173,7 +173,7 @@ const Header = () => {
               </div>
               
               {/* Navigation Links */}
-              <div className="flex-1 px-6 py-8">
+              <div className="flex-1 px-6 py-8 bg-black">
                 <div className="space-y-4">
                   {navigation.map((item) => (
                     <Link
@@ -193,7 +193,7 @@ const Header = () => {
               </div>
               
               {/* Auth Buttons */}
-              <div className="p-6 border-t border-gray-700">
+              <div className="p-6 border-t border-gray-700 bg-black">
                 {user ? (
                   <div className="space-y-4">
                     <div className="text-center text-gray-300 text-sm mb-4">
