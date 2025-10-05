@@ -154,7 +154,7 @@ const Header = () => {
             ></div>
             
             {/* Mobile Menu Panel */}
-                <div className="relative z-10 h-full bg-gray-900 flex flex-col">
+            <div className="relative z-10 h-full bg-gray-900 flex flex-col w-full">
               {/* Header with Close Button */}
               <div className="flex items-center justify-between p-4 border-b border-gray-700">
                 <div className="flex items-center space-x-3">
@@ -178,20 +178,26 @@ const Header = () => {
                 <div className="p-6">
                   {/* Navigation Links in Two Columns */}
                   <div className="grid grid-cols-2 gap-3">
-                    {navigation.map((item) => (
-                      <Link
-                        key={item.name}
-                        href={item.href}
-                        className={`block px-6 py-4 text-lg font-medium transition-all duration-300 text-center rounded-lg ${
-                          pathname === item.href 
-                            ? 'text-orange-400 bg-orange-500/10 border border-orange-500/20' 
-                            : 'text-gray-300 hover:text-orange-400 hover:bg-gray-800'
-                        }`}
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {item.name}
-                      </Link>
-                    ))}
+                    {navigation && navigation.length > 0 ? (
+                      navigation.map((item) => (
+                        <Link
+                          key={item.name}
+                          href={item.href}
+                          className={`block px-6 py-4 text-lg font-medium transition-all duration-300 text-center rounded-lg border ${
+                            pathname === item.href 
+                              ? 'text-orange-400 bg-orange-500/10 border-orange-500/20' 
+                              : 'text-gray-300 hover:text-orange-400 hover:bg-gray-800 border-gray-600'
+                          }`}
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          {item.name}
+                        </Link>
+                      ))
+                    ) : (
+                      <div className="col-span-2 text-center text-gray-500 py-8">
+                        <p>Navigation not available</p>
+                      </div>
+                    )}
                   </div>
                 </div>
                 
