@@ -1,8 +1,17 @@
+'use client';
+
 import Layout from '@/components/Layout/Layout';
 import Link from 'next/link';
 import { CheckIcon } from '@heroicons/react/24/outline';
+import { useState } from 'react';
 
 export default function Membership() {
+  // State for custom plan creator
+  const [planType, setPlanType] = useState('individual');
+  const [duration, setDuration] = useState('3');
+  const [selectedFeatures, setSelectedFeatures] = useState<string[]>([]);
+  const [selectedServices, setSelectedServices] = useState<string[]>([]);
+
   const packages = [
         {
           id: 'men-normal',
@@ -76,34 +85,83 @@ export default function Membership() {
     }
   ];
 
-      const additionalServices = [
-        {
-          name: 'Nutrition Consultation',
-          price: 'Rs 2,500/session',
-          description: 'One-on-one nutrition planning with certified dietitians',
-          hasButton: false
-        },
-        {
-          name: 'Massage Therapy',
-          price: 'Rs 4,000/session',
-          description: 'Professional massage therapy for recovery and relaxation',
-          hasButton: false
-        },
-        {
-          name: 'Supplement Store',
-          price: 'Member Prices',
-          description: 'High-quality supplements and protein powders at member prices',
-          hasButton: true,
-          buttonText: 'View Shop',
-          buttonLink: '/shop'
-        },
-        {
-          name: 'Personal Training',
-          price: 'Rs 1,500/session',
-          description: 'Additional personal training sessions beyond your package',
-          hasButton: false
-        }
-      ];
+  const premiumServices = [
+    {
+      name: 'Nutrition Consultation',
+      price: 'Rs 2,500/session',
+      description: 'One-on-one nutrition planning with certified dietitians',
+      hasButton: false
+    },
+    {
+      name: 'Massage Therapy',
+      price: 'Rs 4,000/session',
+      description: 'Professional massage therapy for recovery and relaxation',
+      hasButton: false
+    },
+    {
+      name: 'Supplement Store',
+      price: 'Member Prices',
+      description: 'High-quality supplements and protein powders at member prices',
+      hasButton: true,
+      buttonText: 'View Shop',
+      buttonLink: '/shop'
+    },
+    {
+      name: 'Personal Training',
+      price: 'Rs 1,500/session',
+      description: 'Additional personal training sessions beyond your package',
+      hasButton: false
+    }
+  ];
+
+  // Feature and service data with pricing
+  const features = [
+    { id: 'personal-training', name: 'Personal Training Sessions', price: 2000 },
+    { id: 'nutrition', name: 'Nutrition Consultation', price: 1500 },
+    { id: 'group-classes', name: 'Group Classes', price: 1000 },
+    { id: 'locker', name: 'Locker Access', price: 500 },
+    { id: 'shower', name: 'Shower Facilities', price: 0 },
+    { id: 'progress', name: 'Progress Tracking', price: 800 }
+  ];
+
+  const additionalServices = [
+    { id: 'massage', name: 'Massage Therapy', price: 3000 },
+    { id: 'home-trainer', name: 'Home Trainer Visit', price: 4000 }
+  ];
+
+  // Calculate total price
+  const calculatePrice = () => {
+    let basePrice = planType === 'couple' ? 6000 : 3000;
+    let durationMultiplier = parseInt(duration);
+    
+    let featuresPrice = selectedFeatures.reduce((total, featureId) => {
+      const feature = features.find(f => f.id === featureId);
+      return total + (feature ? feature.price : 0);
+    }, 0);
+    
+    let servicesPrice = selectedServices.reduce((total, serviceId) => {
+      const service = additionalServices.find(s => s.id === serviceId);
+      return total + (service ? service.price : 0);
+    }, 0);
+    
+    return (basePrice + featuresPrice + servicesPrice) * durationMultiplier;
+  };
+
+  const toggleFeature = (featureId: string) => {
+    setSelectedFeatures(prev => 
+      prev.includes(featureId) 
+        ? prev.filter(id => id !== featureId)
+        : [...prev, featureId]
+    );
+  };
+
+  const toggleService = (serviceId: string) => {
+    setSelectedServices(prev => 
+      prev.includes(serviceId) 
+        ? prev.filter(id => id !== serviceId)
+        : [...prev, serviceId]
+    );
+  };
 
   return (
     <Layout>
@@ -213,11 +271,18 @@ export default function Membership() {
           </div>
         </section>
 
-        {/* Custom Plan Creator */}
-        <section className="py-24 bg-gradient-to-br from-gray-900 via-black to-gray-900 relative overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black opacity-50"></div>
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+            {/* Custom Plan Creator */}
+            <section className="py-24 relative overflow-hidden">
+              {/* Background Image */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{
+                  backgroundImage: "url('https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80')"
+                }}
+              ></div>
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-gray-900 opacity-85"></div>
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
           
           {/* Animated Background Elements */}
           <div className="absolute top-20 left-10 w-32 h-32 bg-orange-500/20 rounded-full blur-xl animate-pulse"></div>
@@ -243,55 +308,84 @@ export default function Membership() {
               <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700/50">
                 <h3 className="text-2xl font-bold text-white mb-6">Plan Builder</h3>
                 
-                <form className="space-y-6">
+                <div className="space-y-6">
                   {/* Plan Type */}
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-3">Plan Type</label>
                     <div className="grid grid-cols-2 gap-3">
-                      <label className="relative cursor-pointer">
-                        <input type="radio" name="planType" value="individual" className="sr-only" defaultChecked />
-                        <div className="bg-gray-700/50 border border-gray-600 rounded-lg p-4 text-center hover:border-orange-500/50 transition-colors">
-                          <div className="text-white font-medium">Individual</div>
-                        </div>
-                      </label>
-                      <label className="relative cursor-pointer">
-                        <input type="radio" name="planType" value="couple" className="sr-only" />
-                        <div className="bg-gray-700/50 border border-gray-600 rounded-lg p-4 text-center hover:border-orange-500/50 transition-colors">
-                          <div className="text-white font-medium">Couple</div>
-                        </div>
-                      </label>
+                      <button
+                        type="button"
+                        onClick={() => setPlanType('individual')}
+                        className={`p-4 rounded-lg text-center transition-all duration-300 ${
+                          planType === 'individual'
+                            ? 'bg-orange-600 border-2 border-orange-500 text-white'
+                            : 'bg-gray-700/50 border-2 border-gray-600 text-gray-300 hover:border-orange-500/50'
+                        }`}
+                      >
+                        <div className="font-medium">Individual</div>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPlanType('couple')}
+                        className={`p-4 rounded-lg text-center transition-all duration-300 ${
+                          planType === 'couple'
+                            ? 'bg-orange-600 border-2 border-orange-500 text-white'
+                            : 'bg-gray-700/50 border-2 border-gray-600 text-gray-300 hover:border-orange-500/50'
+                        }`}
+                      >
+                        <div className="font-medium">Couple</div>
+                      </button>
                     </div>
                   </div>
 
                   {/* Duration */}
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-3">Duration</label>
-                    <select className="w-full bg-gray-700/50 border border-gray-600 rounded-lg p-3 text-white focus:border-orange-500 focus:ring-1 focus:ring-orange-500">
-                      <option value="1">1 Month</option>
-                      <option value="3">3 Months</option>
-                      <option value="6">6 Months</option>
-                      <option value="12">12 Months</option>
-                    </select>
+                    <div className="grid grid-cols-2 gap-3">
+                      {[
+                        { value: '1', label: '1 Month' },
+                        { value: '3', label: '3 Months' },
+                        { value: '6', label: '6 Months' },
+                        { value: '12', label: '12 Months' }
+                      ].map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => setDuration(option.value)}
+                          className={`p-3 rounded-lg text-center transition-all duration-300 ${
+                            duration === option.value
+                              ? 'bg-orange-600 border-2 border-orange-500 text-white'
+                              : 'bg-gray-700/50 border-2 border-gray-600 text-gray-300 hover:border-orange-500/50'
+                          }`}
+                        >
+                          <div className="font-medium text-sm">{option.label}</div>
+                        </button>
+                      ))}
+                    </div>
                   </div>
 
                   {/* Features Selection */}
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-3">Select Features</label>
-                    <div className="space-y-3">
-                      {[
-                        'Full Gym Access',
-                        'Personal Training Sessions',
-                        'Nutrition Consultation',
-                        'Group Classes',
-                        'Locker Access',
-                        'Shower Facilities',
-                        'Progress Tracking',
-                        '24/7 Access'
-                      ].map((feature, index) => (
-                        <label key={index} className="flex items-center space-x-3 cursor-pointer">
-                          <input type="checkbox" className="w-4 h-4 text-orange-600 bg-gray-700 border-gray-600 rounded focus:ring-orange-500" />
-                          <span className="text-gray-300">{feature}</span>
-                        </label>
+                    <div className="grid grid-cols-2 gap-3">
+                      {features.map((feature) => (
+                        <button
+                          key={feature.id}
+                          type="button"
+                          onClick={() => toggleFeature(feature.id)}
+                          className={`p-4 rounded-lg text-left transition-all duration-300 ${
+                            selectedFeatures.includes(feature.id)
+                              ? 'bg-orange-600/20 border-2 border-orange-500 text-white'
+                              : 'bg-gray-700/50 border-2 border-gray-600 text-gray-300 hover:border-orange-500/50'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="font-medium text-sm">{feature.name}</div>
+                            {feature.price > 0 && (
+                              <div className="text-orange-400 text-xs">+Rs {feature.price}</div>
+                            )}
+                          </div>
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -299,30 +393,37 @@ export default function Membership() {
                   {/* Additional Services */}
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-3">Additional Services</label>
-                    <div className="space-y-3">
-                      {[
-                        'Massage Therapy',
-                        'Supplement Store Access',
-                        'Meal Planning',
-                        'Online Workout Videos',
-                        'Priority Booking'
-                      ].map((service, index) => (
-                        <label key={index} className="flex items-center space-x-3 cursor-pointer">
-                          <input type="checkbox" className="w-4 h-4 text-orange-600 bg-gray-700 border-gray-600 rounded focus:ring-orange-500" />
-                          <span className="text-gray-300">{service}</span>
-                        </label>
+                    <div className="grid grid-cols-1 gap-3">
+                      {additionalServices.map((service) => (
+                        <button
+                          key={service.id}
+                          type="button"
+                          onClick={() => toggleService(service.id)}
+                          className={`p-4 rounded-lg text-left transition-all duration-300 ${
+                            selectedServices.includes(service.id)
+                              ? 'bg-orange-600/20 border-2 border-orange-500 text-white'
+                              : 'bg-gray-700/50 border-2 border-gray-600 text-gray-300 hover:border-orange-500/50'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="font-medium text-sm">{service.name}</div>
+                            {service.price > 0 && (
+                              <div className="text-orange-400 text-xs">+Rs {service.price}</div>
+                            )}
+                          </div>
+                        </button>
                       ))}
                     </div>
                   </div>
 
                   {/* Submit Button */}
                   <button 
-                    type="submit"
+                    type="button"
                     className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-bold py-4 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/25"
                   >
                     Create My Custom Plan
                   </button>
-                </form>
+                </div>
               </div>
 
               {/* Plan Preview */}
@@ -336,15 +437,19 @@ export default function Membership() {
                     <div className="space-y-2 text-gray-300">
                       <div className="flex justify-between">
                         <span>Plan Type:</span>
-                        <span className="text-white">Individual</span>
+                        <span className="text-white capitalize">{planType}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Duration:</span>
-                        <span className="text-white">3 Months</span>
+                        <span className="text-white">{duration} Month{duration !== '1' ? 's' : ''}</span>
                       </div>
                       <div className="flex justify-between">
                         <span>Features:</span>
-                        <span className="text-white">5 Selected</span>
+                        <span className="text-white">{selectedFeatures.length} Selected</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span>Services:</span>
+                        <span className="text-white">{selectedServices.length} Selected</span>
                       </div>
                     </div>
                   </div>
@@ -352,31 +457,62 @@ export default function Membership() {
                   {/* Price Estimate */}
                   <div className="bg-gradient-to-r from-orange-600/20 to-orange-700/20 rounded-xl p-6 border border-orange-500/30">
                     <h4 className="text-lg font-semibold text-orange-400 mb-4">Estimated Price</h4>
-                    <div className="text-3xl font-black text-white mb-2">Rs 8,500</div>
-                    <div className="text-gray-300 text-sm">per month</div>
-                    <div className="text-orange-300 text-xs mt-2">*Final price will be calculated based on your selections</div>
+                    <div className="text-3xl font-black text-white mb-2">Rs {calculatePrice().toLocaleString()}</div>
+                    <div className="text-gray-300 text-sm">total for {duration} month{duration !== '1' ? 's' : ''}</div>
+                    <div className="text-orange-300 text-xs mt-2">*Price updates automatically based on your selections</div>
                   </div>
 
-                  {/* Benefits */}
+                  {/* Selected Features */}
                   <div>
-                    <h4 className="text-lg font-semibold text-white mb-4">What's Included</h4>
-                    <ul className="space-y-2">
-                      {[
-                        'Personalized workout plan',
-                        'Flexible scheduling',
-                        'Dedicated support',
-                        'Progress tracking',
-                        'Custom nutrition guidance'
-                      ].map((benefit, index) => (
-                        <li key={index} className="flex items-center space-x-2 text-gray-300">
-                          <svg className="w-4 h-4 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
-                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                          </svg>
-                          <span>{benefit}</span>
-                        </li>
-                      ))}
-                    </ul>
+                    <h4 className="text-lg font-semibold text-white mb-4">Selected Features</h4>
+                    {selectedFeatures.length > 0 ? (
+                      <ul className="space-y-2">
+                        {selectedFeatures.map((featureId) => {
+                          const feature = features.find(f => f.id === featureId);
+                          return feature ? (
+                            <li key={featureId} className="flex items-center justify-between text-gray-300">
+                              <div className="flex items-center space-x-2">
+                                <svg className="w-4 h-4 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                                <span>{feature.name}</span>
+                              </div>
+                              {feature.price > 0 && (
+                                <span className="text-orange-400 text-sm">+Rs {feature.price}</span>
+                              )}
+                            </li>
+                          ) : null;
+                        })}
+                      </ul>
+                    ) : (
+                      <p className="text-gray-500 text-sm">No features selected yet</p>
+                    )}
                   </div>
+
+                  {/* Selected Services */}
+                  {selectedServices.length > 0 && (
+                    <div>
+                      <h4 className="text-lg font-semibold text-white mb-4">Additional Services</h4>
+                      <ul className="space-y-2">
+                        {selectedServices.map((serviceId) => {
+                          const service = additionalServices.find(s => s.id === serviceId);
+                          return service ? (
+                            <li key={serviceId} className="flex items-center justify-between text-gray-300">
+                              <div className="flex items-center space-x-2">
+                                <svg className="w-4 h-4 text-orange-400" fill="currentColor" viewBox="0 0 20 20">
+                                  <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                                </svg>
+                                <span>{service.name}</span>
+                              </div>
+                              {service.price > 0 && (
+                                <span className="text-orange-400 text-sm">+Rs {service.price}</span>
+                              )}
+                            </li>
+                          ) : null;
+                        })}
+                      </ul>
+                    </div>
+                  )}
 
                   {/* Contact Info */}
                   <div className="bg-gray-700/30 rounded-xl p-6">
@@ -405,11 +541,11 @@ export default function Membership() {
           </div>
         </section>
 
-        {/* Additional Services */}
-        <section className="py-24 bg-gray-900 relative overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black opacity-50"></div>
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+            {/* Additional Services */}
+            <section className="py-24 relative overflow-hidden">
+              {/* Background */}
+              <div className="absolute inset-0 bg-gray-900"></div>
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
           
           <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
@@ -425,8 +561,8 @@ export default function Membership() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {additionalServices.map((service, index) => (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {premiumServices.map((service, index) => (
                 <div key={index} className="group relative bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700/50 hover:border-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 hover:-translate-y-2">
                   {/* Gradient Overlay */}
                   <div className="absolute inset-0 bg-gradient-to-br from-orange-600/5 to-transparent rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -438,15 +574,15 @@ export default function Membership() {
                     </div>
                     <p className="text-gray-300 group-hover:text-gray-200 transition-colors duration-300 mb-4">{service.description}</p>
                     
-                    {/* View Shop Button for Supplement Store */}
-                    {service.hasButton && (
-                      <Link 
-                        href={service.buttonLink}
-                        className="inline-block bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25"
-                      >
-                        {service.buttonText}
-                      </Link>
-                    )}
+                        {/* View Shop Button for Supplement Store */}
+                        {service.hasButton && service.buttonLink && (
+                          <Link 
+                            href={service.buttonLink}
+                            className="inline-block bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300 transform hover:scale-105 hover:shadow-lg hover:shadow-orange-500/25"
+                          >
+                            {service.buttonText}
+                          </Link>
+                        )}
                   </div>
                 </div>
               ))}
@@ -454,11 +590,18 @@ export default function Membership() {
           </div>
         </section>
 
-        {/* FAQ Section */}
-        <section className="py-24 bg-black relative overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900/20 to-black"></div>
-          <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+            {/* FAQ Section */}
+            <section className="py-24 relative overflow-hidden">
+              {/* Background Image */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                style={{
+                  backgroundImage: "url('/gym-bg.jpg')"
+                }}
+              ></div>
+              {/* Overlay */}
+              <div className="absolute inset-0 bg-black opacity-70"></div>
+              <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
           
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">

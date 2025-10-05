@@ -12,24 +12,37 @@ export default function Register() {
     address: '',
     package: '',
     joiningDate: '',
-    expiryDate: ''
+    expiryDate: '',
+    photo: null as File | null
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const packages = [
-    { id: 'cardio', name: 'Cardio Package', price: '$29/month' },
-    { id: 'weight', name: 'Weight Training Package', price: '$39/month' },
-    { id: 'trainer', name: 'With Trainer Package', price: '$79/month' },
-    { id: 'coach', name: 'With Coach Package', price: '$99/month' }
+    { id: 'cardio', name: 'Men Cardio', price: 'Rs 4,000/month' },
+    { id: 'weight', name: 'Men Normal', price: 'Rs 3,000/month' },
+    { id: 'trainer', name: 'Couple (Separate Floor)', price: 'Rs 6,000/month' },
+    { id: 'coach', name: 'Ladies (Separate Floor)', price: 'Rs 4,000/month' }
   ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    setFormData(prev => {
+      const updated = {
+        ...prev,
+        [name]: value
+      };
+      
+      // Auto-set expiry date when joining date is selected
+      if (name === 'joiningDate' && value) {
+        const joiningDate = new Date(value);
+        const expiryDate = new Date(joiningDate);
+        expiryDate.setMonth(expiryDate.getMonth() + 1); // Add 1 month
+        updated.expiryDate = expiryDate.toISOString().split('T')[0];
+      }
+      
+      return updated;
+    });
     
     // Clear error when user starts typing
     if (errors[name]) {
@@ -37,6 +50,42 @@ export default function Register() {
         ...prev,
         [name]: ''
       }));
+    }
+  };
+
+  const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith('image/')) {
+        setErrors(prev => ({
+          ...prev,
+          photo: 'Please select a valid image file'
+        }));
+        return;
+      }
+      
+      // Validate file size (max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        setErrors(prev => ({
+          ...prev,
+          photo: 'Image size should be less than 5MB'
+        }));
+        return;
+      }
+      
+      setFormData(prev => ({
+        ...prev,
+        photo: file
+      }));
+      
+      // Clear error
+      if (errors.photo) {
+        setErrors(prev => ({
+          ...prev,
+          photo: ''
+        }));
+      }
     }
   };
 
@@ -77,28 +126,72 @@ export default function Register() {
       newErrors.expiryDate = 'Expiry date must be after joining date';
     }
 
+    if (!formData.photo) {
+      newErrors.photo = 'Profile photo is required';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (validateForm()) {
-      // Here you would typically send the data to your backend
-      console.log('Form submitted:', formData);
-      alert('Registration successful! You will be contacted soon for payment confirmation.');
+      try {
+        const response = await fetch('/api/members', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          alert(`Registration successful! Your member ID is ${result.data.memberId}. You will be contacted soon for payment confirmation.`);
+          // Reset form
+          setFormData({
+            memberName: '',
+            cnicNumber: '',
+            contactNumber: '',
+            address: '',
+            package: '',
+            joiningDate: '',
+            expiryDate: '',
+            photo: null
+          });
+        } else {
+          alert(`Registration failed: ${result.error}`);
+        }
+      } catch (error) {
+        console.error('Registration error:', error);
+        alert('Registration failed. Please try again.');
+      }
     }
   };
 
   return (
     <Layout>
-      <div className="min-h-screen bg-gray-50 py-12">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-white rounded-xl shadow-lg p-8">
+      <div className="min-h-screen bg-black py-12 relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black via-gray-900/20 to-black"></div>
+        <div className="absolute top-20 left-10 w-32 h-32 bg-orange-500/20 rounded-full blur-xl animate-pulse"></div>
+        <div className="absolute bottom-20 right-10 w-48 h-48 bg-orange-600/10 rounded-full blur-2xl animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-orange-400/15 rounded-full blur-lg animate-pulse delay-500"></div>
+        
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 shadow-2xl p-8">
             <div className="text-center mb-8">
-              <h1 className="text-3xl font-bold text-gray-900 mb-4">Join King Gym</h1>
-              <p className="text-lg text-gray-600">
+              <div className="inline-flex items-center px-4 py-2 rounded-full bg-orange-600/10 border border-orange-500/20 text-orange-300 text-sm font-medium mb-6">
+                <span className="w-2 h-2 bg-orange-400 rounded-full mr-2"></span>
+                Member Registration
+              </div>
+              <h1 className="text-5xl font-black text-white mb-4">
+                Join <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">King Gym</span>
+              </h1>
+              <p className="text-xl text-gray-300">
                 Fill out the form below to start your fitness journey with us
               </p>
             </div>
@@ -106,8 +199,8 @@ export default function Register() {
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Member Name */}
               <div>
-                <label htmlFor="memberName" className="block text-sm font-medium text-gray-700 mb-2">
-                  <UserIcon className="h-5 w-5 inline mr-2" />
+                <label htmlFor="memberName" className="block text-lg font-semibold text-white mb-2">
+                  <UserIcon className="h-6 w-6 inline mr-2 text-orange-400" />
                   Member Name *
                 </label>
                 <input
@@ -116,20 +209,20 @@ export default function Register() {
                   name="memberName"
                   value={formData.memberName}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
-                    errors.memberName ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-4 bg-gray-700/50 border rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-lg ${
+                    errors.memberName ? 'border-red-500' : 'border-gray-600'
                   }`}
                   placeholder="Enter your full name"
                 />
                 {errors.memberName && (
-                  <p className="mt-1 text-sm text-red-600">{errors.memberName}</p>
+                  <p className="mt-1 text-sm text-red-400">{errors.memberName}</p>
                 )}
               </div>
 
               {/* CNIC Number */}
               <div>
-                <label htmlFor="cnicNumber" className="block text-sm font-medium text-gray-700 mb-2">
-                  <IdentificationIcon className="h-5 w-5 inline mr-2" />
+                <label htmlFor="cnicNumber" className="block text-lg font-semibold text-white mb-2">
+                  <IdentificationIcon className="h-6 w-6 inline mr-2 text-orange-400" />
                   CNIC Number *
                 </label>
                 <input
@@ -138,20 +231,20 @@ export default function Register() {
                   name="cnicNumber"
                   value={formData.cnicNumber}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
-                    errors.cnicNumber ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-4 bg-gray-700/50 border rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-lg ${
+                    errors.cnicNumber ? 'border-red-500' : 'border-gray-600'
                   }`}
                   placeholder="12345-1234567-1"
                 />
                 {errors.cnicNumber && (
-                  <p className="mt-1 text-sm text-red-600">{errors.cnicNumber}</p>
+                  <p className="mt-1 text-sm text-red-400">{errors.cnicNumber}</p>
                 )}
               </div>
 
               {/* Contact Number */}
               <div>
-                <label htmlFor="contactNumber" className="block text-sm font-medium text-gray-700 mb-2">
-                  <PhoneIcon className="h-5 w-5 inline mr-2" />
+                <label htmlFor="contactNumber" className="block text-lg font-semibold text-white mb-2">
+                  <PhoneIcon className="h-6 w-6 inline mr-2 text-orange-400" />
                   Contact Number *
                 </label>
                 <input
@@ -160,20 +253,20 @@ export default function Register() {
                   name="contactNumber"
                   value={formData.contactNumber}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
-                    errors.contactNumber ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-4 bg-gray-700/50 border rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-lg ${
+                    errors.contactNumber ? 'border-red-500' : 'border-gray-600'
                   }`}
                   placeholder="03XX-XXXXXXX"
                 />
                 {errors.contactNumber && (
-                  <p className="mt-1 text-sm text-red-600">{errors.contactNumber}</p>
+                  <p className="mt-1 text-sm text-red-400">{errors.contactNumber}</p>
                 )}
               </div>
 
               {/* Address */}
               <div>
-                <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-2">
-                  <MapPinIcon className="h-5 w-5 inline mr-2" />
+                <label htmlFor="address" className="block text-lg font-semibold text-white mb-2">
+                  <MapPinIcon className="h-6 w-6 inline mr-2 text-orange-400" />
                   Address *
                 </label>
                 <textarea
@@ -182,29 +275,66 @@ export default function Register() {
                   value={formData.address}
                   onChange={handleInputChange}
                   rows={3}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
-                    errors.address ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-4 bg-gray-700/50 border rounded-xl text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-lg ${
+                    errors.address ? 'border-red-500' : 'border-gray-600'
                   }`}
                   placeholder="Enter your complete address"
                 />
                 {errors.address && (
-                  <p className="mt-1 text-sm text-red-600">{errors.address}</p>
+                  <p className="mt-1 text-sm text-red-400">{errors.address}</p>
+                )}
+              </div>
+
+              {/* Profile Photo */}
+              <div>
+                <label htmlFor="photo" className="block text-lg font-semibold text-white mb-2">
+                  <UserIcon className="h-6 w-6 inline mr-2 text-orange-400" />
+                  Profile Photo *
+                </label>
+                <div className="flex items-center space-x-4">
+                  <div className="flex-1">
+                    <input
+                      type="file"
+                      id="photo"
+                      name="photo"
+                      accept="image/*"
+                      onChange={handlePhotoChange}
+                      className={`w-full px-4 py-4 bg-gray-700/50 border rounded-xl text-white file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-orange-600 file:text-white hover:file:bg-orange-700 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
+                        errors.photo ? 'border-red-500' : 'border-gray-600'
+                      }`}
+                    />
+                    <p className="mt-2 text-sm text-gray-400">
+                      Upload a clear photo of yourself (Max 5MB, JPG/PNG)
+                    </p>
+                  </div>
+                  {formData.photo && (
+                    <div className="w-20 h-20 rounded-xl overflow-hidden border-2 border-orange-500">
+                      <img
+                        src={URL.createObjectURL(formData.photo)}
+                        alt="Profile preview"
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  )}
+                </div>
+                {errors.photo && (
+                  <p className="mt-1 text-sm text-red-400">{errors.photo}</p>
                 )}
               </div>
 
               {/* Package Selection */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-4">
+                <label className="block text-lg font-semibold text-white mb-4">
                   Select Package *
                 </label>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {packages.map((pkg) => (
                     <div
                       key={pkg.id}
-                      className={`relative border-2 rounded-lg p-4 cursor-pointer transition-all ${
+                      className={`group relative border-2 rounded-xl p-6 cursor-pointer transition-all ${
                         formData.package === pkg.id
-                          ? 'border-orange-500 bg-orange-50'
-                          : 'border-gray-200 hover:border-orange-300'
+                          ? 'border-orange-500 bg-orange-600/10'
+                          : 'border-gray-600 hover:border-orange-400/50 bg-gray-700/30'
                       }`}
                       onClick={() => setFormData(prev => ({ ...prev, package: pkg.id }))}
                     >
@@ -219,13 +349,13 @@ export default function Register() {
                       />
                       <div className="flex justify-between items-center">
                         <div>
-                          <h3 className="font-medium text-gray-900">{pkg.name}</h3>
-                          <p className="text-sm text-gray-600">{pkg.price}</p>
+                          <h3 className="font-bold text-white text-lg group-hover:text-orange-300 transition-colors duration-300">{pkg.name}</h3>
+                          <p className="text-orange-400 font-semibold text-lg">{pkg.price}</p>
                         </div>
-                        <div className={`w-4 h-4 rounded-full border-2 ${
+                        <div className={`w-6 h-6 rounded-full border-2 ${
                           formData.package === pkg.id
                             ? 'border-orange-500 bg-orange-500'
-                            : 'border-gray-300'
+                            : 'border-gray-400'
                         }`}>
                           {formData.package === pkg.id && (
                             <div className="w-full h-full rounded-full bg-white scale-50"></div>
@@ -236,14 +366,14 @@ export default function Register() {
                   ))}
                 </div>
                 {errors.package && (
-                  <p className="mt-1 text-sm text-red-600">{errors.package}</p>
+                  <p className="mt-1 text-sm text-red-400">{errors.package}</p>
                 )}
               </div>
 
               {/* Joining Date */}
               <div>
-                <label htmlFor="joiningDate" className="block text-sm font-medium text-gray-700 mb-2">
-                  <CalendarIcon className="h-5 w-5 inline mr-2" />
+                <label htmlFor="joiningDate" className="block text-lg font-semibold text-white mb-2">
+                  <CalendarIcon className="h-6 w-6 inline mr-2 text-orange-400" />
                   Joining Date *
                 </label>
                 <input
@@ -252,41 +382,39 @@ export default function Register() {
                   name="joiningDate"
                   value={formData.joiningDate}
                   onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
-                    errors.joiningDate ? 'border-red-500' : 'border-gray-300'
+                  className={`w-full px-4 py-4 bg-gray-700/50 border rounded-xl text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-lg ${
+                    errors.joiningDate ? 'border-red-500' : 'border-gray-600'
                   }`}
                 />
                 {errors.joiningDate && (
-                  <p className="mt-1 text-sm text-red-600">{errors.joiningDate}</p>
+                  <p className="mt-1 text-sm text-red-400">{errors.joiningDate}</p>
                 )}
               </div>
 
               {/* Expiry Date */}
               <div>
-                <label htmlFor="expiryDate" className="block text-sm font-medium text-gray-700 mb-2">
-                  <CalendarIcon className="h-5 w-5 inline mr-2" />
-                  Expiry Date *
+                <label htmlFor="expiryDate" className="block text-lg font-semibold text-white mb-2">
+                  <CalendarIcon className="h-6 w-6 inline mr-2 text-orange-400" />
+                  Expiry Date (Auto-calculated)
                 </label>
                 <input
                   type="date"
                   id="expiryDate"
                   name="expiryDate"
                   value={formData.expiryDate}
-                  onChange={handleInputChange}
-                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 ${
-                    errors.expiryDate ? 'border-red-500' : 'border-gray-300'
-                  }`}
+                  readOnly
+                  className="w-full px-4 py-4 bg-gray-600/50 border border-gray-500 rounded-xl text-orange-400 font-semibold text-lg"
                 />
-                {errors.expiryDate && (
-                  <p className="mt-1 text-sm text-red-600">{errors.expiryDate}</p>
-                )}
+                <p className="mt-2 text-sm text-gray-400">
+                  Automatically set to 1 month from joining date
+                </p>
               </div>
 
               {/* Submit Button */}
-              <div className="pt-6">
+              <div className="pt-8">
                 <button
                   type="submit"
-                  className="w-full btn-primary text-lg py-4"
+                  className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-bold text-xl py-5 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/25"
                 >
                   Complete Registration
                 </button>

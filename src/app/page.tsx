@@ -76,11 +76,11 @@ export default function Home() {
 
   return (
     <Layout>
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center bg-gradient-to-br from-black via-gray-900 to-orange-900 text-white overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-black opacity-60"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-orange-600/10 to-transparent"></div>
+          {/* Hero Section */}
+          <section className="relative min-h-screen flex items-center text-white overflow-hidden">
+            {/* Background */}
+            <div className="absolute inset-0 bg-black"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-orange-600/20 to-transparent"></div>
         
         {/* Animated Background Elements */}
         <div className="absolute top-20 left-10 w-32 h-32 bg-orange-500/20 rounded-full blur-xl animate-pulse"></div>
@@ -159,9 +159,16 @@ export default function Home() {
       </section>
 
           {/* Professional Logos Section */}
-          <section className="py-24 pb-32 bg-gradient-to-br from-black via-gray-900 to-orange-900 relative overflow-hidden">
-            {/* Background Pattern */}
-            <div className="absolute inset-0 bg-black opacity-60"></div>
+          <section className="py-24 pb-32 relative overflow-hidden">
+            {/* Background Image */}
+            <div 
+              className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+              style={{
+                backgroundImage: "url('/certifications-bg.jpg')"
+              }}
+            ></div>
+            {/* Overlay */}
+            <div className="absolute inset-0 bg-black opacity-80"></div>
             <div className="absolute inset-0 bg-gradient-to-r from-orange-600/10 to-transparent"></div>
             
             {/* Animated Background Elements */}
@@ -238,11 +245,11 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-24 bg-gray-900 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-gradient-to-b from-gray-900 to-black opacity-50"></div>
-        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
+          {/* Features Section */}
+          <section className="py-24 relative overflow-hidden">
+            {/* Background */}
+            <div className="absolute inset-0 bg-gray-900"></div>
+            <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-orange-500 to-transparent"></div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">

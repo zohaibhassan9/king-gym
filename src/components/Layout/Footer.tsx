@@ -34,23 +34,23 @@ const Footer = () => {
                 <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
                 <ul className="space-y-2">
                   <li>
-                        <Link href="/membership" className="text-gray-400 hover:text-orange-400 transition-colors">
+                    <Link href="/" className="text-gray-400 hover:text-orange-400 transition-colors">
+                      Home
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/membership" className="text-gray-400 hover:text-orange-400 transition-colors">
                       Membership Plans
                     </Link>
                   </li>
                   <li>
-                    <Link href="/classes" className="text-gray-400 hover:text-orange-400 transition-colors">
-                      Classes
+                    <Link href="/about" className="text-gray-400 hover:text-orange-400 transition-colors">
+                      About Us
                     </Link>
                   </li>
                   <li>
-                    <Link href="/trainers" className="text-gray-400 hover:text-orange-400 transition-colors">
-                      Trainers
-                    </Link>
-                  </li>
-                  <li>
-                    <Link href="/facilities" className="text-gray-400 hover:text-orange-400 transition-colors">
-                      Facilities
+                    <Link href="/shop" className="text-gray-400 hover:text-orange-400 transition-colors">
+                      Shop
                     </Link>
                   </li>
                 </ul>
@@ -66,23 +66,23 @@ const Footer = () => {
                 <h3 className="text-lg font-semibold mb-4">Support</h3>
                 <ul className="space-y-2">
                   <li>
-                    <Link href="/help" className="text-gray-400 hover:text-orange-400 transition-colors">
-                      Help Center
-                    </Link>
-                  </li>
-                  <li>
                     <Link href="/contact" className="text-gray-400 hover:text-orange-400 transition-colors">
                       Contact Us
                     </Link>
                   </li>
                   <li>
-                    <Link href="/privacy" className="text-gray-400 hover:text-orange-400 transition-colors">
-                      Privacy Policy
+                    <Link href="/about#team" className="text-gray-400 hover:text-orange-400 transition-colors">
+                      Our Trainers
                     </Link>
                   </li>
                   <li>
-                    <Link href="/terms" className="text-gray-400 hover:text-orange-400 transition-colors">
-                      Terms of Service
+                    <Link href="/membership#faq" className="text-gray-400 hover:text-orange-400 transition-colors">
+                      FAQ
+                    </Link>
+                  </li>
+                  <li>
+                    <Link href="/register" className="text-gray-400 hover:text-orange-400 transition-colors">
+                      Join Now
                     </Link>
                   </li>
                 </ul>
@@ -99,7 +99,7 @@ const Footer = () => {
             <div className="border-t border-gray-800 mt-8 pt-8">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-400 text-sm">
-              © 2024 King Gym. All rights reserved.
+              © 2024 <Link href="https://affanwahid.com" target="_blank" rel="noopener noreferrer" className="text-orange-400 hover:text-orange-300 transition-colors">Muhammad Affan Wahid</Link>. All rights reserved.
             </p>
             <div className="flex space-x-6 mt-4 md:mt-0">
               <Link 
