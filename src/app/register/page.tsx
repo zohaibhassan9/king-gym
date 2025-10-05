@@ -139,32 +139,35 @@ export default function Register() {
     
     if (validateForm()) {
       try {
-        const response = await fetch('/api/members', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
+        // Import client database dynamically
+        const { default: clientDb } = await import('../../../lib/client-database');
+        
+        // Set package price
+        const packagePrice = clientDb.getPackagePrice(formData.package);
+        const finalPrice = packagePrice - (formData.discount || 0);
+        
+        const memberData = {
+          ...formData,
+          packagePrice,
+          finalPrice,
+          photo: formData.photo ? URL.createObjectURL(formData.photo) : null
+        };
+        
+        const newMember = clientDb.addMember(memberData);
+        
+        alert(`Registration successful! Your member ID is ${newMember.memberId}. You will be contacted soon for payment confirmation.`);
+        
+        // Reset form
+        setFormData({
+          memberName: '',
+          cnicNumber: '',
+          contactNumber: '',
+          address: '',
+          package: '',
+          joiningDate: '',
+          expiryDate: '',
+          photo: null
         });
-        
-        const result = await response.json();
-        
-        if (result.success) {
-          alert(`Registration successful! Your member ID is ${result.data.memberId}. You will be contacted soon for payment confirmation.`);
-          // Reset form
-          setFormData({
-            memberName: '',
-            cnicNumber: '',
-            contactNumber: '',
-            address: '',
-            package: '',
-            joiningDate: '',
-            expiryDate: '',
-            photo: null
-          });
-        } else {
-          alert(`Registration failed: ${result.error}`);
-        }
       } catch (error) {
         console.error('Registration error:', error);
         alert('Registration failed. Please try again.');

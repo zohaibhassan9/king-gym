@@ -125,26 +125,20 @@ export default function StaffDashboard() {
     try {
       setLoading(true);
       
+      // Import client database dynamically
+      const { default: clientDb } = await import('../../../lib/client-database');
+      
       // Load members
-      const membersResponse = await fetch('/api/members');
-      const membersResult = await membersResponse.json();
-      if (membersResult.success) {
-        setMembers(membersResult.data);
-      }
+      const members = clientDb.getMembers();
+      setMembers(members);
 
       // Load payments
-      const paymentsResponse = await fetch('/api/payments');
-      const paymentsResult = await paymentsResponse.json();
-      if (paymentsResult.success) {
-        setPayments(paymentsResult.data);
-      }
+      const payments = clientDb.getPayments();
+      setPayments(payments);
 
       // Load dashboard data
-      const dashboardResponse = await fetch('/api/dashboard');
-      const dashboardResult = await dashboardResponse.json();
-      if (dashboardResult.success) {
-        setDashboardData(dashboardResult.data);
-      }
+      const dashboardData = clientDb.getDashboardData();
+      setDashboardData(dashboardData);
 
       // Generate recent activities from payments and attendance
       setTimeout(() => {
