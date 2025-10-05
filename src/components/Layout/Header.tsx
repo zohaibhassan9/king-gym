@@ -192,25 +192,25 @@ const Header = () => {
             </div>
             
             {/* Mobile Menu Content */}
-            <div className="relative h-screen min-h-screen flex flex-col bg-black w-full overflow-y-auto">
+            <div className="relative h-screen min-h-screen flex flex-col bg-black w-full">
               {/* Header */}
-              <div className="flex items-center justify-center p-6 border-b border-gray-700 bg-black">
+              <div className="flex items-center justify-center p-4 border-b border-gray-700 bg-black flex-shrink-0">
                 <img 
                   src="/logo-navbar.png" 
                   alt="King Gym Logo" 
-                  className="h-16 w-auto"
+                  className="h-12 w-auto"
                 />
-                <span className="text-white text-xl font-bold ml-3">King Gym</span>
+                <span className="text-white text-lg font-bold ml-3">King Gym</span>
               </div>
               
               {/* Navigation Links */}
-              <div className="flex-1 px-6 py-8 bg-black min-h-0">
-                <div className="space-y-4">
+              <div className="flex-1 px-4 py-4 bg-black overflow-y-auto">
+                <div className="space-y-3">
                   {navigation.map((item) => (
                     <Link
                       key={item.name}
                       href={item.href}
-                      className={`block w-full px-6 py-4 text-xl font-bold text-center rounded-xl border-2 transition-all duration-300 ${
+                      className={`block w-full px-4 py-3 text-lg font-bold text-center rounded-lg border-2 transition-all duration-300 ${
                         pathname === item.href 
                           ? 'text-orange-400 bg-orange-500/20 border-orange-500' 
                           : 'text-white border-gray-600 hover:bg-gray-800 hover:border-orange-500'
@@ -223,8 +223,8 @@ const Header = () => {
                 </div>
               </div>
               
-              {/* Auth Buttons */}
-              <div className="p-6 border-t border-gray-700 bg-black flex-shrink-0">
+              {/* Auth Buttons - Always at bottom */}
+              <div className="p-4 border-t border-gray-700 bg-black flex-shrink-0 sticky bottom-0">
                 {user ? (
                   <div className="space-y-4">
                     <div className="text-center text-gray-300 text-sm mb-4">
@@ -241,20 +241,20 @@ const Header = () => {
                     </button>
                   </div>
                 ) : (
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     <Link
                       href="/login"
-                      className="block w-full text-center px-6 py-4 text-gray-300 text-xl font-bold hover:bg-gray-800 rounded-xl transition-colors border-2 border-gray-600 hover:border-gray-500"
+                      className="block w-full text-center px-4 py-3 text-gray-300 text-lg font-bold hover:bg-gray-800 rounded-lg transition-colors border-2 border-gray-600 hover:border-gray-500"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Login
                     </Link>
                     <Link
                       href="/register"
-                      className="block w-full text-center px-6 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-xl transition-colors text-xl font-bold shadow-lg hover:shadow-orange-500/25"
+                      className="block w-full text-center px-4 py-4 bg-orange-600 hover:bg-orange-700 text-white rounded-lg transition-colors text-xl font-bold shadow-lg hover:shadow-orange-500/25 border-2 border-orange-500"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      Join Now
+                      🏋️ Join Now
                     </Link>
                   </div>
                 )}
