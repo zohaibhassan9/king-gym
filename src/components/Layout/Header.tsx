@@ -15,16 +15,47 @@ const Header = () => {
   // Lock body scroll when mobile menu is open
   useEffect(() => {
     if (isMenuOpen) {
+      // Prevent scrolling with multiple methods
       document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+      document.body.style.height = '100%';
+      document.documentElement.style.overflow = 'hidden';
+      
+      // Prevent touch scrolling on mobile
+      document.addEventListener('touchmove', preventScroll, { passive: false });
+      document.addEventListener('wheel', preventScroll, { passive: false });
     } else {
+      // Restore scrolling
       document.body.style.overflow = 'unset';
+      document.body.style.position = 'unset';
+      document.body.style.width = 'unset';
+      document.body.style.height = 'unset';
+      document.documentElement.style.overflow = 'unset';
+      
+      // Remove event listeners
+      document.removeEventListener('touchmove', preventScroll);
+      document.removeEventListener('wheel', preventScroll);
     }
     
     // Cleanup on unmount
     return () => {
       document.body.style.overflow = 'unset';
+      document.body.style.position = 'unset';
+      document.body.style.width = 'unset';
+      document.body.style.height = 'unset';
+      document.documentElement.style.overflow = 'unset';
+      document.removeEventListener('touchmove', preventScroll);
+      document.removeEventListener('wheel', preventScroll);
     };
   }, [isMenuOpen]);
+
+  // Function to prevent scrolling
+  const preventScroll = (e: Event) => {
+    e.preventDefault();
+    e.stopPropagation();
+    return false;
+  };
 
   // Handle scroll detection
   useEffect(() => {
