@@ -146,7 +146,10 @@ const Header = () => {
 
         {/* Mobile Navigation Overlay */}
         {isMenuOpen && (
-          <div className="md:hidden fixed inset-0 z-50 bg-gray-900">
+          <div className="md:hidden fixed inset-0 z-[9999] bg-gray-900 w-full h-full">
+            {/* Backdrop */}
+            <div className="absolute inset-0 bg-gray-900"></div>
+            
             {/* Close Button */}
             <div className="absolute top-4 right-4 z-20">
               <button
@@ -158,7 +161,7 @@ const Header = () => {
             </div>
             
             {/* Mobile Menu Content */}
-            <div className="h-full flex flex-col">
+            <div className="relative h-full flex flex-col bg-gray-900">
               {/* Header */}
               <div className="flex items-center justify-center p-6 border-b border-gray-700">
                 <img 
