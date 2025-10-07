@@ -31,9 +31,12 @@ export async function POST(request: NextRequest) {
     // Generate transaction ID
     const transactionId = `TXN-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
+    // Remove fields that are not in the schema
+    const { description, ...paymentData } = body;
+    
     const payment = await prisma.payment.create({
       data: {
-        ...body,
+        ...paymentData,
         transactionId,
       },
       include: {

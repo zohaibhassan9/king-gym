@@ -71,7 +71,11 @@ export default function StaffDashboard() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showPaymentErrorModal, setShowPaymentErrorModal] = useState(false);
+  const [paymentErrorMessage, setPaymentErrorMessage] = useState('');
+  const [showPaymentSuccessModal, setShowPaymentSuccessModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [members, setMembers] = useState<Member[]>([]);
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
   const [payments, setPayments] = useState<any[]>([]);
@@ -148,9 +152,17 @@ export default function StaffDashboard() {
       const members = clientDb.getMembers();
       setMembers(members);
 
-      // Load payments
+      // Load payments and enrich with member information
       const payments = clientDb.getPayments();
-      setPayments(payments);
+      const enrichedPayments = payments.map((payment: any) => {
+        const member = members.find((m: any) => m.id === payment.memberId);
+        return {
+          ...payment,
+          memberName: member ? member.memberName : 'Unknown Member',
+          status: payment.status || 'completed' // Default status if not set
+        };
+      });
+      setPayments(enrichedPayments);
 
       // Load dashboard data
       const dashboardData = clientDb.getDashboardData();
@@ -390,11 +402,15 @@ export default function StaffDashboard() {
     }
   };
 
-  const filteredMembers = members.filter(member =>
-    member.memberName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    member.memberId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    member.contactNumber.includes(searchTerm)
-  );
+  const filteredMembers = members.filter(member => {
+    const matchesSearch = member.memberName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.memberId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      member.contactNumber.includes(searchTerm);
+    
+    const matchesStatus = statusFilter === 'all' || member.status === statusFilter;
+    
+    return matchesSearch && matchesStatus;
+  });
 
   const handleViewMember = (member: Member) => {
     setSelectedMember(member);
@@ -451,42 +467,56 @@ export default function StaffDashboard() {
   const handleAddTransaction = async () => {
     if (selectedMember && newTransaction.amount > 0) {
       try {
-        const response = await fetch('/api/payments', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            memberId: selectedMember.id,
-            amount: newTransaction.amount,
-            method: newTransaction.method,
-            description: newTransaction.description || `Payment for ${selectedMember.package}`,
-            date: newTransaction.date
-          }),
+        // Import client database
+        const { default: clientDb } = await import('../../../lib/client-database');
+        
+        // Create payment record using client database
+        const paymentData = {
+          memberId: selectedMember.id,
+          memberName: selectedMember.memberName,
+          amount: newTransaction.amount,
+          method: newTransaction.method,
+          description: newTransaction.description || `Payment for ${selectedMember.package}`,
+          date: newTransaction.date,
+          package: selectedMember.package,
+          previousExpiryDate: selectedMember.expiryDate
+        };
+        
+        // Add payment record
+        clientDb.addPayment(paymentData);
+        
+        // Extend member's expiration date by one month
+        const currentExpiryDate = new Date(selectedMember.expiryDate);
+        const newExpiryDate = new Date(currentExpiryDate);
+        newExpiryDate.setMonth(newExpiryDate.getMonth() + 1);
+        
+        // Update member's expiry date
+        const updatedMember = {
+          ...selectedMember,
+          expiryDate: newExpiryDate.toISOString().split('T')[0]
+        };
+        
+        // Update member in database
+        clientDb.updateMember(updatedMember);
+        
+        // Show success modal
+        setShowPaymentSuccessModal(true);
+        setShowPaymentModal(false);
+        
+        // Reset form
+        setNewTransaction({
+          amount: selectedMember.finalPrice,
+          method: 'cash',
+          description: '',
+          date: new Date().toISOString().split('T')[0]
         });
         
-        const result = await response.json();
-        
-        if (result.success) {
-          alert(result.message);
-          setShowPaymentModal(false);
-          
-          // Reset form
-          setNewTransaction({
-            amount: selectedMember.finalPrice,
-            method: 'cash',
-            description: '',
-            date: new Date().toISOString().split('T')[0]
-          });
-          
-          // Reload data to get updated information
-          await loadData();
-        } else {
-          alert(`Payment failed: ${result.error}`);
-        }
+        // Reload data to get updated information
+        await loadData();
       } catch (error) {
         console.error('Payment error:', error);
-        alert('Payment failed. Please try again.');
+        setPaymentErrorMessage('Payment failed. Please try again.');
+        setShowPaymentErrorModal(true);
       }
     }
   };
@@ -589,22 +619,28 @@ export default function StaffDashboard() {
         };
         
         // Add attendance record
-        clientDb.addAttendance(attendanceRecord);
+        const result = clientDb.addAttendance(attendanceRecord);
         
-        // Show success modal
-        setShowSuccessModal(true);
-        setShowAttendanceModal(false);
-        
-        // Reset form
-        setAttendanceData({
-          date: new Date().toISOString().split('T')[0],
-          checkInTime: new Date().toTimeString().split(' ')[0].substring(0, 5),
-          checkOutTime: '',
-          notes: ''
-        });
-        
-        // Reload data
-        await loadData();
+        if (result.success) {
+          // Show success modal
+          setShowSuccessModal(true);
+          setShowAttendanceModal(false);
+          
+          // Reset form
+          setAttendanceData({
+            date: new Date().toISOString().split('T')[0],
+            checkInTime: new Date().toTimeString().split(' ')[0].substring(0, 5),
+            checkOutTime: '',
+            notes: ''
+          });
+          
+          // Reload data
+          await loadData();
+        } else {
+          // Show error modal for duplicate attendance
+          setErrorMessage(result.message || 'Attendance already marked for this member today');
+          setShowErrorModal(true);
+        }
       } catch (error) {
         console.error('Attendance error:', error);
         setErrorMessage('Attendance marking failed. Please try again.');
@@ -737,9 +773,18 @@ export default function StaffDashboard() {
                     <h2 className="text-2xl font-bold text-white mb-2">Welcome back, {user?.name || 'Staff'}!</h2>
                     <p className="text-gray-300">Here's what's happening at King Gym today</p>
                   </div>
-                  <div className="text-right">
-                    <div className="text-sm text-gray-400">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
-                    <div className="text-orange-400 font-semibold">{new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</div>
+                  <div className="flex items-center gap-4">
+                    <button 
+                      onClick={() => window.open('/register', '_blank')}
+                      className="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2"
+                    >
+                      <UserGroupIcon className="h-4 w-4" />
+                      Register New Member
+                    </button>
+                    <div className="text-right">
+                      <div className="text-sm text-gray-400">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                      <div className="text-orange-400 font-semibold">{new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -783,23 +828,6 @@ export default function StaffDashboard() {
                   </div>
                 </div>
 
-                <div className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6 hover:border-blue-500/30 hover:shadow-2xl hover:shadow-blue-500/10 transition-all duration-500 hover:-translate-y-2">
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-600/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="relative">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="p-3 bg-gradient-to-br from-blue-600/20 to-blue-700/20 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                        <CurrencyDollarIcon className="h-8 w-8 text-blue-400 group-hover:text-blue-300 transition-colors duration-300" />
-                      </div>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-white group-hover:text-blue-300 transition-colors duration-300">Rs {staffStats.todayRevenue.toLocaleString()}</div>
-                        <div className="text-sm text-gray-400">Today's Revenue</div>
-                      </div>
-                    </div>
-                    <div className="text-sm text-gray-300">
-                      Monthly: Rs {(staffStats.monthlyRevenue / 1000000).toFixed(1)}M
-                    </div>
-                  </div>
-                </div>
 
                 <div className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6 hover:border-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 hover:-translate-y-2">
                   <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -820,137 +848,45 @@ export default function StaffDashboard() {
                 </div>
               </div>
 
-              {/* Alerts and Notifications */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Attendance Statistics */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-white">Alerts & Notifications</h3>
-                    <BellIcon className="h-5 w-5 text-orange-400" />
-                  </div>
-                  <div className="space-y-3">
-                    {staffStats.expiringMemberships > 0 && (
-                      <button 
-                        onClick={() => setShowExpiringModal(true)}
-                        className="w-full flex items-center p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg hover:bg-yellow-500/20 transition-colors text-left"
-                      >
-                        <ExclamationTriangleIcon className="h-5 w-5 text-yellow-400 mr-3" />
-                        <div>
-                          <div className="text-yellow-400 font-medium">{staffStats.expiringMemberships} memberships expiring in 5 days</div>
-                          <div className="text-sm text-gray-400">Click to view members - Contact for renewal</div>
-                        </div>
-                      </button>
-                    )}
-                    {staffStats.pendingCheckouts > 0 && (
-                      <div className="flex items-center p-3 bg-yellow-500/10 border border-yellow-500/20 rounded-lg">
-                        <ClockIcon className="h-5 w-5 text-yellow-400 mr-3" />
-                        <div>
-                          <div className="text-yellow-400 font-medium">{staffStats.pendingCheckouts} members haven't checked out</div>
-                          <div className="text-sm text-gray-400">Check gym floor for remaining members</div>
-                        </div>
-                      </div>
-                    )}
-                    {expiredMembers.length > 0 && (
-                      <div className="flex items-center p-3 bg-red-500/10 border border-red-500/20 rounded-lg">
-                        <ExclamationTriangleIcon className="h-5 w-5 text-red-400 mr-3" />
-                        <div className="flex-1">
-                          <div className="text-red-400 font-medium">{expiredMembers.length} members have expired memberships</div>
-                          <div className="text-sm text-gray-400">Mark as expired and send renewal alerts</div>
-                        </div>
-                        <button
-                          onClick={markMembersAsExpired}
-                          className="px-3 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors"
-                        >
-                          Mark Expired
-                        </button>
-                      </div>
-                    )}
-                    <div className="flex items-center p-3 bg-green-500/10 border border-green-500/20 rounded-lg">
-                      <CheckCircleIcon className="h-5 w-5 text-green-400 mr-3" />
-                      <div>
-                        <div className="text-green-400 font-medium">All systems operational</div>
-                        <div className="text-sm text-gray-400">Gym equipment and facilities running smoothly</div>
-                      </div>
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-gray-400 text-sm">Today's Check-ins</p>
+                      <p className="text-2xl font-bold text-white">{staffStats.activeToday}</p>
+                    </div>
+                    <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
+                      <ClockIcon className="h-6 w-6 text-green-400" />
                     </div>
                   </div>
                 </div>
-
+                
                 <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-white">Recent Activity</h3>
-                    <ClockIcon className="h-5 w-5 text-orange-400" />
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-gray-400 text-sm">Active Members</p>
+                      <p className="text-2xl font-bold text-white">{staffStats.activeMembers}</p>
+                    </div>
+                    <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
+                      <UserGroupIcon className="h-6 w-6 text-blue-400" />
+                    </div>
                   </div>
-                  <div className="space-y-3">
-                    {recentActivities.length === 0 ? (
-                      <div className="text-center py-8">
-                        <div className="text-gray-400 text-lg">No recent activity</div>
-                        <div className="text-gray-500 text-sm mt-2">Activities will appear here as members register and make payments</div>
-                      </div>
-                    ) : (
-                      recentActivities.map((activity: any) => (
-                        <div key={activity.id} className="flex items-center p-3 bg-gray-700/30 rounded-lg">
-                          <div className={`w-2 h-2 rounded-full mr-3 ${
-                            activity.type === 'payment' ? 'bg-green-400' :
-                            activity.type === 'attendance' ? 'bg-blue-400' :
-                            'bg-orange-400'
-                          }`}></div>
-                          <div className="flex-1">
-                            <div className="text-white text-sm">
-                              {activity.type === 'payment' && `${activity.member} paid Rs ${activity.amount?.toLocaleString() || '0'}`}
-                              {activity.type === 'attendance' && `${activity.member} ${activity.action}`}
-                              {activity.type === 'registration' && `${activity.member} joined with ${activity.package}`}
-                            </div>
-                            <div className="text-gray-400 text-xs">{activity.time}</div>
-                          </div>
-                          <span className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                            activity.status === 'completed' ? 'bg-green-500/20 text-green-400' :
-                            activity.status === 'active' ? 'bg-blue-500/20 text-blue-400' :
-                            'bg-orange-500/20 text-orange-400'
-                          }`}>
-                            {activity.status}
-                          </span>
-                        </div>
-                      ))
-                    )}
+                </div>
+                
+                <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-gray-400 text-sm">Attendance Rate</p>
+                      <p className="text-2xl font-bold text-white">{staffStats.averageAttendance}%</p>
+                    </div>
+                    <div className="w-12 h-12 bg-orange-500/20 rounded-full flex items-center justify-center">
+                      <ChartBarIcon className="h-6 w-6 text-orange-400" />
+                    </div>
                   </div>
                 </div>
               </div>
 
-              {/* Quick Actions */}
-              <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-                <h3 className="text-lg font-semibold text-white mb-4">Quick Actions</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <button 
-                    onClick={() => setActiveTab('members')}
-                    className="flex items-center p-4 bg-orange-600/10 border border-orange-500/20 rounded-lg hover:bg-orange-600/20 transition-colors"
-                  >
-                    <UserGroupIcon className="h-6 w-6 text-orange-400 mr-3" />
-                    <div className="text-left">
-                      <div className="text-white font-medium">Manage Members</div>
-                      <div className="text-sm text-gray-400">View and edit member details</div>
-                    </div>
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab('attendance')}
-                    className="flex items-center p-4 bg-blue-600/10 border border-blue-500/20 rounded-lg hover:bg-blue-600/20 transition-colors"
-                  >
-                    <ClockIcon className="h-6 w-6 text-blue-400 mr-3" />
-                    <div className="text-left">
-                      <div className="text-white font-medium">Mark Attendance</div>
-                      <div className="text-sm text-gray-400">Check in/out members</div>
-                    </div>
-                  </button>
-                  <button 
-                    onClick={() => setActiveTab('payments')}
-                    className="flex items-center p-4 bg-green-600/10 border border-green-500/20 rounded-lg hover:bg-green-600/20 transition-colors"
-                  >
-                    <CurrencyDollarIcon className="h-6 w-6 text-green-400 mr-3" />
-                    <div className="text-left">
-                      <div className="text-white font-medium">View Payments</div>
-                      <div className="text-sm text-gray-400">Recent payment history</div>
-                    </div>
-                  </button>
-                </div>
-              </div>
             </div>
           )}
 
@@ -967,6 +903,16 @@ export default function StaffDashboard() {
                     onChange={(e) => setSearchTerm(e.target.value)}
                     className="px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
                   />
+                  <select
+                    value={statusFilter}
+                    onChange={(e) => setStatusFilter(e.target.value)}
+                    className="px-4 py-2 bg-gray-700/50 border border-gray-600 rounded-lg text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                  >
+                    <option value="all">All Status</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                    <option value="expired">Expired</option>
+                  </select>
                 </div>
               </div>
               
@@ -1965,6 +1911,83 @@ export default function StaffDashboard() {
               </div>
             </div>
           )}
+
+          {/* Payment Error Modal */}
+          {showPaymentErrorModal && (
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+              <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 max-w-md w-full mx-4">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mr-4">
+                    <ExclamationTriangleIcon className="h-6 w-6 text-red-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Payment Failed</h3>
+                    <p className="text-gray-400 text-sm">Transaction could not be processed</p>
+                  </div>
+                </div>
+                
+                <div className="mb-6">
+                  <p className="text-gray-300">
+                    {paymentErrorMessage}
+                  </p>
+                </div>
+                
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => setShowPaymentErrorModal(false)}
+                    className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                  >
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Payment Success Modal */}
+          {showPaymentSuccessModal && (
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+              <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 max-w-md w-full mx-4">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mr-4">
+                    <CheckCircleIcon className="h-6 w-6 text-green-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Payment {newTransaction.method === 'cash' ? 'Approved' : 'Pending'}</h3>
+                    <p className="text-gray-400 text-sm">
+                      {newTransaction.method === 'cash' 
+                        ? 'Transaction completed and approved' 
+                        : 'Transaction recorded, awaiting admin approval'
+                      }
+                    </p>
+                  </div>
+                </div>
+                
+                <div className="mb-6">
+                  <p className="text-gray-300 mb-3">
+                    Payment of <span className="font-semibold text-white">Rs {newTransaction.amount?.toLocaleString() || '0'}</span> has been successfully recorded for <span className="font-semibold text-white">{selectedMember?.memberName}</span>.
+                  </p>
+                  <div className="bg-gray-700/30 rounded-lg p-3 text-sm">
+                    <div className="text-gray-300 space-y-1">
+                      <div><span className="text-gray-400">Previous Expiry:</span> {selectedMember?.expiryDate ? new Date(selectedMember.expiryDate).toLocaleDateString() : 'N/A'}</div>
+                      <div><span className="text-gray-400">New Expiry:</span> {selectedMember?.expiryDate ? new Date(new Date(selectedMember.expiryDate).setMonth(new Date(selectedMember.expiryDate).getMonth() + 1)).toLocaleDateString() : 'N/A'}</div>
+                      <div className="text-green-400 font-medium">Membership extended by 1 month</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => setShowPaymentSuccessModal(false)}
+                    className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                  >
+                    Continue
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
         </div>
       </div>
     </Layout>

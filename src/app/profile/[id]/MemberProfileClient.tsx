@@ -68,7 +68,14 @@ export default function MemberProfileClient({ memberId }: MemberProfileClientPro
         const memberPayments = clientDb.getPaymentsByMemberId(Number(memberId));
         const memberAttendance = clientDb.getAttendanceByMemberId(Number(memberId));
         
-        setPayments(memberPayments);
+        // Enrich payment data with status and other information
+        const enrichedPayments = memberPayments.map(payment => ({
+          ...payment,
+          status: payment.status || 'completed', // Default status if not set
+          memberName: memberData.memberName // Add member name for consistency
+        }));
+        
+        setPayments(enrichedPayments);
         setAttendance(memberAttendance);
       }
     } catch (error) {
