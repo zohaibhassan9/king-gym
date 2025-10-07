@@ -7,12 +7,12 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  output: 'export',
+  // Disable static export to enable API routes
+  // ...(process.env.NODE_ENV === 'production' && { output: 'export' }),
   trailingSlash: true,
   images: {
     unoptimized: true,
   },
-  distDir: 'out',
 };
 
 export default nextConfig;

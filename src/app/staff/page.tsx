@@ -68,6 +68,9 @@ export default function StaffDashboard() {
   const [showEditMemberModal, setShowEditMemberModal] = useState(false);
   const [showAttendanceModal, setShowAttendanceModal] = useState(false);
   const [showExpiringModal, setShowExpiringModal] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
   const [members, setMembers] = useState<Member[]>([]);
   const [dashboardData, setDashboardData] = useState<DashboardData | null>(null);
@@ -138,7 +141,7 @@ export default function StaffDashboard() {
     try {
       setLoading(true);
       
-      // Import client database dynamically
+      // Import client database
       const { default: clientDb } = await import('../../../lib/client-database');
       
       // Load members
@@ -566,50 +569,46 @@ export default function StaffDashboard() {
   };
 
   const handleViewProfile = (member: Member) => {
-    router.push(`/profile/${member.id}`);
+    window.open(`/profile/${member.id}`, '_blank');
   };
 
   const handleSaveAttendance = async () => {
     if (selectedMember) {
       try {
-        const response = await fetch('/api/attendance', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            memberId: selectedMember.id,
-            memberName: selectedMember.memberName,
-            date: attendanceData.date,
-            checkInTime: attendanceData.checkInTime,
-            checkOutTime: attendanceData.checkOutTime || null,
-            notes: attendanceData.notes,
-            status: attendanceData.checkOutTime ? 'completed' : 'active'
-          }),
+        // Import client database
+        const { default: clientDb } = await import('../../../lib/client-database');
+        
+        // Create attendance record using client database
+        const attendanceRecord = {
+          memberId: selectedMember.id,
+          date: attendanceData.date,
+          checkInTime: attendanceData.checkInTime,
+          checkOutTime: attendanceData.checkOutTime || null,
+          notes: attendanceData.notes,
+          status: attendanceData.checkOutTime ? 'completed' : 'active'
+        };
+        
+        // Add attendance record
+        clientDb.addAttendance(attendanceRecord);
+        
+        // Show success modal
+        setShowSuccessModal(true);
+        setShowAttendanceModal(false);
+        
+        // Reset form
+        setAttendanceData({
+          date: new Date().toISOString().split('T')[0],
+          checkInTime: new Date().toTimeString().split(' ')[0].substring(0, 5),
+          checkOutTime: '',
+          notes: ''
         });
         
-        const result = await response.json();
-        
-        if (result.success) {
-          alert(`Attendance marked successfully for ${selectedMember.memberName}!`);
-          setShowAttendanceModal(false);
-          
-          // Reset form
-          setAttendanceData({
-            date: new Date().toISOString().split('T')[0],
-            checkInTime: new Date().toTimeString().split(' ')[0].substring(0, 5),
-            checkOutTime: '',
-            notes: ''
-          });
-          
-          // Reload data
-          await loadData();
-        } else {
-          alert(`Attendance marking failed: ${result.error}`);
-        }
+        // Reload data
+        await loadData();
       } catch (error) {
         console.error('Attendance error:', error);
-        alert('Attendance marking failed. Please try again.');
+        setErrorMessage('Attendance marking failed. Please try again.');
+        setShowErrorModal(true);
       }
     }
   };
@@ -993,7 +992,7 @@ export default function StaffDashboard() {
                                 alt={member.memberName}
                                 className="w-full h-full object-cover"
                                 onError={(e) => {
-                                  e.currentTarget.src = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face';
+                                  e.currentTarget.src = '/dummy.png';
                                 }}
                               />
                             </div>
@@ -1146,7 +1145,7 @@ export default function StaffDashboard() {
                                   alt={member.memberName}
                                   className="w-full h-full object-cover"
                                   onError={(e) => {
-                                    e.currentTarget.src = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face';
+                                    e.currentTarget.src = '/dummy.png';
                                   }}
                                 />
                               </div>
@@ -1272,7 +1271,7 @@ export default function StaffDashboard() {
                           alt={selectedMember.memberName}
                           className="w-full h-full object-cover"
                           onError={(e) => {
-                            e.currentTarget.src = '/api/placeholder/200/200';
+                            e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedMember.memberName) + '&background=orange&color=fff&size=200';
                           }}
                         />
                       </div>
@@ -1347,7 +1346,7 @@ export default function StaffDashboard() {
           {/* Add Transaction Modal */}
           {showPaymentModal && selectedMember && (
             <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-              <div className="bg-gray-800 rounded-2xl border border-gray-700 max-w-md w-full">
+              <div className="bg-gray-800 rounded-2xl border border-gray-700 max-w-2xl w-full">
                 <div className="p-6">
                   <div className="flex justify-between items-center mb-6">
                     <h3 className="text-xl font-bold text-white">Add New Transaction</h3>
@@ -1549,7 +1548,7 @@ export default function StaffDashboard() {
                           alt={selectedMember.memberName}
                           className="w-full h-full object-cover"
                           onError={(e) => {
-                            e.currentTarget.src = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face';
+                            e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(selectedMember.memberName) + '&background=orange&color=fff&size=200';
                           }}
                         />
                       </div>
@@ -1813,7 +1812,7 @@ export default function StaffDashboard() {
                                       alt={member.memberName}
                                       className="w-full h-full object-cover"
                                       onError={(e) => {
-                                        e.currentTarget.src = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&h=200&fit=crop&crop=face';
+                                        e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(member.memberName) + '&background=orange&color=fff&size=200';
                                       }}
                                     />
                                   </div>
@@ -1898,6 +1897,70 @@ export default function StaffDashboard() {
                       Go to Members
                     </button>
                   </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Success Modal */}
+          {showSuccessModal && (
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+              <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 max-w-md w-full mx-4">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center mr-4">
+                    <CheckCircleIcon className="h-6 w-6 text-green-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Attendance Marked</h3>
+                    <p className="text-gray-400 text-sm">Successfully recorded</p>
+                  </div>
+                </div>
+                
+                <div className="mb-6">
+                  <p className="text-gray-300">
+                    Attendance has been successfully marked for <span className="font-semibold text-white">{selectedMember?.memberName}</span>.
+                  </p>
+                </div>
+                
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => setShowSuccessModal(false)}
+                    className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                  >
+                    Continue
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Error Modal */}
+          {showErrorModal && (
+            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+              <div className="bg-gray-800 rounded-2xl border border-gray-700 p-6 max-w-md w-full mx-4">
+                <div className="flex items-center mb-4">
+                  <div className="w-12 h-12 bg-red-500/20 rounded-full flex items-center justify-center mr-4">
+                    <ExclamationTriangleIcon className="h-6 w-6 text-red-400" />
+                  </div>
+                  <div>
+                    <h3 className="text-xl font-bold text-white">Error</h3>
+                    <p className="text-gray-400 text-sm">Attendance marking failed</p>
+                  </div>
+                </div>
+                
+                <div className="mb-6">
+                  <p className="text-gray-300">
+                    {errorMessage}
+                  </p>
+                </div>
+                
+                <div className="flex justify-end">
+                  <button
+                    onClick={() => setShowErrorModal(false)}
+                    className="bg-gray-600 hover:bg-gray-700 text-white font-semibold py-2 px-6 rounded-lg transition-colors"
+                  >
+                    Close
+                  </button>
                 </div>
               </div>
             </div>

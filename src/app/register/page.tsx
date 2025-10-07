@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Layout from '@/components/Layout/Layout';
-import { UserIcon, IdentificationIcon, PhoneIcon, MapPinIcon, CalendarIcon } from '@heroicons/react/24/outline';
+import { UserIcon, IdentificationIcon, PhoneIcon, MapPinIcon, CalendarIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 
 export default function Register() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     memberName: '',
     cnicNumber: '',
@@ -12,37 +14,26 @@ export default function Register() {
     address: '',
     package: '',
     joiningDate: '',
-    expiryDate: '',
     photo: null as File | null
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [newMember, setNewMember] = useState<any>(null);
 
   const packages = [
-    { id: 'cardio', name: 'Men Cardio', price: 'Rs 4,000/month' },
-    { id: 'weight', name: 'Men Normal', price: 'Rs 3,000/month' },
-    { id: 'trainer', name: 'Couple (Separate Floor)', price: 'Rs 6,000/month' },
-    { id: 'coach', name: 'Ladies (Separate Floor)', price: 'Rs 4,000/month' }
+    { id: 'Men Cardio', name: 'Men Cardio', price: 'Rs 4,000/month' },
+    { id: 'Men Normal', name: 'Men Normal', price: 'Rs 3,000/month' },
+    { id: 'Couple (Separate Floor)', name: 'Couple (Separate Floor)', price: 'Rs 6,000/month' },
+    { id: 'Ladies (Separate Floor)', name: 'Ladies (Separate Floor)', price: 'Rs 4,000/month' }
   ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => {
-      const updated = {
-        ...prev,
-        [name]: value
-      };
-      
-      // Auto-set expiry date when joining date is selected
-      if (name === 'joiningDate' && value) {
-        const joiningDate = new Date(value);
-        const expiryDate = new Date(joiningDate);
-        expiryDate.setMonth(expiryDate.getMonth() + 1); // Add 1 month
-        updated.expiryDate = expiryDate.toISOString().split('T')[0];
-      }
-      
-      return updated;
-    });
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
     
     // Clear error when user starts typing
     if (errors[name]) {
@@ -96,9 +87,8 @@ export default function Register() {
       newErrors.memberName = 'Member name is required';
     }
 
-    if (!formData.cnicNumber.trim()) {
-      newErrors.cnicNumber = 'CNIC number is required';
-    } else if (!/^\d{5}-\d{7}-\d{1}$/.test(formData.cnicNumber)) {
+    // CNIC is now optional, but if provided, must be in correct format
+    if (formData.cnicNumber.trim() && !/^\d{5}-\d{7}-\d{1}$/.test(formData.cnicNumber)) {
       newErrors.cnicNumber = 'CNIC must be in format 12345-1234567-1';
     }
 
@@ -120,15 +110,10 @@ export default function Register() {
       newErrors.joiningDate = 'Joining date is required';
     }
 
-    if (!formData.expiryDate) {
-      newErrors.expiryDate = 'Expiry date is required';
-    } else if (formData.joiningDate && new Date(formData.expiryDate) <= new Date(formData.joiningDate)) {
-      newErrors.expiryDate = 'Expiry date must be after joining date';
-    }
-
-    if (!formData.photo) {
-      newErrors.photo = 'Profile photo is required';
-    }
+    // Photo is now optional
+    // if (!formData.photo) {
+    //   newErrors.photo = 'Profile photo is required';
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -139,23 +124,36 @@ export default function Register() {
     
     if (validateForm()) {
       try {
-        // Import client database dynamically
+        // Import client database
         const { default: clientDb } = await import('../../../lib/client-database');
         
         // Set package price
         const packagePrice = clientDb.getPackagePrice(formData.package);
-        const finalPrice = packagePrice - (formData.discount || 0);
+        const finalPrice = packagePrice;
         
+        // Calculate expiry date (1 month from joining date)
+        const joiningDate = new Date(formData.joiningDate);
+        const expiryDate = new Date(joiningDate);
+        expiryDate.setMonth(expiryDate.getMonth() + 1);
+
         const memberData = {
-          ...formData,
+          memberName: formData.memberName,
+          cnicNumber: formData.cnicNumber,
+          contactNumber: formData.contactNumber,
+          address: formData.address,
+          package: formData.package,
           packagePrice,
           finalPrice,
-          photo: formData.photo ? URL.createObjectURL(formData.photo) : null
+          joiningDate: formData.joiningDate,
+          expiryDate: expiryDate.toISOString().split('T')[0],
+          photo: formData.photo ? URL.createObjectURL(formData.photo) : '/dummy.png'
         };
         
         const newMember = clientDb.addMember(memberData);
         
-        alert(`Registration successful! Your member ID is ${newMember.memberId}. You will be contacted soon for payment confirmation.`);
+        // Store the new member data and show success modal
+        setNewMember(newMember);
+        setShowSuccessModal(true);
         
         // Reset form
         setFormData({
@@ -165,7 +163,6 @@ export default function Register() {
           address: '',
           package: '',
           joiningDate: '',
-          expiryDate: '',
           photo: null
         });
         
@@ -179,6 +176,11 @@ export default function Register() {
         alert('Registration failed. Please try again.');
       }
     }
+  };
+
+  const handleGoToHome = () => {
+    setShowSuccessModal(false);
+    router.push('/');
   };
 
   return (
@@ -232,7 +234,7 @@ export default function Register() {
               <div>
                 <label htmlFor="cnicNumber" className="block text-lg font-semibold text-white mb-2">
                   <IdentificationIcon className="h-6 w-6 inline mr-2 text-orange-400" />
-                  CNIC Number *
+                  CNIC Number (Optional)
                 </label>
                 <input
                   type="text"
@@ -298,7 +300,7 @@ export default function Register() {
               <div>
                 <label htmlFor="photo" className="block text-lg font-semibold text-white mb-2">
                   <UserIcon className="h-6 w-6 inline mr-2 text-orange-400" />
-                  Profile Photo *
+                  Profile Photo (Optional)
                 </label>
                 <div className="flex items-center space-x-4">
                   <div className="flex-1">
@@ -400,24 +402,6 @@ export default function Register() {
                 )}
               </div>
 
-              {/* Expiry Date */}
-              <div>
-                <label htmlFor="expiryDate" className="block text-lg font-semibold text-white mb-2">
-                  <CalendarIcon className="h-6 w-6 inline mr-2 text-orange-400" />
-                  Expiry Date (Auto-calculated)
-                </label>
-                <input
-                  type="date"
-                  id="expiryDate"
-                  name="expiryDate"
-                  value={formData.expiryDate}
-                  readOnly
-                  className="w-full px-4 py-4 bg-gray-600/50 border border-gray-500 rounded-xl text-orange-400 font-semibold text-lg"
-                />
-                <p className="mt-2 text-sm text-gray-400">
-                  Automatically set to 1 month from joining date
-                </p>
-              </div>
 
               {/* Submit Button */}
               <div className="pt-8">
@@ -432,6 +416,38 @@ export default function Register() {
           </div>
         </div>
       </div>
+
+      {/* Success Modal */}
+      {showSuccessModal && newMember && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-2xl border border-gray-700 max-w-md w-full">
+            <div className="p-8 text-center">
+              <div className="w-20 h-20 bg-green-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <CheckCircleIcon className="h-12 w-12 text-green-400" />
+              </div>
+              
+              <h3 className="text-2xl font-bold text-white mb-4">Registration Successful!</h3>
+              
+              <div className="bg-gray-700/50 rounded-xl p-4 mb-6">
+                <div className="text-orange-400 font-semibold text-lg mb-2">Your Member ID</div>
+                <div className="text-3xl font-black text-white">{newMember.memberId}</div>
+              </div>
+              
+              <div className="text-gray-300 mb-6">
+                <p className="mb-2">Welcome to <span className="text-orange-400 font-semibold">King Gym</span>!</p>
+                <p className="text-sm">You will be contacted soon for payment confirmation.</p>
+              </div>
+              
+              <button
+                onClick={handleGoToHome}
+                className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-bold text-lg py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/25"
+              >
+                Go to Home Page
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Layout>
   );
 }
