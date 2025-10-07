@@ -330,8 +330,40 @@ export default function AdminDashboard() {
   useEffect(() => {
     if (activeTab === 'analytics' && members.length > 0) {
       loadAnalyticsData();
+    } else if (activeTab === 'analytics' && members.length === 0) {
+      // If no members, still load analytics with empty data
+      loadAnalyticsData();
     }
   }, [activeTab, members]);
+
+  // Add timeout to ensure analytics loads even if there are issues
+  useEffect(() => {
+    if (activeTab === 'analytics' && !analyticsData) {
+      const timeout = setTimeout(() => {
+        if (!analyticsData) {
+          console.log('Analytics loading timeout, setting fallback data');
+          setAnalyticsData({
+            projectedRevenue: 0,
+            activeMembers: [],
+            realAttendanceRate: 0,
+            revenueGrowthRate: 0,
+            memberGrowthRate: 0,
+            attendanceGrowthRate: 0,
+            packagePercentages: [],
+            daysInMonth: 30,
+            daysPassed: 1,
+            daysRemaining: 29,
+            currentMonthMembers: 0,
+            monthlyRevenueData: new Array(12).fill(0),
+            monthlyMembersData: new Array(12).fill(0),
+            monthlyAttendanceData: new Array(12).fill(0)
+          });
+        }
+      }, 3000); // 3 second timeout
+
+      return () => clearTimeout(timeout);
+    }
+  }, [activeTab, analyticsData]);
 
   const tabs = [
     { id: 'analytics', name: 'Analytics', icon: ChartPieIcon },
@@ -466,6 +498,23 @@ export default function AdminDashboard() {
       });
     } catch (error) {
       console.error('Error loading analytics data:', error);
+      // Set fallback data to prevent infinite loading state
+      setAnalyticsData({
+        projectedRevenue: 0,
+        activeMembers: [],
+        realAttendanceRate: 0,
+        revenueGrowthRate: 0,
+        memberGrowthRate: 0,
+        attendanceGrowthRate: 0,
+        packagePercentages: [],
+        daysInMonth: 30,
+        daysPassed: 1,
+        daysRemaining: 29,
+        currentMonthMembers: 0,
+        monthlyRevenueData: new Array(12).fill(0),
+        monthlyMembersData: new Array(12).fill(0),
+        monthlyAttendanceData: new Array(12).fill(0)
+      });
     }
   };
 
