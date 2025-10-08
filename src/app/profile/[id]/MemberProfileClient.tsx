@@ -77,6 +77,12 @@ export default function MemberProfileClient({ memberId }: MemberProfileClientPro
         
         setPayments(enrichedPayments);
         setAttendance(memberAttendance);
+      } else {
+        // Handle case where member doesn't exist (e.g., fallback 'default' case)
+        console.log('Member not found for ID:', memberId);
+        setMember(null);
+        setPayments([]);
+        setAttendance([]);
       }
     } catch (error) {
       console.error('Error loading member data:', error);
@@ -169,12 +175,12 @@ export default function MemberProfileClient({ memberId }: MemberProfileClientPro
       <Layout>
         <div className="min-h-screen bg-black flex items-center justify-center">
           <div className="text-center">
-            <XCircleIcon className="h-16 w-16 text-red-400 mx-auto mb-4" />
+            <XCircleIcon className="h-16 w-16 text-red-500 mx-auto mb-4" />
             <h1 className="text-2xl font-bold text-white mb-2">Member Not Found</h1>
-            <p className="text-gray-400 mb-6">The member you're looking for doesn't exist.</p>
+            <p className="text-gray-400 mb-6">The member profile you're looking for doesn't exist.</p>
             <button
               onClick={() => window.history.back()}
-              className="bg-orange-600 hover:bg-orange-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+              className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition-colors"
             >
               Go Back
             </button>

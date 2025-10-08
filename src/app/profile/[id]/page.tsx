@@ -4,18 +4,28 @@ import MemberProfileClient from './MemberProfileClient';
 // Generate static params for all member profiles
 export async function generateStaticParams() {
   try {
-    // Import the client database to get member IDs
-    const { default: clientDb } = await import('../../../../lib/client-database');
-    const members = clientDb.getMembers();
+    // Try to read from the data files directly during build
+    const fs = await import('fs');
+    const path = await import('path');
     
-    // Return array of params for each member
-    return members.map((member: any) => ({
-      id: member.id.toString(),
-    }));
+    // Try to read members from the data directory
+    const dataPath = path.join(process.cwd(), 'data', 'members.json');
+    
+    if (fs.existsSync(dataPath)) {
+      const membersData = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+      const members = Array.isArray(membersData) ? membersData : [];
+      
+      return members.map((member: any) => ({
+        id: member.id?.toString() || member.memberId?.toString() || '',
+      })).filter((param: any) => param.id);
+    }
+    
+    // Fallback: return a default profile for build
+    return [{ id: 'default' }];
   } catch (error) {
     console.error('Error generating static params:', error);
-    // Return empty array if there's an error to prevent build failure
-    return [];
+    // Return a default profile to prevent build failure
+    return [{ id: 'default' }];
   }
 }
 
