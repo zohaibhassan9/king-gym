@@ -33,12 +33,17 @@ interface DashboardData {
     expiringMemberships: number;
     monthlyRevenue: number;
     todayRevenue: number;
+    monthlyProfit: number;
     newMembersThisMonth: number;
     averageAttendance: number;
+    attendanceToday: number;
   };
   expiringMembers: Member[];
   expiredMembers: Member[];
+  recentMembers: any[];
+  recentPayments: any[];
   todayAttendance: any[];
+  recentActivities: any[];
 }
 import { 
   UserGroupIcon, 
@@ -158,7 +163,9 @@ export default function StaffDashboard() {
 
       // Load dashboard data
       const dashboardData = await dbService.getDashboardData();
-      setDashboardData(dashboardData);
+      // Cast to the correct type to fix TypeScript issues
+      const enrichedDashboardData = dashboardData as DashboardData;
+      setDashboardData(enrichedDashboardData);
 
       // Generate recent activities from payments and attendance
       setTimeout(() => {
