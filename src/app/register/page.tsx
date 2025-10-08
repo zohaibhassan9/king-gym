@@ -126,11 +126,14 @@ export default function Register() {
     
     if (validateForm()) {
       try {
-        // Import database service
-        const { default: dbService } = await import('../../../lib/database-service');
-        
         // Set package price
-        const packagePrice = dbService.getPackagePrice(formData.package);
+        const packagePrices: { [key: string]: number } = {
+          'Men Cardio': 4000,
+          'Men Normal': 3000,
+          'Couple (Separate Floor)': 6000,
+          'Ladies (Separate Floor)': 4000,
+        };
+        const packagePrice = packagePrices[formData.package] || 3000;
         const finalPrice = packagePrice;
         
         // Calculate expiry date (1 month from joining date)
@@ -151,7 +154,16 @@ export default function Register() {
           photo: formData.photo ? URL.createObjectURL(formData.photo) : '/dummy.png'
         };
         
-        const result = await dbService.addMember(memberData);
+        // Add member using API
+        const response = await fetch('/api/members', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(memberData),
+        });
+        
+        const result = await response.json();
         
         if (result.success) {
           const newMember = result.member;

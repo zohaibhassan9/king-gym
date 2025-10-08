@@ -150,22 +150,20 @@ export default function StaffDashboard() {
     try {
       setLoading(true);
       
-      // Import database service
-      const { default: dbService } = await import('../../../lib/database-service');
-      
       // Load members
-      const members = await dbService.getMembers();
+      const membersResponse = await fetch('/api/members');
+      const members = await membersResponse.json();
       setMembers(members);
 
-      // Load payments (already enriched with member data from database)
-      const payments = await dbService.getPayments();
+      // Load payments
+      const paymentsResponse = await fetch('/api/payments');
+      const payments = await paymentsResponse.json();
       setPayments(payments);
 
       // Load dashboard data
-      const dashboardData = await dbService.getDashboardData();
-      // Cast to the correct type to fix TypeScript issues
-      const enrichedDashboardData = dashboardData as DashboardData;
-      setDashboardData(enrichedDashboardData);
+      const dashboardResponse = await fetch('/api/dashboard');
+      const dashboardData = await dashboardResponse.json();
+      setDashboardData(dashboardData);
 
       // Generate recent activities from payments and attendance
       setTimeout(() => {
@@ -466,10 +464,7 @@ export default function StaffDashboard() {
   const handleAddTransaction = async () => {
     if (selectedMember && newTransaction.amount > 0) {
       try {
-        // Import database service
-        const { default: dbService } = await import('../../../lib/database-service');
-        
-        // Create payment record using database service
+        // Create payment record using API
         const paymentData = {
           memberId: selectedMember.id,
           amount: newTransaction.amount,
@@ -478,7 +473,15 @@ export default function StaffDashboard() {
         };
         
         // Add payment record
-        const paymentResult = await dbService.addPayment(paymentData);
+        const paymentResponse = await fetch('/api/payments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(paymentData),
+        });
+        
+        const paymentResult = await paymentResponse.json();
         
         if (paymentResult.success) {
           // Extend member's expiration date by one month
@@ -487,9 +490,17 @@ export default function StaffDashboard() {
           newExpiryDate.setMonth(newExpiryDate.getMonth() + 1);
           
           // Update member's expiry date
-          const updateResult = await dbService.updateMember(selectedMember.id, {
-            expiryDate: newExpiryDate.toISOString().split('T')[0]
+          const updateResponse = await fetch(`/api/members/${selectedMember.id}`, {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              expiryDate: newExpiryDate.toISOString().split('T')[0]
+            }),
           });
+          
+          const updateResult = await updateResponse.json();
           
           if (!updateResult.success) {
             console.error('Failed to update member expiry date:', updateResult.error);
@@ -602,10 +613,7 @@ export default function StaffDashboard() {
   const handleSaveAttendance = async () => {
     if (selectedMember) {
       try {
-        // Import database service
-        const { default: dbService } = await import('../../../lib/database-service');
-        
-        // Create attendance record using database service
+        // Create attendance record using API
         const attendanceRecord = {
           memberId: selectedMember.id,
           date: attendanceData.date,
@@ -615,7 +623,15 @@ export default function StaffDashboard() {
         };
         
         // Add attendance record
-        const result = await dbService.addAttendance(attendanceRecord);
+        const response = await fetch('/api/attendance', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(attendanceRecord),
+        });
+        
+        const result = await response.json();
         
         if (result.success) {
           // Show success modal

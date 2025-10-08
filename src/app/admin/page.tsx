@@ -118,29 +118,20 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       
-      // Import database service
-      const { default: dbService } = await import('../../../lib/database-service');
-      
       // Load members
-      const members = await dbService.getMembers();
+      const membersResponse = await fetch('/api/members');
+      const members = await membersResponse.json();
       setMembers(members);
 
-      // Load payments (already enriched with member data from database)
-      const payments = await dbService.getPayments();
+      // Load payments
+      const paymentsResponse = await fetch('/api/payments');
+      const payments = await paymentsResponse.json();
       setPayments(payments);
 
       // Load dashboard data
-      const dashboardData = await dbService.getDashboardData();
-      // Ensure all required properties are present
-      const enrichedDashboardData = {
-        ...dashboardData,
-        recentPayments: payments.slice(0, 5), // Get recent 5 payments
-        recentActivities: [], // Will be populated by generateRecentActivities
-        expiringMembers: dashboardData.expiringMembers || [],
-        expiredMembers: dashboardData.expiredMembers || [],
-        todayAttendance: dashboardData.todayAttendance || []
-      };
-      setDashboardData(enrichedDashboardData);
+      const dashboardResponse = await fetch('/api/dashboard');
+      const dashboardData = await dashboardResponse.json();
+      setDashboardData(dashboardData);
 
       // Generate recent activities
       setTimeout(() => {

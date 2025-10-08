@@ -56,17 +56,21 @@ export default function MemberProfileClient({ memberId }: MemberProfileClientPro
     try {
       setLoading(true);
       
-      // Import database service
-      const { default: dbService } = await import('../../../../lib/database-service');
-      
       // Load member data
-      const memberData = await dbService.getMemberById(Number(memberId));
-      if (memberData) {
+      const memberResponse = await fetch(`/api/members/${memberId}`);
+      const memberData = await memberResponse.json();
+      
+      if (memberData && !memberData.error) {
         setMember(memberData);
         
         // Load related data
-        const memberPayments = await dbService.getPaymentsByMemberId(Number(memberId));
-        const memberAttendance = await dbService.getAttendanceByMemberId(Number(memberId));
+        const paymentsResponse = await fetch('/api/payments');
+        const allPayments = await paymentsResponse.json();
+        const memberPayments = allPayments.filter((payment: any) => payment.memberId === Number(memberId));
+        
+        const attendanceResponse = await fetch('/api/attendance');
+        const allAttendance = await attendanceResponse.json();
+        const memberAttendance = allAttendance.filter((record: any) => record.memberId === Number(memberId));
         
         // Enrich payment data with status and other information
         const enrichedPayments = memberPayments.map(payment => ({
@@ -135,11 +139,16 @@ export default function MemberProfileClient({ memberId }: MemberProfileClientPro
     try {
       setDeleting(true);
       
-      // Import database service
-      const { default: dbService } = await import('../../../../lib/database-service');
+      // Delete member using API
+      const response = await fetch(`/api/members/${member.id}`, {
+        method: 'DELETE',
+      });
       
-      // Delete member
-      await dbService.deleteMember(member.id);
+      const result = await response.json();
+      
+      if (!result.success) {
+        throw new Error(result.error || 'Failed to delete member');
+      }
       
       // Show success modal
       setShowSuccessModal(true);
