@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Layout from '@/components/Layout/Layout';
-import { UserIcon, IdentificationIcon, PhoneIcon, MapPinIcon, CalendarIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import { UserIcon, IdentificationIcon, PhoneIcon, MapPinIcon, CalendarIcon, CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/outline';
 
 export default function Register() {
   const router = useRouter();
@@ -19,6 +19,8 @@ export default function Register() {
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
   const [newMember, setNewMember] = useState<any>(null);
 
   const packages = [
@@ -124,11 +126,11 @@ export default function Register() {
     
     if (validateForm()) {
       try {
-        // Import client database
-        const { default: clientDb } = await import('../../../lib/client-database');
+        // Import database service
+        const { default: dbService } = await import('../../../lib/database-service');
         
         // Set package price
-        const packagePrice = clientDb.getPackagePrice(formData.package);
+        const packagePrice = dbService.getPackagePrice(formData.package);
         const finalPrice = packagePrice;
         
         // Calculate expiry date (1 month from joining date)
@@ -149,11 +151,20 @@ export default function Register() {
           photo: formData.photo ? URL.createObjectURL(formData.photo) : '/dummy.png'
         };
         
-        const newMember = clientDb.addMember(memberData);
+        const result = await dbService.addMember(memberData);
         
-        // Store the new member data and show success modal
-        setNewMember(newMember);
-        setShowSuccessModal(true);
+        if (result.success) {
+          const newMember = result.member;
+          
+          // Store the new member data and show success modal
+          setNewMember(newMember);
+          setShowSuccessModal(true);
+        } else {
+          // Show error modal for database errors
+          setErrorMessage(result.error || 'Registration failed. Please try again.');
+          setShowErrorModal(true);
+          return;
+        }
         
         // Reset form
         setFormData({
@@ -173,7 +184,8 @@ export default function Register() {
         }
       } catch (error) {
         console.error('Registration error:', error);
-        alert('Registration failed. Please try again.');
+        setErrorMessage('Registration failed. Please try again.');
+        setShowErrorModal(true);
       }
     }
   };
@@ -443,6 +455,32 @@ export default function Register() {
                 className="w-full bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white font-bold text-lg py-3 px-6 rounded-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl hover:shadow-orange-500/25"
               >
                 Go to Home Page
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Error Modal */}
+      {showErrorModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-2xl border border-gray-700 max-w-md w-full">
+            <div className="p-8 text-center">
+              <div className="w-20 h-20 bg-red-500/20 rounded-full flex items-center justify-center mx-auto mb-6">
+                <XCircleIcon className="h-12 w-12 text-red-400" />
+              </div>
+              
+              <h3 className="text-2xl font-bold text-white mb-4">Registration Failed</h3>
+              
+              <p className="text-gray-300 mb-6">
+                {errorMessage}
+              </p>
+              
+              <button
+                onClick={() => setShowErrorModal(false)}
+                className="w-full px-6 py-3 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors"
+              >
+                Try Again
               </button>
             </div>
           </div>

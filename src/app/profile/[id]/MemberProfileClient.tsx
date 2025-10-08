@@ -56,17 +56,17 @@ export default function MemberProfileClient({ memberId }: MemberProfileClientPro
     try {
       setLoading(true);
       
-      // Import client database
-      const { default: clientDb } = await import('../../../../lib/client-database');
+      // Import database service
+      const { default: dbService } = await import('../../../../lib/database-service');
       
       // Load member data
-      const memberData = clientDb.getMemberById(Number(memberId));
+      const memberData = await dbService.getMemberById(Number(memberId));
       if (memberData) {
         setMember(memberData);
         
         // Load related data
-        const memberPayments = clientDb.getPaymentsByMemberId(Number(memberId));
-        const memberAttendance = clientDb.getAttendanceByMemberId(Number(memberId));
+        const memberPayments = await dbService.getPaymentsByMemberId(Number(memberId));
+        const memberAttendance = await dbService.getAttendanceByMemberId(Number(memberId));
         
         // Enrich payment data with status and other information
         const enrichedPayments = memberPayments.map(payment => ({
@@ -135,11 +135,11 @@ export default function MemberProfileClient({ memberId }: MemberProfileClientPro
     try {
       setDeleting(true);
       
-      // Import client database
-      const { default: clientDb } = await import('../../../../lib/client-database');
+      // Import database service
+      const { default: dbService } = await import('../../../../lib/database-service');
       
       // Delete member
-      clientDb.deleteMember(member.id);
+      await dbService.deleteMember(member.id);
       
       // Show success modal
       setShowSuccessModal(true);

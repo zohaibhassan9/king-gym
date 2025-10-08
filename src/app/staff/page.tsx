@@ -145,27 +145,19 @@ export default function StaffDashboard() {
     try {
       setLoading(true);
       
-      // Import client database
-      const { default: clientDb } = await import('../../../lib/client-database');
+      // Import database service
+      const { default: dbService } = await import('../../../lib/database-service');
       
       // Load members
-      const members = clientDb.getMembers();
+      const members = await dbService.getMembers();
       setMembers(members);
 
-      // Load payments and enrich with member information
-      const payments = clientDb.getPayments();
-      const enrichedPayments = payments.map((payment: any) => {
-        const member = members.find((m: any) => m.id === payment.memberId);
-        return {
-          ...payment,
-          memberName: member ? member.memberName : 'Unknown Member',
-          status: payment.status || 'completed' // Default status if not set
-        };
-      });
-      setPayments(enrichedPayments);
+      // Load payments (already enriched with member data from database)
+      const payments = await dbService.getPayments();
+      setPayments(payments);
 
       // Load dashboard data
-      const dashboardData = clientDb.getDashboardData();
+      const dashboardData = await dbService.getDashboardData();
       setDashboardData(dashboardData);
 
       // Generate recent activities from payments and attendance
@@ -467,37 +459,35 @@ export default function StaffDashboard() {
   const handleAddTransaction = async () => {
     if (selectedMember && newTransaction.amount > 0) {
       try {
-        // Import client database
-        const { default: clientDb } = await import('../../../lib/client-database');
+        // Import database service
+        const { default: dbService } = await import('../../../lib/database-service');
         
-        // Create payment record using client database
+        // Create payment record using database service
         const paymentData = {
           memberId: selectedMember.id,
-          memberName: selectedMember.memberName,
           amount: newTransaction.amount,
           method: newTransaction.method,
-          description: newTransaction.description || `Payment for ${selectedMember.package}`,
-          date: newTransaction.date,
-          package: selectedMember.package,
-          previousExpiryDate: selectedMember.expiryDate
+          transactionId: `TXN${Date.now()}`
         };
         
         // Add payment record
-        clientDb.addPayment(paymentData);
+        const paymentResult = await dbService.addPayment(paymentData);
         
-        // Extend member's expiration date by one month
-        const currentExpiryDate = new Date(selectedMember.expiryDate);
-        const newExpiryDate = new Date(currentExpiryDate);
-        newExpiryDate.setMonth(newExpiryDate.getMonth() + 1);
-        
-        // Update member's expiry date
-        const updatedMember = {
-          ...selectedMember,
-          expiryDate: newExpiryDate.toISOString().split('T')[0]
-        };
-        
-        // Update member in database
-        clientDb.updateMember(updatedMember);
+        if (paymentResult.success) {
+          // Extend member's expiration date by one month
+          const currentExpiryDate = new Date(selectedMember.expiryDate);
+          const newExpiryDate = new Date(currentExpiryDate);
+          newExpiryDate.setMonth(newExpiryDate.getMonth() + 1);
+          
+          // Update member's expiry date
+          const updateResult = await dbService.updateMember(selectedMember.id, {
+            expiryDate: newExpiryDate.toISOString().split('T')[0]
+          });
+          
+          if (!updateResult.success) {
+            console.error('Failed to update member expiry date:', updateResult.error);
+          }
+        }
         
         // Show success modal
         setShowPaymentSuccessModal(true);
@@ -605,21 +595,20 @@ export default function StaffDashboard() {
   const handleSaveAttendance = async () => {
     if (selectedMember) {
       try {
-        // Import client database
-        const { default: clientDb } = await import('../../../lib/client-database');
+        // Import database service
+        const { default: dbService } = await import('../../../lib/database-service');
         
-        // Create attendance record using client database
+        // Create attendance record using database service
         const attendanceRecord = {
           memberId: selectedMember.id,
           date: attendanceData.date,
           checkInTime: attendanceData.checkInTime,
           checkOutTime: attendanceData.checkOutTime || null,
-          notes: attendanceData.notes,
           status: attendanceData.checkOutTime ? 'completed' : 'active'
         };
         
         // Add attendance record
-        const result = clientDb.addAttendance(attendanceRecord);
+        const result = await dbService.addAttendance(attendanceRecord);
         
         if (result.success) {
           // Show success modal

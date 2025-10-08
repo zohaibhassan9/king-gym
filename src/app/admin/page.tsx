@@ -118,27 +118,19 @@ export default function AdminDashboard() {
     try {
       setLoading(true);
       
-      // Import client database dynamically
-      const { default: clientDb } = await import('../../../lib/client-database');
+      // Import database service
+      const { default: dbService } = await import('../../../lib/database-service');
       
       // Load members
-      const members = clientDb.getMembers();
+      const members = await dbService.getMembers();
       setMembers(members);
 
-      // Load payments and enrich with member information
-      const payments = clientDb.getPayments();
-      const enrichedPayments = payments.map((payment: any) => {
-        const member = members.find((m: any) => m.id === payment.memberId);
-        return {
-          ...payment,
-          memberName: member ? member.memberName : 'Unknown Member',
-          status: payment.status || 'completed' // Default status if not set
-        };
-      });
-      setPayments(enrichedPayments);
+      // Load payments (already enriched with member data from database)
+      const payments = await dbService.getPayments();
+      setPayments(payments);
 
       // Load dashboard data
-      const dashboardData = clientDb.getDashboardData();
+      const dashboardData = await dbService.getDashboardData();
       // Add missing fields to match interface
       const enrichedDashboardData = {
         ...dashboardData,
