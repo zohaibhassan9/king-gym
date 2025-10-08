@@ -131,11 +131,14 @@ export default function AdminDashboard() {
 
       // Load dashboard data
       const dashboardData = await dbService.getDashboardData();
-      // Add missing fields to match interface
+      // Ensure all required properties are present
       const enrichedDashboardData = {
         ...dashboardData,
         recentPayments: payments.slice(0, 5), // Get recent 5 payments
-        recentActivities: [] // Will be populated by generateRecentActivities
+        recentActivities: [], // Will be populated by generateRecentActivities
+        expiringMembers: dashboardData.expiringMembers || [],
+        expiredMembers: dashboardData.expiredMembers || [],
+        todayAttendance: dashboardData.todayAttendance || []
       };
       setDashboardData(enrichedDashboardData);
 
@@ -231,21 +234,20 @@ export default function AdminDashboard() {
   const handleSaveAttendance = async () => {
     if (selectedMember) {
       try {
-        // Import client database
-        const { default: clientDb } = await import('../../../lib/client-database');
+        // Import database service
+        const { default: dbService } = await import('../../../lib/database-service');
         
-        // Create attendance record using client database
+        // Create attendance record using database service
         const attendanceRecord = {
           memberId: selectedMember.id,
           date: attendanceData.date,
           checkInTime: attendanceData.checkInTime,
           checkOutTime: attendanceData.checkOutTime || null,
-          notes: attendanceData.notes,
           status: attendanceData.checkOutTime ? 'completed' : 'active'
         };
         
         // Add attendance record
-        const result = clientDb.addAttendance(attendanceRecord);
+        const result = await dbService.addAttendance(attendanceRecord);
         
         if (result.success) {
           // Show success modal
@@ -387,8 +389,8 @@ export default function AdminDashboard() {
       const monthEnd = new Date(currentYear, currentMonth + 1, 0);
       
       // Get attendance data for current month
-      const { default: clientDb } = await import('../../../lib/client-database');
-      const allAttendance = clientDb.getAttendance();
+      const { default: dbService } = await import('../../../lib/database-service');
+      const allAttendance = await dbService.getAttendance();
       const monthlyAttendance = allAttendance.filter((record: any) => {
         const recordDate = new Date(record.date);
         return recordDate >= monthStart && recordDate <= monthEnd;
@@ -1123,8 +1125,8 @@ export default function AdminDashboard() {
 
     const handleApprovePayment = async (paymentId: number) => {
       try {
-        const { default: clientDb } = await import('../../../lib/client-database');
-        clientDb.updatePaymentStatus(paymentId, 'approved');
+        const { default: dbService } = await import('../../../lib/database-service');
+        await dbService.updatePaymentStatus(paymentId, 'approved');
         await loadData(); // Reload data to reflect changes
       } catch (error) {
         console.error('Error approving payment:', error);
@@ -1133,8 +1135,8 @@ export default function AdminDashboard() {
 
     const handleRejectPayment = async (paymentId: number) => {
       try {
-        const { default: clientDb } = await import('../../../lib/client-database');
-        clientDb.updatePaymentStatus(paymentId, 'rejected');
+        const { default: dbService } = await import('../../../lib/database-service');
+        await dbService.updatePaymentStatus(paymentId, 'rejected');
         await loadData(); // Reload data to reflect changes
       } catch (error) {
         console.error('Error rejecting payment:', error);
