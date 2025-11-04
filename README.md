@@ -73,12 +73,22 @@ A comprehensive gym management system built with Next.js, TypeScript, and Tailwi
    npm install
    ```
 
-3. **Run the development server**
+3. **Set up Supabase database**:
+   - See [SUPABASE_SETUP.md](./SUPABASE_SETUP.md) for detailed instructions
+   - Create a `.env.local` file with your Supabase credentials:
+     ```env
+     NEXT_PUBLIC_SUPABASE_URL=your_project_url
+     NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
+     SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+     ```
+   - Run the SQL migration from `supabase-migrations.sql` in Supabase SQL Editor
+
+4. **Run the development server**
 ```bash
 npm run dev
    ```
 
-4. **Open your browser**
+5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000)
 
 ### Demo Credentials
@@ -130,6 +140,7 @@ king-gym/
 - **State Management**: React Hooks
 - **Form Handling**: Controlled components with validation
 - **Routing**: Next.js App Router
+- **Database**: Supabase PostgreSQL
 
 ## 📱 Pages & Features
 

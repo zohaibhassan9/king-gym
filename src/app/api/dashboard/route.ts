@@ -1,93 +1,59 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { SupabaseDatabase } from '../../../lib/supabase-database';
 
-const prisma = new PrismaClient();
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const members = await prisma.member.findMany();
-    const payments = await prisma.payment.findMany({
-      include: { member: true }
-    });
-    const attendance = await prisma.attendance.findMany({
-      include: { member: true }
-    });
+    const dashboardData = await SupabaseDatabase.getDashboardData();
     
-    const currentDate = new Date();
-    const today = currentDate.toISOString().split('T')[0];
-    const currentMonth = currentDate.getMonth();
-    const currentYear = currentDate.getFullYear();
+    // Get members for additional processing if needed
+    const members = await SupabaseDatabase.getMembers();
+    const membersArray = Array.isArray(members) ? members : [];
     
-    // Calculate stats
-    const totalMembers = members.length;
-    const activeMembers = members.filter(member => member.status === 'active').length;
-    const inactiveMembers = totalMembers - activeMembers;
+    // Calculate monthly profit (assuming 30% profit margin)
+    const monthlyProfit = (dashboardData?.stats?.monthlyRevenue || 0) * 0.3;
     
-    // Today's attendance
-    const todayAttendance = attendance.filter(record => record.date === today);
-    
-    // Enrich today's attendance with member names
-    const enrichedTodayAttendance = todayAttendance.map(record => ({
-      ...record,
-      memberName: record.member?.memberName || 'Unknown Member',
-      memberId: record.memberId
-    }));
-    
-    // Monthly revenue
-    const monthlyRevenue = payments
-      .filter(payment => {
-        const paymentDate = new Date(payment.createdAt);
-        return paymentDate.getMonth() === currentMonth &&
-               paymentDate.getFullYear() === currentYear;
-      })
-      .reduce((sum, payment) => sum + payment.amount, 0);
-    
-    // Today's revenue
-    const todayRevenue = payments
-      .filter(payment => {
-        const paymentDate = new Date(payment.createdAt).toISOString().split('T')[0];
-        return paymentDate === today;
-      })
-      .reduce((sum, payment) => sum + payment.amount, 0);
-    
-    // Recent members (last 5)
-    const recentMembers = members
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
-      .slice(0, 5);
-    
-    // Recent payments (last 5)
-    const recentPayments = payments
-      .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
-      .slice(0, 5);
+    // Use the enriched todayAttendance from getDashboardData() which already has member info
+    const todayAttendance = dashboardData?.todayAttendance || [];
     
     return NextResponse.json({
       stats: {
-        totalMembers,
-        activeMembers,
-        inactiveMembers,
-        activeToday: enrichedTodayAttendance.length,
+        ...(dashboardData?.stats || {}),
+        monthlyProfit,
+        attendanceToday: todayAttendance.length,
+      },
+      expiringMembers: Array.isArray(dashboardData?.expiringMembers) ? dashboardData.expiringMembers : [],
+      expiredMembers: Array.isArray(dashboardData?.expiredMembers) ? dashboardData.expiredMembers : [],
+      recentMembers: Array.isArray(dashboardData?.recentMembers) ? dashboardData.recentMembers : [],
+      recentPayments: Array.isArray(dashboardData?.recentPayments) ? dashboardData.recentPayments : [],
+      todayAttendance: todayAttendance, // This already has memberName and memberId from getDashboardData()
+      recentActivities: []
+    });
+  } catch (error: any) {
+    console.error('Error getting dashboard data:', error);
+    // Return default structure on error
+    return NextResponse.json({
+      stats: {
+        totalMembers: 0,
+        activeMembers: 0,
+        inactiveMembers: 0,
+        activeToday: 0,
         pendingCheckouts: 0,
         expiringMemberships: 0,
-        monthlyRevenue,
-        todayRevenue,
-        monthlyProfit: monthlyRevenue * 0.3,
-        newMembersThisMonth: members.filter(member => {
-          const memberDate = new Date(member.joiningDate);
-          return memberDate.getMonth() === currentMonth && 
-                 memberDate.getFullYear() === currentYear;
-        }).length,
+        monthlyRevenue: 0,
+        todayRevenue: 0,
+        monthlyProfit: 0,
+        newMembersThisMonth: 0,
         averageAttendance: 0,
-        attendanceToday: enrichedTodayAttendance.length
+        attendanceToday: 0
       },
       expiringMembers: [],
       expiredMembers: [],
-      recentMembers,
-      recentPayments,
-      todayAttendance: enrichedTodayAttendance,
+      recentMembers: [],
+      recentPayments: [],
+      todayAttendance: [],
       recentActivities: []
-    });
-  } catch (error) {
-    console.error('Error getting dashboard data:', error);
-    return NextResponse.json({ error: 'Failed to get dashboard data' }, { status: 500 });
+    }, { status: 500 });
   }
 }

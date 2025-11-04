@@ -1,20 +1,60 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { SupabaseDatabase } from '../../../lib/supabase-database';
 
-const prisma = new PrismaClient();
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const payments = await prisma.payment.findMany({
-      include: {
-        member: true
-      },
-      orderBy: { createdAt: 'desc' }
+    const payments = await SupabaseDatabase.getPayments();
+    const members = await SupabaseDatabase.getMembers();
+    
+    // Ensure arrays
+    const paymentsArray = Array.isArray(payments) ? payments : [];
+    const membersArray = Array.isArray(members) ? members : [];
+    
+    // Enrich payments with member information
+    const enrichedPayments = paymentsArray.map((payment: any) => {
+      // Match payment.member_id (foreign key) with members.id (primary key)
+      const paymentMemberId = payment.member_id || payment.memberId;
+      const member = membersArray.find((m: any) => {
+        const memberId = Number(m.id);
+        const paymentId = Number(paymentMemberId);
+        return memberId === paymentId || m.id === paymentMemberId;
+      });
+      
+      // Format date
+      const paymentDate = payment.created_at || payment.createdAt || payment.date;
+      let formattedDate = '';
+      if (paymentDate) {
+        try {
+          const date = new Date(paymentDate);
+          formattedDate = date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric'
+          });
+        } catch (e) {
+          formattedDate = paymentDate;
+        }
+      }
+      
+      return {
+        ...payment,
+        memberId: member?.member_id || member?.memberId || '',
+        memberName: member?.member_name || member?.memberName || 'Unknown Member',
+        memberPhoto: member?.photo || '',
+        date: formattedDate,
+        amount: payment.amount || 0,
+        method: payment.method || 'cash',
+        status: payment.status || 'pending',
+      };
     });
-    return NextResponse.json(payments);
-  } catch (error) {
+    
+    return NextResponse.json(enrichedPayments);
+  } catch (error: any) {
     console.error('Error fetching payments:', error);
-    return NextResponse.json({ error: 'Failed to fetch payments' }, { status: 500 });
+    // Return empty array on error instead of error object
+    return NextResponse.json([], { status: 500 });
   }
 }
 
@@ -22,22 +62,20 @@ export async function POST(request: NextRequest) {
   try {
     const paymentData = await request.json();
     
-    const payment = await prisma.payment.create({
-      data: {
-        memberId: paymentData.memberId,
-        amount: paymentData.amount,
-        method: paymentData.method,
-        status: paymentData.method === 'cash' ? 'approved' : 'pending',
-        transactionId: paymentData.transactionId
-      },
-      include: {
-        member: true
-      }
+    // Set status based on payment method
+    const status = paymentData.method === 'cash' ? 'approved' : 'pending';
+    
+    const payment = await SupabaseDatabase.addPayment({
+      ...paymentData,
+      status,
     });
     
     return NextResponse.json({ success: true, payment });
-  } catch (error) {
+  } catch (error: any) {
     console.error('Error creating payment:', error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    return NextResponse.json(
+      { success: false, error: error.message },
+      { status: 500 }
+    );
   }
 }

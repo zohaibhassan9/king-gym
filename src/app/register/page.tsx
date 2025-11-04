@@ -169,7 +169,11 @@ export default function Register() {
           const newMember = result.member;
           
           // Store the new member data and show success modal
-          setNewMember(newMember);
+          // Handle both snake_case and camelCase from Supabase
+          setNewMember({
+            ...newMember,
+            memberId: newMember.memberId || newMember.member_id || 'N/A'
+          });
           setShowSuccessModal(true);
         } else {
           // Show error modal for database errors
@@ -454,7 +458,9 @@ export default function Register() {
               
               <div className="bg-gray-700/50 rounded-xl p-4 mb-6">
                 <div className="text-orange-400 font-semibold text-lg mb-2">Your Member ID</div>
-                <div className="text-3xl font-black text-white">{newMember.memberId}</div>
+                <div className="text-3xl font-black text-white">
+                  {newMember?.memberId || newMember?.member_id || 'N/A'}
+                </div>
               </div>
               
               <div className="text-gray-300 mb-6">

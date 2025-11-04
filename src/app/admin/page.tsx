@@ -59,6 +59,28 @@ interface DashboardData {
   recentActivities: any[];
 }
 
+// Helper function to normalize member data from Supabase (snake_case) to camelCase
+const normalizeMember = (member: any): Member => {
+  if (!member) return member as Member;
+  return {
+    id: member.id,
+    memberId: member.memberId || member.member_id || '',
+    memberName: member.memberName || member.member_name || '',
+    cnicNumber: member.cnicNumber || member.cnic_number || '',
+    contactNumber: member.contactNumber || member.contact_number || '',
+    address: member.address || '',
+    package: member.package || '',
+    packagePrice: member.packagePrice || member.package_price || 0,
+    discount: member.discount || 0,
+    finalPrice: member.finalPrice || member.final_price || 0,
+    joiningDate: member.joiningDate || member.joining_date || '',
+    expiryDate: member.expiryDate || member.expiry_date || '',
+    photo: member.photo || '',
+    status: member.status || 'active',
+    createdAt: member.createdAt || member.created_at || '',
+  };
+};
+
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('analytics');
   const [members, setMembers] = useState<Member[]>([]);
@@ -120,8 +142,12 @@ export default function AdminDashboard() {
       
       // Load members
       const membersResponse = await fetch('/api/members');
-      const members = await membersResponse.json();
-      setMembers(members);
+      const membersData = await membersResponse.json();
+      // Normalize members data to handle both snake_case and camelCase
+      const normalizedMembers = Array.isArray(membersData) 
+        ? membersData.map(normalizeMember)
+        : [];
+      setMembers(normalizedMembers);
 
       // Load payments
       const paymentsResponse = await fetch('/api/payments');
@@ -170,12 +196,13 @@ export default function AdminDashboard() {
         .slice(0, 3);
       
       recentRegistrations.forEach(member => {
+        const normalized = normalizeMember(member);
         activities.push({
-          id: `reg_${member.id}`,
+          id: `reg_${normalized.id}`,
           type: 'registration',
-          member: member.memberName,
-          package: member.package,
-          time: getTimeAgo(member.createdAt || member.joiningDate),
+          member: normalized.memberName,
+          package: normalized.package,
+          time: getTimeAgo(normalized.createdAt || normalized.joiningDate),
           status: 'new'
         });
       });
@@ -257,7 +284,7 @@ export default function AdminDashboard() {
           await loadData();
         } else {
           // Show error modal for duplicate attendance
-          setErrorMessage(result.message || 'Attendance already marked for this member today');
+          setErrorMessage((result as any).message || (result as any).error || 'Attendance already marked for this member today');
           setShowErrorModal(true);
         }
       } catch (error) {
@@ -283,14 +310,16 @@ export default function AdminDashboard() {
   };
 
   // Filter members based on search term and status
-  const filteredMembers = members.filter(member => {
-    const matchesSearch = member.memberName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.memberId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.contactNumber.includes(searchTerm) ||
-      member.package.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.status.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredMembers = (Array.isArray(members) ? members : []).filter(member => {
+    if (!member) return false;
+    const normalized = normalizeMember(member);
+    const matchesSearch = (normalized.memberName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (normalized.memberId || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (normalized.contactNumber || '').includes(searchTerm) ||
+      (normalized.package || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (normalized.status || '').toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesStatus = statusFilter === 'all' || member.status === statusFilter;
+    const matchesStatus = statusFilter === 'all' || normalized.status === statusFilter;
     
     return matchesSearch && matchesStatus;
   });
@@ -370,9 +399,13 @@ export default function AdminDashboard() {
       const daysRemaining = daysInMonth - daysPassed;
       
       // Calculate projected monthly revenue from active members' fees
-      const activeMembers = members.filter(member => member.status === 'active');
+      const activeMembers = members.filter(member => {
+        const normalized = normalizeMember(member);
+        return normalized.status === 'active';
+      });
       const projectedRevenue = activeMembers.reduce((sum, member) => {
-        return sum + (member.finalPrice || 0);
+        const normalized = normalizeMember(member);
+        return sum + (normalized.finalPrice || 0);
       }, 0);
       
       // Calculate real attendance rate for the month
@@ -394,7 +427,8 @@ export default function AdminDashboard() {
       
       // Calculate real growth rates
       const currentMonthMembers = members.filter(member => {
-        const memberDate = new Date(member.joiningDate);
+        const normalized = normalizeMember(member);
+        const memberDate = new Date(normalized.joiningDate);
         return memberDate.getMonth() === currentMonth && memberDate.getFullYear() === currentYear;
       }).length;
       
@@ -402,7 +436,8 @@ export default function AdminDashboard() {
       const previousMonth = currentMonth === 0 ? 11 : currentMonth - 1;
       const previousYear = currentMonth === 0 ? currentYear - 1 : currentYear;
       const previousMonthMembers = members.filter(member => {
-        const memberDate = new Date(member.joiningDate);
+        const normalized = normalizeMember(member);
+        const memberDate = new Date(normalized.joiningDate);
         return memberDate.getMonth() === previousMonth && memberDate.getFullYear() === previousYear;
       }).length;
       
@@ -415,18 +450,40 @@ export default function AdminDashboard() {
       const revenueGrowthRate = 12; // 12% growth (can be negative)
       const attendanceGrowthRate = 5; // 5% growth (can be negative)
       
+      // Define all available packages
+      const allPackages = [
+        'Men Cardio',
+        'Men Normal',
+        'Couple (Separate Floor)',
+        'Ladies (Separate Floor)'
+      ];
+      
       // Calculate package distribution from actual data
       const packageDistribution = members.reduce((acc: any, member: any) => {
-        acc[member.package] = (acc[member.package] || 0) + 1;
+        const normalized = normalizeMember(member);
+        const packageName = normalized.package || '';
+        if (packageName) {
+          acc[packageName] = (acc[packageName] || 0) + 1;
+        }
         return acc;
       }, {});
       
+      // Initialize all packages with 0 if they don't exist
+      allPackages.forEach(pkg => {
+        if (!packageDistribution[pkg]) {
+          packageDistribution[pkg] = 0;
+        }
+      });
+      
       const totalMembers = members.length;
-      const packagePercentages = Object.entries(packageDistribution).map(([packageName, count]: [string, any]) => ({
-        name: packageName,
-        count,
-        percentage: Math.round((count / totalMembers) * 100)
-      }));
+      const packagePercentages = allPackages.map((packageName: string) => {
+        const count = packageDistribution[packageName] || 0;
+        return {
+          name: packageName,
+          count,
+          percentage: totalMembers > 0 ? Math.round((count / totalMembers) * 100) : 0
+        };
+      });
 
       // Calculate real monthly data for charts
       const monthlyRevenueData = [];
@@ -1084,20 +1141,20 @@ export default function AdminDashboard() {
                 className="border-b border-gray-700/50 hover:bg-gray-700/30 transition-colors cursor-pointer"
               >
                 <td className="py-4 px-4">
-                  <div className="font-semibold text-white">{member.memberName}</div>
+                  <div className="font-semibold text-white">{normalizeMember(member).memberName}</div>
                 </td>
-                <td className="py-4 px-4 text-gray-300">{member.package}</td>
-                <td className="py-4 px-4 text-gray-300">{member.contactNumber}</td>
+                <td className="py-4 px-4 text-gray-300">{normalizeMember(member).package}</td>
+                <td className="py-4 px-4 text-gray-300">{normalizeMember(member).contactNumber}</td>
                 <td className="py-4 px-4">
                   <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold border ${
-                    member.status === 'active' 
+                    normalizeMember(member).status === 'active' 
                       ? 'bg-green-500/20 text-green-400 border-green-500/30' 
                       : 'bg-red-500/20 text-red-400 border-red-500/30'
                   }`}>
-                    {member.status}
+                    {normalizeMember(member).status}
                   </span>
                 </td>
-                <td className="py-4 px-4 text-gray-300">{member.expiryDate}</td>
+                <td className="py-4 px-4 text-gray-300">{normalizeMember(member).expiryDate}</td>
               </tr>
             ))}
           </tbody>
@@ -1116,21 +1173,57 @@ export default function AdminDashboard() {
 
     const handleApprovePayment = async (paymentId: number) => {
       try {
-        const { default: dbService } = await import('../../../lib/database-service');
-        await dbService.updatePaymentStatus(paymentId, 'approved');
-        await loadData(); // Reload data to reflect changes
+        const response = await fetch(`/api/payments/${paymentId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: 'approved' }),
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Reload data to reflect changes
+          await loadData();
+          // Show success feedback
+          setShowPaymentSuccessModal(true);
+        } else {
+          setPaymentErrorMessage(result.error || 'Failed to approve payment');
+          setShowPaymentErrorModal(true);
+        }
       } catch (error) {
         console.error('Error approving payment:', error);
+        setPaymentErrorMessage('Failed to approve payment. Please try again.');
+        setShowPaymentErrorModal(true);
       }
     };
 
     const handleRejectPayment = async (paymentId: number) => {
       try {
-        const { default: dbService } = await import('../../../lib/database-service');
-        await dbService.updatePaymentStatus(paymentId, 'rejected');
-        await loadData(); // Reload data to reflect changes
+        const response = await fetch(`/api/payments/${paymentId}`, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ status: 'rejected' }),
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+          // Reload data to reflect changes
+          await loadData();
+          // Show success feedback
+          setShowPaymentSuccessModal(true);
+        } else {
+          setPaymentErrorMessage(result.error || 'Failed to reject payment');
+          setShowPaymentErrorModal(true);
+        }
       } catch (error) {
         console.error('Error rejecting payment:', error);
+        setPaymentErrorMessage('Failed to reject payment. Please try again.');
+        setShowPaymentErrorModal(true);
       }
     };
 
@@ -1183,13 +1276,13 @@ export default function AdminDashboard() {
                     ) : (
                       <div className="flex gap-2">
                         <button
-                          onClick={() => handleApprovePayment(payment.id)}
+                          onClick={() => handleApprovePayment(Number(payment.id))}
                           className="px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded-lg transition-colors"
                         >
                           Approve
                         </button>
                         <button
-                          onClick={() => handleRejectPayment(payment.id)}
+                          onClick={() => handleRejectPayment(Number(payment.id))}
                           className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white text-xs rounded-lg transition-colors"
                         >
                           Reject
@@ -1758,6 +1851,56 @@ export default function AdminDashboard() {
                   Mark Attendance
                 </button>
               </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Payment Success Modal */}
+      {showPaymentSuccessModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-2xl border border-gray-700 max-w-md w-full">
+            <div className="p-6">
+              <div className="flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-white text-center mb-2">Payment Updated</h3>
+              <p className="text-gray-400 text-center mb-6">Payment status has been updated successfully.</p>
+              <button
+                onClick={() => setShowPaymentSuccessModal(false)}
+                className="w-full px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Payment Error Modal */}
+      {showPaymentErrorModal && (
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-800 rounded-2xl border border-gray-700 max-w-md w-full">
+            <div className="p-6">
+              <div className="flex items-center justify-center mb-4">
+                <div className="w-16 h-16 bg-red-500/20 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </div>
+              </div>
+              <h3 className="text-xl font-bold text-white text-center mb-2">Error</h3>
+              <p className="text-gray-400 text-center mb-6">{paymentErrorMessage || 'An error occurred while updating payment status.'}</p>
+              <button
+                onClick={() => setShowPaymentErrorModal(false)}
+                className="w-full px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors"
+              >
+                OK
+              </button>
             </div>
           </div>
         </div>

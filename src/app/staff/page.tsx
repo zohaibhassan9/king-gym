@@ -61,6 +61,29 @@ import {
   UserIcon
 } from '@heroicons/react/24/outline';
 
+// Helper function to normalize member data from Supabase (snake_case) to camelCase
+const normalizeMember = (member: any): Member => {
+  if (!member) return member;
+  return {
+    id: member.id,
+    memberId: member.memberId || member.member_id || '',
+    memberName: member.memberName || member.member_name || '',
+    cnicNumber: member.cnicNumber || member.cnic_number || '',
+    contactNumber: member.contactNumber || member.contact_number || '',
+    address: member.address || '',
+    package: member.package || '',
+    packagePrice: member.packagePrice || member.package_price || 0,
+    discount: member.discount || 0,
+    finalPrice: member.finalPrice || member.final_price || 0,
+    joiningDate: member.joiningDate || member.joining_date || '',
+    expiryDate: member.expiryDate || member.expiry_date || '',
+    photo: member.photo || '',
+    status: member.status || 'active',
+    createdAt: member.createdAt || member.created_at || '',
+    updatedAt: member.updatedAt || member.updated_at || '',
+  };
+};
+
 export default function StaffDashboard() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
@@ -133,10 +156,17 @@ export default function StaffDashboard() {
     loadData();
     
     // Auto-refresh when page becomes visible (user switches back to tab)
+    // Only refresh if page was hidden for more than 30 seconds to avoid constant reloads
+    let lastVisibilityChange = Date.now();
     const handleVisibilityChange = () => {
       if (!document.hidden) {
-        loadData();
+        const timeSinceLastChange = Date.now() - lastVisibilityChange;
+        // Only reload if page was hidden for more than 30 seconds
+        if (timeSinceLastChange > 30000) {
+          loadData();
+        }
       }
+      lastVisibilityChange = Date.now();
     };
     
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -152,63 +182,91 @@ export default function StaffDashboard() {
       
       // Load members
       const membersResponse = await fetch('/api/members');
-      const members = await membersResponse.json();
-      setMembers(members);
+      if (!membersResponse.ok) {
+        throw new Error('Failed to fetch members');
+      }
+      const membersData = await membersResponse.json();
+      // Ensure members is always an array and normalize data
+      const normalizedMembers = Array.isArray(membersData) 
+        ? membersData.map(normalizeMember)
+        : [];
+      setMembers(normalizedMembers);
 
       // Load payments
       const paymentsResponse = await fetch('/api/payments');
-      const payments = await paymentsResponse.json();
-      setPayments(payments);
+      if (!paymentsResponse.ok) {
+        throw new Error('Failed to fetch payments');
+      }
+      const paymentsData = await paymentsResponse.json();
+      // Ensure payments is always an array
+      setPayments(Array.isArray(paymentsData) ? paymentsData : []);
 
       // Load dashboard data
       const dashboardResponse = await fetch('/api/dashboard');
+      if (!dashboardResponse.ok) {
+        throw new Error('Failed to fetch dashboard data');
+      }
       const dashboardData = await dashboardResponse.json();
       setDashboardData(dashboardData);
 
-      // Generate recent activities from payments and attendance
-      setTimeout(() => {
-        generateRecentActivities();
-      }, 100);
+      // Generate recent activities from the loaded data
+      // Use the fresh data instead of state (which might be stale)
+      generateRecentActivities(normalizedMembers, Array.isArray(paymentsData) ? paymentsData : []);
     } catch (error) {
       console.error('Error loading data:', error);
+      // Set empty arrays on error to prevent filter errors
+      setMembers([]);
+      setPayments([]);
+      setDashboardData(null);
     } finally {
       setLoading(false);
     }
   };
 
-  const generateRecentActivities = () => {
+  const generateRecentActivities = (membersData: Member[] = members, paymentsData: any[] = payments) => {
     const activities: any[] = [];
     
     // Only add activities if there's real data
-    if (payments.length > 0) {
-      const recentPayments = payments
-        .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    if (paymentsData && paymentsData.length > 0) {
+      const recentPayments = paymentsData
+        .filter(p => p.createdAt || p.created_at)
+        .sort((a, b) => {
+          const dateA = new Date(a.createdAt || a.created_at || 0).getTime();
+          const dateB = new Date(b.createdAt || b.created_at || 0).getTime();
+          return dateB - dateA;
+        })
         .slice(0, 3);
       
       recentPayments.forEach(payment => {
         activities.push({
           id: payment.id,
           type: 'payment',
-          member: payment.memberName,
-          amount: payment.amount.toLocaleString(),
-          time: getTimeAgo(payment.createdAt),
-          status: 'completed'
+          member: payment.memberName || payment.member?.memberName || 'Unknown',
+          amount: (payment.amount || 0).toLocaleString(),
+          time: getTimeAgo(payment.createdAt || payment.created_at),
+          status: payment.status || 'completed'
         });
       });
     }
 
-    if (members.length > 0) {
-      const recentRegistrations = members
-        .sort((a, b) => new Date(b.createdAt || b.joiningDate).getTime() - new Date(a.createdAt || a.joiningDate).getTime())
+    if (membersData && membersData.length > 0) {
+      const recentRegistrations = membersData
+        .filter(m => m.createdAt || m.joiningDate)
+        .sort((a, b) => {
+          const dateA = new Date(a.createdAt || a.joiningDate || 0).getTime();
+          const dateB = new Date(b.createdAt || b.joiningDate || 0).getTime();
+          return dateB - dateA;
+        })
         .slice(0, 2);
       
       recentRegistrations.forEach(member => {
+        const normalized = normalizeMember(member);
         activities.push({
-          id: `reg_${member.id}`,
+          id: `reg_${normalized.id}`,
           type: 'registration',
-          member: member.memberName,
-          package: member.package,
-          time: getTimeAgo(member.createdAt || member.joiningDate),
+          member: normalized.memberName,
+          package: normalized.package,
+          time: getTimeAgo(normalized.createdAt || normalized.joiningDate),
           status: 'new'
         });
       });
@@ -354,16 +412,18 @@ export default function StaffDashboard() {
   const markMembersAsExpired = () => {
     expiredMembers.forEach((member: Member) => {
       // In a real app, this would update the database
-      console.log(`Marking ${member.memberName} as expired`);
+      const normalized = normalizeMember(member);
+      console.log(`Marking ${normalized.memberName} as expired`);
     });
     alert(`${expiredMembers.length} members have been marked as expired due to non-payment.`);
   };
 
   // Function to send WhatsApp alert
   const sendWhatsAppAlert = (member: Member) => {
-    const message = `Hello ${member.memberName}, your King Gym membership has expired on ${new Date(member.expiryDate).toLocaleDateString()}. Please renew your membership to continue using our facilities. Contact us for renewal options. - King Gym Team`;
+    const normalized = normalizeMember(member);
+    const message = `Hello ${normalized.memberName}, your King Gym membership has expired on ${new Date(normalized.expiryDate).toLocaleDateString()}. Please renew your membership to continue using our facilities. Contact us for renewal options. - King Gym Team`;
     const encodedMessage = encodeURIComponent(message);
-    const whatsappUrl = `https://wa.me/${member.contactNumber.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
+    const whatsappUrl = `https://wa.me/${normalized.contactNumber.replace(/[^0-9]/g, '')}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
   };
 
@@ -399,12 +459,15 @@ export default function StaffDashboard() {
     }
   };
 
-  const filteredMembers = members.filter(member => {
-    const matchesSearch = member.memberName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.memberId.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.contactNumber.includes(searchTerm);
+  // Ensure members is always an array before filtering
+  const filteredMembers = (Array.isArray(members) ? members : []).filter(member => {
+    if (!member) return false;
+    const normalized = normalizeMember(member);
+    const matchesSearch = (normalized.memberName || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (normalized.memberId || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (normalized.contactNumber || '').includes(searchTerm);
     
-    const matchesStatus = statusFilter === 'all' || member.status === statusFilter;
+    const matchesStatus = statusFilter === 'all' || normalized.status === statusFilter;
     
     return matchesSearch && matchesStatus;
   });
@@ -415,26 +478,28 @@ export default function StaffDashboard() {
   };
 
   const handleUpdatePayment = (member: Member) => {
-    setSelectedMember(member);
+    const normalized = normalizeMember(member);
+    setSelectedMember(normalized);
     setNewTransaction({
-      amount: member.finalPrice,
+      amount: normalized.finalPrice,
       method: 'cash',
-      description: `Monthly membership fee - ${member.package}`,
+      description: `Monthly membership fee - ${normalized.package}`,
       date: new Date().toISOString().split('T')[0]
     });
     setShowPaymentModal(true);
   };
 
   const handleEditFee = (member: Member) => {
-    setSelectedMember(member);
+    const normalized = normalizeMember(member);
+    setSelectedMember(normalized);
     setEditingMember({
-      memberName: member.memberName,
-      package: member.package,
-      packagePrice: member.packagePrice,
-      discount: member.discount,
-      finalPrice: member.finalPrice,
-      status: member.status,
-      expiryDate: member.expiryDate
+      memberName: normalized.memberName,
+      package: normalized.package,
+      packagePrice: normalized.packagePrice,
+      discount: normalized.discount,
+      finalPrice: normalized.finalPrice,
+      status: normalized.status,
+      expiryDate: normalized.expiryDate
     });
     setShowEditMemberModal(true);
   };
@@ -801,99 +866,97 @@ export default function StaffDashboard() {
                 </div>
               </div>
 
-              {/* Key Metrics */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6 hover:border-orange-500/30 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-500 hover:-translate-y-2">
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-600/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+              {/* Key Metrics - Single row with 4 tiles, non-redundant data */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+                {/* Total Members */}
+                <div className="group relative bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-3xl border border-orange-500/20 p-6 lg:p-8 hover:border-orange-500/50 hover:shadow-2xl hover:shadow-orange-500/20 transition-all duration-300 hover:-translate-y-1">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-orange-500/5 rounded-full blur-3xl"></div>
                   <div className="relative">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="p-3 bg-gradient-to-br from-orange-600/20 to-orange-700/20 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                        <UserGroupIcon className="h-8 w-8 text-orange-400 group-hover:text-orange-300 transition-colors duration-300" />
-                      </div>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-white group-hover:text-orange-300 transition-colors duration-300">{staffStats.totalMembers.toLocaleString()}</div>
-                        <div className="text-sm text-gray-400">Total Members</div>
+                    <div className="flex items-start justify-between mb-6">
+                      <div className="p-4 bg-gradient-to-br from-orange-500/20 to-orange-600/20 rounded-2xl border border-orange-500/30">
+                        <UserGroupIcon className="h-10 w-10 text-orange-400" />
                       </div>
                     </div>
-                    <div className="flex justify-between text-sm">
-                      <span className="text-green-400">Active: {staffStats.activeMembers}</span>
-                      <span className="text-red-400">Inactive: {staffStats.inactiveMembers}</span>
+                    <div className="mb-4">
+                      <div className="text-4xl font-black text-white mb-2">{staffStats.totalMembers}</div>
+                      <div className="text-gray-400 font-medium">Total Members</div>
+                    </div>
+                    <div className="flex items-center gap-4 pt-4 border-t border-gray-700/50">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-400 rounded-full"></div>
+                        <span className="text-sm text-gray-300">Active: <span className="text-green-400 font-semibold">{staffStats.activeMembers}</span></span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-red-400 rounded-full"></div>
+                        <span className="text-sm text-gray-300">Inactive: <span className="text-red-400 font-semibold">{staffStats.inactiveMembers}</span></span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                <div className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6 hover:border-green-500/30 hover:shadow-2xl hover:shadow-green-500/10 transition-all duration-500 hover:-translate-y-2">
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-600/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                {/* Today's Check-ins */}
+                <div className="group relative bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-3xl border border-green-500/20 p-6 lg:p-8 hover:border-green-500/50 hover:shadow-2xl hover:shadow-green-500/20 transition-all duration-300 hover:-translate-y-1">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/5 rounded-full blur-3xl"></div>
                   <div className="relative">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="p-3 bg-gradient-to-br from-green-600/20 to-green-700/20 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                        <ClockIcon className="h-8 w-8 text-green-400 group-hover:text-green-300 transition-colors duration-300" />
-                      </div>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-white group-hover:text-green-300 transition-colors duration-300">{staffStats.activeToday}</div>
-                        <div className="text-sm text-gray-400">Active Today</div>
+                    <div className="flex items-start justify-between mb-6">
+                      <div className="p-4 bg-gradient-to-br from-green-500/20 to-green-600/20 rounded-2xl border border-green-500/30">
+                        <ClockIcon className="h-10 w-10 text-green-400" />
                       </div>
                     </div>
-                    <div className="text-sm text-gray-300">
-                      {staffStats.averageAttendance}% avg attendance
+                    <div className="mb-4">
+                      <div className="text-4xl font-black text-white mb-2">{staffStats.activeToday}</div>
+                      <div className="text-gray-400 font-medium">Today's Check-ins</div>
+                    </div>
+                    <div className="pt-4 border-t border-gray-700/50">
+                      <div className="text-sm text-gray-300">
+                        <span className="text-green-400 font-semibold">{staffStats.activeToday}</span> members checked in today
+                      </div>
                     </div>
                   </div>
                 </div>
 
-
-                <div className="group relative bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6 hover:border-purple-500/30 hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-500 hover:-translate-y-2">
-                  <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                {/* Today's Revenue */}
+                <div className="group relative bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-3xl border border-blue-500/20 p-6 lg:p-8 hover:border-blue-500/50 hover:shadow-2xl hover:shadow-blue-500/20 transition-all duration-300 hover:-translate-y-1">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-3xl"></div>
                   <div className="relative">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="p-3 bg-gradient-to-br from-purple-600/20 to-purple-700/20 rounded-xl group-hover:scale-110 transition-transform duration-300">
-                        <ChartBarIcon className="h-8 w-8 text-purple-400 group-hover:text-purple-300 transition-colors duration-300" />
-                      </div>
-                      <div className="text-right">
-                        <div className="text-2xl font-bold text-white group-hover:text-purple-300 transition-colors duration-300">{staffStats.newMembersThisMonth}</div>
-                        <div className="text-sm text-gray-400">New This Month</div>
+                    <div className="flex items-start justify-between mb-6">
+                      <div className="p-4 bg-gradient-to-br from-blue-500/20 to-blue-600/20 rounded-2xl border border-blue-500/30">
+                        <CurrencyDollarIcon className="h-10 w-10 text-blue-400" />
                       </div>
                     </div>
-                    <div className="text-sm text-gray-300">
-                      +{Math.round(staffStats.newMembersThisMonth / 30)} per day
+                    <div className="mb-4">
+                      <div className="text-4xl font-black text-white mb-2">Rs {staffStats.todayRevenue.toLocaleString()}</div>
+                      <div className="text-gray-400 font-medium">Today's Revenue</div>
+                    </div>
+                    <div className="pt-4 border-t border-gray-700/50">
+                      <div className="text-sm text-gray-300">
+                        {staffStats.todayRevenue > 0 ? (
+                          <span className="text-blue-400 font-semibold">Cash collected</span>
+                        ) : (
+                          <span>No payments today</span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Attendance Statistics */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-gray-400 text-sm">Today's Check-ins</p>
-                      <p className="text-2xl font-bold text-white">{staffStats.activeToday}</p>
+                {/* Monthly Revenue */}
+                <div className="group relative bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-sm rounded-3xl border border-purple-500/20 p-6 lg:p-8 hover:border-purple-500/50 hover:shadow-2xl hover:shadow-purple-500/20 transition-all duration-300 hover:-translate-y-1">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/5 rounded-full blur-3xl"></div>
+                  <div className="relative">
+                    <div className="flex items-start justify-between mb-6">
+                      <div className="p-4 bg-gradient-to-br from-purple-500/20 to-purple-600/20 rounded-2xl border border-purple-500/30">
+                        <ChartBarIcon className="h-10 w-10 text-purple-400" />
+                      </div>
                     </div>
-                    <div className="w-12 h-12 bg-green-500/20 rounded-full flex items-center justify-center">
-                      <ClockIcon className="h-6 w-6 text-green-400" />
+                    <div className="mb-4">
+                      <div className="text-4xl font-black text-white mb-2">Rs {staffStats.monthlyRevenue.toLocaleString()}</div>
+                      <div className="text-gray-400 font-medium">Monthly Revenue</div>
                     </div>
-                  </div>
-                </div>
-                
-                <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-gray-400 text-sm">Active Members</p>
-                      <p className="text-2xl font-bold text-white">{staffStats.activeMembers}</p>
-                    </div>
-                    <div className="w-12 h-12 bg-blue-500/20 rounded-full flex items-center justify-center">
-                      <UserGroupIcon className="h-6 w-6 text-blue-400" />
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700/50 p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-gray-400 text-sm">Attendance Rate</p>
-                      <p className="text-2xl font-bold text-white">{staffStats.averageAttendance}%</p>
-                    </div>
-                    <div className="w-12 h-12 bg-orange-500/20 rounded-full flex items-center justify-center">
-                      <ChartBarIcon className="h-6 w-6 text-orange-400" />
+                    <div className="pt-4 border-t border-gray-700/50">
+                      <div className="text-sm text-gray-300">
+                        <span className="text-purple-400 font-semibold">{staffStats.newMembersThisMonth}</span> new members this month
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -945,30 +1008,55 @@ export default function StaffDashboard() {
                         <td className="py-4 px-4">
                           <div className="flex items-center space-x-3">
                             <div className="w-12 h-12 rounded-lg overflow-hidden border-2 border-orange-500/30">
-                              <img
-                                src={member.photo}
-                                alt={member.memberName}
-                                className="w-full h-full object-cover"
-                                onError={(e) => {
-                                  e.currentTarget.src = '/dummy.png';
-                                }}
-                              />
+                              {(() => {
+                                const normalized = normalizeMember(member);
+                                return (
+                                  <img
+                                    src={normalized.photo}
+                                    alt={normalized.memberName}
+                                    className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.currentTarget.src = '/dummy.png';
+                                    }}
+                                  />
+                                );
+                              })()}
                             </div>
                             <div>
-                              <div className="font-semibold text-white">{member.memberName}</div>
-                              <div className="text-sm text-gray-400">{member.memberId}</div>
+                              {(() => {
+                                const normalized = normalizeMember(member);
+                                return (
+                                  <>
+                                    <div className="font-semibold text-white">{normalized.memberName}</div>
+                                    <div className="text-sm text-gray-400">{normalized.memberId}</div>
+                                  </>
+                                );
+                              })()}
                             </div>
                           </div>
                         </td>
                         <td className="py-4 px-4">
-                          <div className="text-orange-400 font-medium">{member.package}</div>
+                          <div className="text-orange-400 font-medium">
+                            {normalizeMember(member).package}
+                          </div>
                         </td>
                         <td className="py-4 px-4">
                           <div className="text-white">
-                            <div className="font-semibold">Rs {member.finalPrice.toLocaleString()}</div>
-                            {member.discount > 0 && (
-                              <div className="text-sm text-green-400">-Rs {member.discount} discount</div>
-                            )}
+                            {(() => {
+                              const normalized = normalizeMember(member);
+                              return (
+                                <>
+                                  <div className="font-semibold">
+                                    Rs {normalized.finalPrice.toLocaleString()}
+                                  </div>
+                                  {normalized.discount > 0 && (
+                                    <div className="text-sm text-green-400">
+                                      -Rs {normalized.discount} discount
+                                    </div>
+                                  )}
+                                </>
+                              );
+                            })()}
                           </div>
                         </td>
                         <td className="py-4 px-4">
@@ -1048,32 +1136,40 @@ export default function StaffDashboard() {
                       </tr>
                     </thead>
                     <tbody>
-                      {todayAttendance.map((attendance) => (
-                        <tr key={attendance.id} className="border-b border-gray-700/50 hover:bg-gray-700/30 transition-colors">
-                          <td className="py-4 px-4">
-                            <div>
-                              <div className="font-semibold text-white">{attendance.memberName}</div>
-                              <div className="text-sm text-gray-400">{attendance.memberId}</div>
-                            </div>
-                          </td>
-                          <td className="py-4 px-4 text-green-400 font-medium">{attendance.checkInTime}</td>
-                          <td className="py-4 px-4 text-red-400 font-medium">{attendance.checkOutTime || '-'}</td>
-                          <td className="py-4 px-4">
-                            <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(attendance.status)}`}>
-                              {attendance.status}
-                            </span>
-                          </td>
-                          <td className="py-4 px-4">
-                            <button 
-                              onClick={() => handleMarkAttendance(attendance)}
-                              className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded-lg transition-colors"
-                              title="Mark Attendance"
-                            >
-                              <ClockIcon className="h-5 w-5" />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
+                      {todayAttendance.map((attendance) => {
+                        // Normalize attendance data to handle both snake_case and camelCase
+                        const memberName = attendance.memberName || attendance.member_name || 'Unknown Member';
+                        const memberId = attendance.memberId || attendance.member_id || '';
+                        const checkInTime = attendance.checkInTime || attendance.check_in_time || '-';
+                        const checkOutTime = attendance.checkOutTime || attendance.check_out_time || '-';
+                        
+                        return (
+                          <tr key={attendance.id} className="border-b border-gray-700/50 hover:bg-gray-700/30 transition-colors">
+                            <td className="py-4 px-4">
+                              <div>
+                                <div className="font-semibold text-white">{memberName}</div>
+                                {memberId && <div className="text-sm text-gray-400">{memberId}</div>}
+                              </div>
+                            </td>
+                            <td className="py-4 px-4 text-green-400 font-medium">{checkInTime}</td>
+                            <td className="py-4 px-4 text-red-400 font-medium">{checkOutTime}</td>
+                            <td className="py-4 px-4">
+                              <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(attendance.status || 'active')}`}>
+                                {attendance.status || 'active'}
+                              </span>
+                            </td>
+                            <td className="py-4 px-4">
+                              <button 
+                                onClick={() => handleMarkAttendance(attendance)}
+                                className="p-2 text-blue-400 hover:text-blue-300 hover:bg-blue-500/20 rounded-lg transition-colors"
+                                title="Mark Attendance"
+                              >
+                                <ClockIcon className="h-5 w-5" />
+                              </button>
+                            </td>
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
@@ -1098,23 +1194,37 @@ export default function StaffDashboard() {
                           <td className="py-4 px-4">
                             <div className="flex items-center space-x-3">
                               <div className="w-10 h-10 rounded-lg overflow-hidden border-2 border-orange-500/30">
-                                <img
-                                  src={member.photo}
-                                  alt={member.memberName}
-                                  className="w-full h-full object-cover"
-                                  onError={(e) => {
-                                    e.currentTarget.src = '/dummy.png';
-                                  }}
-                                />
+                                {(() => {
+                                  const normalized = normalizeMember(member);
+                                  return (
+                                    <img
+                                      src={normalized.photo}
+                                      alt={normalized.memberName}
+                                      className="w-full h-full object-cover"
+                                      onError={(e) => {
+                                        e.currentTarget.src = '/dummy.png';
+                                      }}
+                                    />
+                                  );
+                                })()}
                               </div>
                               <div>
-                                <div className="font-semibold text-white">{member.memberName}</div>
-                                <div className="text-sm text-gray-400">{member.memberId}</div>
+                                {(() => {
+                                  const normalized = normalizeMember(member);
+                                  return (
+                                    <>
+                                      <div className="font-semibold text-white">{normalized.memberName}</div>
+                                      <div className="text-sm text-gray-400">{normalized.memberId}</div>
+                                    </>
+                                  );
+                                })()}
                               </div>
                             </div>
                           </td>
                           <td className="py-4 px-4">
-                            <div className="text-orange-400 font-medium">{member.package}</div>
+                            <div className="text-orange-400 font-medium">
+                              {normalizeMember(member).package}
+                            </div>
                           </td>
                           <td className="py-4 px-4">
                             <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(member.status)}`}>
@@ -1173,21 +1283,49 @@ export default function StaffDashboard() {
                     </tr>
                   </thead>
                     <tbody>
-                      {payments.slice(0, 10).map((payment: any) => (
-                      <tr key={payment.id} className="border-b border-gray-700/50 hover:bg-gray-700/30 transition-colors">
-                        <td className="py-4 px-4">
-                          <div className="font-semibold text-white">{payment.memberName}</div>
-                        </td>
-                        <td className="py-4 px-4 text-orange-400 font-semibold">Rs {payment.amount.toLocaleString()}</td>
-                        <td className="py-4 px-4 text-gray-300">{payment.method}</td>
-                        <td className="py-4 px-4">
-                          <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(payment.status)}`}>
-                            {payment.status}
-                          </span>
-                        </td>
-                        <td className="py-4 px-4 text-gray-300">{payment.date}</td>
-                      </tr>
-                    ))}
+                      {payments.slice(0, 10).map((payment: any) => {
+                        // Normalize payment data to handle both snake_case and camelCase
+                        const memberName = payment.memberName || payment.member_name || 'Unknown Member';
+                        const memberId = payment.memberId || payment.member_id || '';
+                        const amount = payment.amount || 0;
+                        const method = payment.method || 'cash';
+                        const status = payment.status || 'pending';
+                        const paymentDate = payment.date || payment.created_at || payment.createdAt || '';
+                        
+                        // Format date if it's a string that needs formatting
+                        let formattedDate = paymentDate;
+                        if (paymentDate && typeof paymentDate === 'string' && paymentDate.includes('T')) {
+                          try {
+                            const date = new Date(paymentDate);
+                            formattedDate = date.toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'short',
+                              day: 'numeric'
+                            });
+                          } catch (e) {
+                            // Keep original date string if parsing fails
+                          }
+                        }
+                        
+                        return (
+                          <tr key={payment.id} className="border-b border-gray-700/50 hover:bg-gray-700/30 transition-colors">
+                            <td className="py-4 px-4">
+                              <div className="font-semibold text-white">{memberName}</div>
+                              {memberId && <div className="text-sm text-gray-400">{memberId}</div>}
+                            </td>
+                            <td className="py-4 px-4 text-orange-400 font-semibold">
+                              Rs {amount.toLocaleString()}
+                            </td>
+                            <td className="py-4 px-4 text-gray-300 capitalize">{method}</td>
+                            <td className="py-4 px-4">
+                              <span className={`inline-flex px-3 py-1 rounded-full text-xs font-semibold border ${getStatusColor(status)}`}>
+                                {status}
+                              </span>
+                            </td>
+                            <td className="py-4 px-4 text-gray-300">{formattedDate || '-'}</td>
+                          </tr>
+                        );
+                      })}
                   </tbody>
                 </table>
               </div>
@@ -1756,27 +1894,28 @@ export default function StaffDashboard() {
                       </thead>
                       <tbody>
                         {expiringMembers.map((member: Member) => {
-                          const expiryDate = new Date(member.expiryDate);
+                          const normalized = normalizeMember(member);
+                          const expiryDate = new Date(normalized.expiryDate);
                           const today = new Date();
                           const daysLeft = Math.ceil((expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
                           
                           return (
-                            <tr key={member.id} className="border-b border-gray-700/50 hover:bg-gray-700/30 transition-colors">
+                            <tr key={normalized.id} className="border-b border-gray-700/50 hover:bg-gray-700/30 transition-colors">
                               <td className="py-4 px-4">
                                 <div className="flex items-center space-x-3">
                                   <div className="w-10 h-10 rounded-lg overflow-hidden border-2 border-orange-500/30">
                                     <img
-                                      src={member.photo}
-                                      alt={member.memberName}
+                                      src={normalized.photo}
+                                      alt={normalized.memberName}
                                       className="w-full h-full object-cover"
                                       onError={(e) => {
-                                        e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(member.memberName) + '&background=orange&color=fff&size=200';
+                                        e.currentTarget.src = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(normalized.memberName) + '&background=orange&color=fff&size=200';
                                       }}
                                     />
                                   </div>
                                   <div>
-                                    <div className="font-semibold text-white">{member.memberName}</div>
-                                    <div className="text-sm text-gray-400">{member.memberId}</div>
+                                    <div className="font-semibold text-white">{normalized.memberName}</div>
+                                    <div className="text-sm text-gray-400">{normalized.memberId}</div>
                                   </div>
                                 </div>
                               </td>

@@ -39,6 +39,29 @@ interface MemberProfileClientProps {
   memberId: string;
 }
 
+// Helper function to normalize member data from Supabase (snake_case) to camelCase
+const normalizeMember = (member: any): Member => {
+  if (!member) return member as Member;
+  return {
+    id: member.id,
+    memberId: member.memberId || member.member_id || '',
+    memberName: member.memberName || member.member_name || '',
+    cnicNumber: member.cnicNumber || member.cnic_number || '',
+    contactNumber: member.contactNumber || member.contact_number || '',
+    address: member.address || '',
+    package: member.package || '',
+    packagePrice: member.packagePrice || member.package_price || 0,
+    discount: member.discount || 0,
+    finalPrice: member.finalPrice || member.final_price || 0,
+    joiningDate: member.joiningDate || member.joining_date || '',
+    expiryDate: member.expiryDate || member.expiry_date || '',
+    photo: member.photo || '',
+    status: member.status || 'active',
+    createdAt: member.createdAt || member.created_at || '',
+    updatedAt: member.updatedAt || member.updated_at || '',
+  };
+};
+
 export default function MemberProfileClient({ memberId }: MemberProfileClientProps) {
   const [member, setMember] = useState<Member | null>(null);
   const [loading, setLoading] = useState(true);
@@ -61,22 +84,33 @@ export default function MemberProfileClient({ memberId }: MemberProfileClientPro
       const memberData = await memberResponse.json();
       
       if (memberData && !memberData.error) {
-        setMember(memberData);
+        // Normalize member data to handle both snake_case and camelCase
+        const normalizedMember = normalizeMember(memberData);
+        setMember(normalizedMember);
         
         // Load related data
+        // Note: memberId from URL is the primary key (id), and payments/attendance have member_id as foreign key
         const paymentsResponse = await fetch('/api/payments');
         const allPayments = await paymentsResponse.json();
-        const memberPayments = allPayments.filter((payment: any) => payment.memberId === Number(memberId));
+        const memberPayments = allPayments.filter((payment: any) => {
+          // payment.member_id is the foreign key pointing to member.id (primary key)
+          const paymentMemberId = payment.member_id || payment.memberId;
+          return Number(paymentMemberId) === Number(normalizedMember.id);
+        });
         
         const attendanceResponse = await fetch('/api/attendance');
         const allAttendance = await attendanceResponse.json();
-        const memberAttendance = allAttendance.filter((record: any) => record.memberId === Number(memberId));
+        const memberAttendance = allAttendance.filter((record: any) => {
+          // record.member_id is the foreign key pointing to member.id (primary key)
+          const recordMemberId = record.member_id || record.memberId;
+          return Number(recordMemberId) === Number(normalizedMember.id);
+        });
         
         // Enrich payment data with status and other information
         const enrichedPayments = memberPayments.map(payment => ({
           ...payment,
           status: payment.status || 'completed', // Default status if not set
-          memberName: memberData.memberName // Add member name for consistency
+          memberName: normalizedMember.memberName // Add member name for consistency
         }));
         
         setPayments(enrichedPayments);
@@ -288,9 +322,13 @@ export default function MemberProfileClient({ memberId }: MemberProfileClientPro
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-2">Monthly Fee</label>
-                    <div className="text-white font-semibold text-lg">Rs {member.finalPrice.toLocaleString()}</div>
-                    {member.discount > 0 && (
-                      <div className="text-sm text-green-400">-Rs {member.discount} discount applied</div>
+                    <div className="text-white font-semibold text-lg">
+                      Rs {(member.finalPrice || 0).toLocaleString()}
+                    </div>
+                    {(member.discount || 0) > 0 && (
+                      <div className="text-sm text-green-400">
+                        -Rs {member.discount || 0} discount applied
+                      </div>
                     )}
                   </div>
                   <div>
@@ -314,23 +352,30 @@ export default function MemberProfileClient({ memberId }: MemberProfileClientPro
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {payments.slice(0, 5).map((payment: any) => (
-                      <div key={payment.id} className="flex justify-between items-center p-3 bg-gray-700/30 rounded-lg">
-                        <div>
-                          <div className="text-white font-medium">Rs {payment.amount?.toLocaleString() || '0'}</div>
-                          <div className="text-sm text-gray-400">{payment.method}</div>
+                    {payments.slice(0, 5).map((payment: any) => {
+                      const amount = payment.amount || 0;
+                      const method = payment.method || 'cash';
+                      const status = payment.status || 'pending';
+                      const createdAt = payment.createdAt || payment.created_at || payment.date || '';
+                      
+                      return (
+                        <div key={payment.id} className="flex justify-between items-center p-3 bg-gray-700/30 rounded-lg">
+                          <div>
+                            <div className="text-white font-medium">Rs {amount.toLocaleString()}</div>
+                            <div className="text-sm text-gray-400 capitalize">{method}</div>
+                          </div>
+                          <div className="text-right">
+                            {createdAt && <div className="text-sm text-gray-300">{getTimeAgo(createdAt)}</div>}
+                            <span className={`inline-flex px-2 py-1 rounded-full text-xs font-semibold border ${
+                              status === 'completed' || status === 'approved' ? 'bg-green-500/20 text-green-400 border-green-500/30' :
+                              'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
+                            }`}>
+                              {status}
+                            </span>
+                          </div>
                         </div>
-                        <div className="text-right">
-                          <div className="text-sm text-gray-300">{getTimeAgo(payment.createdAt)}</div>
-                          <span className={`inline-flex px-2 py-1 rounded-full text-xs font-semibold border ${
-                            payment.status === 'completed' ? 'bg-green-500/20 text-green-400 border-green-500/30' :
-                            'bg-yellow-500/20 text-yellow-400 border-yellow-500/30'
-                          }`}>
-                            {payment.status}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>
@@ -345,25 +390,33 @@ export default function MemberProfileClient({ memberId }: MemberProfileClientPro
                   </div>
                 ) : (
                   <div className="space-y-3">
-                    {attendance.slice(0, 5).map((record: any) => (
-                      <div key={record.id} className="flex justify-between items-center p-3 bg-gray-700/30 rounded-lg">
-                        <div>
-                          <div className="text-white font-medium">{formatDate(record.date)}</div>
-                          <div className="text-sm text-gray-400">
-                            {record.checkInTime} - {record.checkOutTime || 'Active'}
+                    {attendance.slice(0, 5).map((record: any) => {
+                      const date = record.date || '';
+                      const checkInTime = record.checkInTime || record.check_in_time || '-';
+                      const checkOutTime = record.checkOutTime || record.check_out_time || 'Active';
+                      const status = record.status || 'active';
+                      const createdAt = record.createdAt || record.created_at || '';
+                      
+                      return (
+                        <div key={record.id} className="flex justify-between items-center p-3 bg-gray-700/30 rounded-lg">
+                          <div>
+                            {date && <div className="text-white font-medium">{formatDate(date)}</div>}
+                            <div className="text-sm text-gray-400">
+                              {checkInTime} - {checkOutTime}
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            {createdAt && <div className="text-sm text-gray-300">{getTimeAgo(createdAt)}</div>}
+                            <span className={`inline-flex px-2 py-1 rounded-full text-xs font-semibold border ${
+                              status === 'completed' ? 'bg-green-500/20 text-green-400 border-green-500/30' :
+                              'bg-blue-500/20 text-blue-400 border-blue-500/30'
+                            }`}>
+                              {status}
+                            </span>
                           </div>
                         </div>
-                        <div className="text-right">
-                          <div className="text-sm text-gray-300">{getTimeAgo(record.createdAt)}</div>
-                          <span className={`inline-flex px-2 py-1 rounded-full text-xs font-semibold border ${
-                            record.status === 'completed' ? 'bg-green-500/20 text-green-400 border-green-500/30' :
-                            'bg-blue-500/20 text-blue-400 border-blue-500/30'
-                          }`}>
-                            {record.status}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )}
               </div>

@@ -7,7 +7,8 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  output: 'export',
+  // Removed 'output: export' to allow API routes to work
+  // API routes require a server and cannot be statically exported
   trailingSlash: true,
   images: {
     unoptimized: true,
