@@ -6,6 +6,9 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+  [plugins.inputs]
+    # Let plugin handle output directory automatically
+    # Do not set publish directory - plugin manages it
 
 [[headers]]
   for = "/*"
