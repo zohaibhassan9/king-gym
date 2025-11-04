@@ -5,17 +5,24 @@ The error shows: "Your publish directory cannot be the same as the base director
 
 This happens when Netlify defaults the publish directory to the repo root (`/opt/build/repo`), which conflicts with the Next.js plugin's requirements.
 
-## Solution: Set Publish Directory to `.netlify/next`
+## Solution: Let the Plugin Handle Publish Directory
 
-The `netlify.toml` file has been updated to explicitly set the publish directory:
+**DO NOT set a publish directory** - The `@netlify/plugin-nextjs` plugin manages this automatically.
+
+The `netlify.toml` should NOT have a `publish` setting:
 
 ```toml
 [build]
   command = "npm run build"
-  publish = ".netlify/next"
+  # No publish directory - let plugin handle it
 ```
 
-The Next.js plugin will write its output to `.netlify/next` during the build, and Netlify will use that folder as the publish directory.
+**Important:** You must also clear the publish directory in Netlify UI:
+1. Go to: **Site settings** → **Build & deploy** → **Continuous Deployment** → **Edit settings**
+2. Clear the **Publish directory** field (leave it empty)
+3. Save
+
+The plugin will create `.netlify/next` after the build and tell Netlify where to publish from.
 
 ## Why This Works
 - The `@netlify/plugin-nextjs` plugin writes its output to `.netlify/next`
