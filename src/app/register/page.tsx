@@ -7,13 +7,20 @@ import { UserIcon, IdentificationIcon, PhoneIcon, MapPinIcon, CalendarIcon, Chec
 
 export default function Register() {
   const router = useRouter();
+  
+  // Get today's date in YYYY-MM-DD format for default joining date
+  const getTodayDate = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
   const [formData, setFormData] = useState({
     memberName: '',
     cnicNumber: '',
     contactNumber: '',
-    address: '',
+    address: 'Central Park',
     package: '',
-    joiningDate: '',
+    joiningDate: getTodayDate(),
     photo: null as File | null
   });
 
@@ -30,12 +37,92 @@ export default function Register() {
     { id: 'Ladies (Separate Floor)', name: 'Ladies (Separate Floor)', price: 'Rs 4,000/month' }
   ];
 
+  // Format CNIC with hyphens automatically
+  const formatCNIC = (value: string, isDeleting: boolean = false): string => {
+    // Remove all non-numeric characters
+    const numbers = value.replace(/\D/g, '');
+    
+    // Limit to 13 digits (5-7-1 format)
+    const limitedNumbers = numbers.slice(0, 13);
+    
+    // Add hyphens at appropriate positions
+    if (limitedNumbers.length === 0) {
+      return '';
+    } else if (limitedNumbers.length < 5) {
+      // No hyphen yet (1-4 digits)
+      return limitedNumbers;
+    } else if (limitedNumbers.length === 5) {
+      // Show hyphen only when typing forward (not when deleting back)
+      return isDeleting ? limitedNumbers : `${limitedNumbers}-`;
+    } else if (limitedNumbers.length < 12) {
+      // One hyphen in middle (6-11 digits)
+      return `${limitedNumbers.slice(0, 5)}-${limitedNumbers.slice(5)}`;
+    } else if (limitedNumbers.length === 12) {
+      // Show second hyphen only when typing forward (not when deleting back)
+      return isDeleting 
+        ? `${limitedNumbers.slice(0, 5)}-${limitedNumbers.slice(5, 12)}`
+        : `${limitedNumbers.slice(0, 5)}-${limitedNumbers.slice(5, 12)}-`;
+    } else {
+      // Full format (13 digits)
+      return `${limitedNumbers.slice(0, 5)}-${limitedNumbers.slice(5, 12)}-${limitedNumbers.slice(12)}`;
+    }
+  };
+
+  // Format phone number with hyphen automatically (Pakistan format: 03XX-XXXXXXX)
+  const formatPhoneNumber = (value: string, isDeleting: boolean = false): string => {
+    // Remove all non-numeric characters
+    const numbers = value.replace(/\D/g, '');
+    
+    // Limit to 11 digits
+    const limitedNumbers = numbers.slice(0, 11);
+    
+    // Add hyphen after 4 digits (03XX-XXXXXXX format)
+    if (limitedNumbers.length === 0) {
+      return '';
+    } else if (limitedNumbers.length <= 4) {
+      // No hyphen yet (1-4 digits)
+      return limitedNumbers;
+    } else if (limitedNumbers.length === 4) {
+      // Show hyphen only when typing forward (not when deleting back)
+      return isDeleting ? limitedNumbers : `${limitedNumbers}-`;
+    } else {
+      // One hyphen after 4 digits (5-11 digits)
+      return `${limitedNumbers.slice(0, 4)}-${limitedNumbers.slice(4)}`;
+    }
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    
+    // Auto-format CNIC number
+    if (name === 'cnicNumber') {
+      // Detect if user is deleting by comparing current digit count with previous
+      const currentDigits = value.replace(/\D/g, '').length;
+      const prevDigits = formData.cnicNumber.replace(/\D/g, '').length;
+      const isDeleting = currentDigits < prevDigits;
+      
+      const formattedValue = formatCNIC(value, isDeleting);
+      setFormData(prev => ({
+        ...prev,
+        [name]: formattedValue
+      }));
+    } else if (name === 'contactNumber') {
+      // Auto-format phone number
+      const currentDigits = value.replace(/\D/g, '').length;
+      const prevDigits = formData.contactNumber.replace(/\D/g, '').length;
+      const isDeleting = currentDigits < prevDigits;
+      
+      const formattedValue = formatPhoneNumber(value, isDeleting);
+      setFormData(prev => ({
+        ...prev,
+        [name]: formattedValue
+      }));
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        [name]: value
+      }));
+    }
     
     // Clear error when user starts typing
     if (errors[name]) {
@@ -187,9 +274,9 @@ export default function Register() {
           memberName: '',
           cnicNumber: '',
           contactNumber: '',
-          address: '',
+          address: 'Central Park',
           package: '',
-          joiningDate: '',
+          joiningDate: getTodayDate(),
           photo: null
         });
         
@@ -411,20 +498,39 @@ export default function Register() {
 
               {/* Joining Date */}
               <div>
-                <label htmlFor="joiningDate" className="block text-lg font-semibold text-white mb-2">
+                <label 
+                  htmlFor="joiningDate" 
+                  className="block text-lg font-semibold text-white mb-2 cursor-pointer"
+                  onClick={() => {
+                    const input = document.getElementById('joiningDate') as HTMLInputElement;
+                    if (input && 'showPicker' in input) {
+                      input.showPicker();
+                    }
+                  }}
+                >
                   <CalendarIcon className="h-6 w-6 inline mr-2 text-orange-400" />
                   Joining Date *
                 </label>
-                <input
-                  type="date"
-                  id="joiningDate"
-                  name="joiningDate"
-                  value={formData.joiningDate}
-                  onChange={handleInputChange}
-                  className={`w-full px-4 py-4 bg-gray-700/50 border rounded-xl text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-lg ${
+                <div 
+                  className={`w-full px-4 py-4 bg-gray-700/50 border rounded-xl cursor-pointer ${
                     errors.joiningDate ? 'border-red-500' : 'border-gray-600'
                   }`}
-                />
+                  onClick={() => {
+                    const input = document.getElementById('joiningDate') as HTMLInputElement;
+                    if (input && 'showPicker' in input) {
+                      input.showPicker();
+                    }
+                  }}
+                >
+                  <input
+                    type="date"
+                    id="joiningDate"
+                    name="joiningDate"
+                    value={formData.joiningDate}
+                    onChange={handleInputChange}
+                    className="w-full bg-transparent text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-lg cursor-pointer outline-none"
+                  />
+                </div>
                 {errors.joiningDate && (
                   <p className="mt-1 text-sm text-red-400">{errors.joiningDate}</p>
                 )}
