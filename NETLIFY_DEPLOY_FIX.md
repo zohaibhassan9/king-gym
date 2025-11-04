@@ -3,34 +3,47 @@
 ## The Problem
 The error shows: "Your publish directory cannot be the same as the base directory of your site."
 
-This happens when Netlify defaults the publish directory to the repo root (`/opt/build/repo`), which conflicts with the Next.js plugin's automatic output handling.
+This happens when Netlify defaults the publish directory to the repo root (`/opt/build/repo`), which conflicts with the Next.js plugin's requirements.
 
-## Solution: Clear BOTH Base Directory and Publish Directory in Netlify UI
+## Solution: Set Publish Directory to `.netlify/next`
 
-**You MUST do this in the Netlify dashboard:**
+The `netlify.toml` file has been updated to explicitly set the publish directory:
 
-1. Go to your Netlify site dashboard: https://app.netlify.com/sites/kingfitness-club
-2. Navigate to: **Site settings** → **Build & deploy** → **Continuous Deployment**
-3. Click **Edit settings** in the Build settings section
-4. Find **BOTH** of these fields:
-   - **Base directory** → Clear/delete (leave empty)
-   - **Publish directory** → Clear/delete (leave empty)
-5. Click **Save**
+```toml
+[build]
+  command = "npm run build"
+  publish = ".netlify/next"
+```
 
-## Why This Happens
-- When no publish directory is set, Netlify defaults to the repo root
-- The `@netlify/plugin-nextjs` plugin manages its own output directory automatically
-- Having Base directory or Publish directory set conflicts with the plugin
-- The plugin needs to control the output directory itself
+The Next.js plugin will write its output to `.netlify/next` during the build, and Netlify will use that folder as the publish directory.
 
-## After Fixing
+## Why This Works
+- The `@netlify/plugin-nextjs` plugin writes its output to `.netlify/next`
+- Setting `publish = ".netlify/next"` tells Netlify where to find the built files
+- This prevents Netlify from defaulting to the repo root
+- The plugin can now complete its build process successfully
+
+## After This Fix
 1. The build will succeed
-2. The plugin will automatically use the correct output directory (`.netlify` folder)
-3. Your site will deploy successfully
+2. The plugin will write output to `.netlify/next`
+3. Netlify will publish from `.netlify/next`
+4. Your site will deploy successfully
+
+## Additional Steps Required
+
+### Set Environment Variables in Netlify UI
+
+You still need to set your Supabase environment variables:
+
+1. Go to: **Site settings** → **Build & deploy** → **Environment**
+2. Add these three variables:
+   - `NEXT_PUBLIC_SUPABASE_URL`
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - `SUPABASE_SERVICE_ROLE_KEY`
+3. See `NETLIFY_ENV_SETUP.md` for detailed instructions
 
 ## Important Notes
-- **DO NOT** set Base directory or Publish directory when using `@netlify/plugin-nextjs`
-- The plugin handles everything automatically
-- The plugin creates its own output in `.netlify` folder
-- Your `netlify.toml` is already correctly configured
+- The publish directory is now set in `netlify.toml` (`.netlify/next`)
+- If you have this set in Netlify UI, it should match or be removed (let netlify.toml control it)
+- The plugin automatically creates the `.netlify/next` folder during build
 
